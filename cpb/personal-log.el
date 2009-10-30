@@ -1,0 +1,300 @@
+(defvar personal-log-prompt-for-date nil)
+
+(defun personal-log-date-current ()
+  (let ((date (current-time-string (if personal-log-prompt-for-date
+				       (tkb-get-date-from-user)
+				     (if (and (boundp 'personal-log-passed-in-date)
+					      personal-log-passed-in-date)
+					 personal-log-passed-in-date
+				       '())))))
+    (string-match
+     (concat
+      "^\\([A-Z][a-z]*\\) *"
+      "\\([A-Z][a-z]*\\) *"
+      "\\([0-9]*\\) *"
+      "\\([0-9][0-9]\\):\\([0-9][0-9]\\):\\([0-9][0-9]\\) *"
+      "\\([0-9]*\\)$")
+     date)
+    (list
+					; --- Year
+     (string-to-int (substring date (match-beginning 7) (match-end 7)))
+					; --- Month
+     (cdr
+      (assoc
+       (substring date (match-beginning 2) (match-end 2))
+       '(("Jan" . 1)
+	 ("Feb" . 2)
+	 ("Mar" . 3)
+	 ("Apr" . 4)
+	 ("May" . 5)
+	 ("Jun" . 6)
+	 ("Jul" . 7)
+	 ("Aug" . 8)
+	 ("Sep" . 9)
+	 ("Oct" . 10)
+	 ("Nov" . 11)
+	 ("Dec" . 12))))
+					; --- Day
+     (string-to-int (substring date (match-beginning 3) (match-end 3)))
+					; --- Hour, Minute, Second
+     (string-to-int (substring date (match-beginning 4) (match-end 4)))
+     (string-to-int (substring date (match-beginning 5) (match-end 5)))
+     (string-to-int (substring date (match-beginning 6) (match-end 6)))
+					; --- Full Month Name
+     (cdr
+      (assoc
+       (substring date (match-beginning 2) (match-end 2))
+       '(("Jan" . "January")
+	 ("Feb" . "February")
+	 ("Mar" . "March")
+	 ("Apr" . "April")
+	 ("May" . "May")
+	 ("Jun" . "June")
+	 ("Jul" . "July")
+	 ("Aug" . "August")
+	 ("Sep" . "September")
+	 ("Oct" . "October")
+	 ("Nov" . "November")
+	 ("Dec" . "December"))))
+					; --- Full Day Name
+     (cdr
+      (assoc
+       (substring date (match-beginning 1) (match-end 1))
+       '(("Sun" . "Sunday")
+	 ("Mon" . "Monday")
+	 ("Tue" . "Tuesday")
+	 ("Wed" . "Wednesday")
+	 ("Thu" . "Thursday")
+	 ("Fri" . "Friday")
+	 ("Sat" . "Saturday")))))))
+
+
+(defvar personal-log-mode-map nil
+  "Keymap for Change Log major mode.")
+(if personal-log-mode-map
+    nil
+  (setq personal-log-mode-map (make-sparse-keymap))
+  (define-key personal-log-mode-map "\M-q" 'personal-log-fill-paragraph))
+  (define-key personal-log-mode-map "\C-cn"
+    '(lambda () (interactive)
+       (personal-log-insert-date-marker)
+       (personal-log-insert-entry-marker)))
+
+
+
+
+
+
+(defun personal-log-date-marker () 
+  "Generate a personal log book entry date marker for today 
+date.  This marker is used to delimit between different day 
+entries in the log book."
+  (let ((date (personal-log-date-current)))
+    (format "@@@@ %4d/%02d/%02d @@@@ %s  %s, %2d, %d @@@@"
+	    (nth 0 date)		; Year
+	    (nth 1 date)		; Month
+	    (nth 2 date)		; Day
+	    (nth 7 date)		; Day Name
+	    (nth 6 date)		; Month Name
+	    (nth 2 date)		; Day
+	    (nth 0 date))))		; Year
+
+
+
+
+(defun personal-log-insert-date-marker-string ()
+  "Insert a date maker at the current location in a buffer.  Used by
+external modules to insert log book like dates into a file."
+  (interactive)
+  (insert (personal-log-date-marker) "\n"))
+
+
+
+
+(defun personal-log-insert-date-marker () 
+  "Insert the current date maker in the log book if we have not 
+done so already." 
+  (progn
+    (goto-char (point-min))
+    (if (not (looking-at (personal-log-date-marker)))
+	(insert (personal-log-date-marker)
+		"\n\n"))))
+
+
+
+
+(defun personal-log-insert-entry-marker () 
+  "Insert a new entry marker for the current date." 
+  (progn
+    (goto-char (point-min))
+    (forward-line 1)
+    (while (looking-at "\\sW")
+      (forward-line 1))
+    (delete-region (point)
+		   (progn
+		     (skip-chars-backward "\n")
+		     (point)))
+    (open-line 3)
+    (forward-line 2)
+    ;(indent-to left-margin)
+    (insert "* ")))
+
+
+
+
+(defun personal-log (read)
+  "Add an entry to the personal log book."
+  (interactive "P")
+  (progn
+    (let ((personal-log-file (or personal-log-file (personal-log-calc-file))))
+      (find-file personal-log-file)
+      (or (eq major-mode 'personal-log-mode)
+	  (personal-log-mode))
+      ;; (indented-text-mode)
+      ;; (setq left-margin 8)
+      ;; (setq fill-column 74)
+      ;; (setq fill-prefix "\t")
+      ;; (auto-fill-mode 1)
+      (unless read
+	(undo-boundary)
+	(personal-log-insert-date-marker)
+	(personal-log-insert-entry-marker)))))
+
+
+(defun tkb-personal-log (prefix)
+  (interactive "P")
+  ;; Dynamically bind global 
+  (let ((personal-log-prompt-for-date prefix))
+    (personal-log nil)))
+
+(defun tkb-personal-log-insert-date-marker (prefix)
+  (interactive "P")
+  (let ((personal-log-prompt-for-date prefix))
+    (personal-log-insert-date-marker-string)))
+
+
+(defun personal-log-here (&optional get-filename-p)
+  (interactive "P")
+  (let ((personal-log-file (if get-filename-p
+			       (read-file-name "Log file: ")
+			     (buffer-file-name))))
+    (personal-log)))
+
+
+(defun personal-log-prompt-for-name ()
+  "Prompt for a change log name."
+  (let* ((default "notes.txt")
+	 (name (expand-file-name
+		(read-file-name
+		 (format "Personal Log (%s): " default)
+		 nil default))))
+
+    ;; Handle something that is syntactically a directory name.
+    ;; Look for ChangeLog or whatever in that directory.
+    (if (string= (file-name-nondirectory name) "")
+	(expand-file-name (file-name-nondirectory default)
+			  name)
+      ;; Handle specifying a file that is a directory.
+      (if (file-directory-p name)
+	  (expand-file-name (file-name-nondirectory default)
+			    (file-name-as-directory name))
+	name))))
+
+
+
+(defun personal-log-notes ()
+  "Add an entry to the personal log book."
+  (interactive)
+  (progn
+    (find-file (personal-log-prompt-for-name))
+    (or (eq major-mode 'personal-log-mode)
+	(personal-log-mode))
+;    (indented-text-mode)
+;    (setq left-margin 8)
+;    (setq fill-column 74)
+    ;(setq fill-prefix "\t")
+;    (auto-fill-mode 1)
+    (undo-boundary)
+    (personal-log-insert-date-marker)
+    (personal-log-insert-entry-marker)))
+
+
+
+
+
+
+(defun personal-log-calc-file ()
+  "Generate the correct for the log book from the current date"
+  (let ((date (personal-log-date-current)))
+       (format "%s/log/%4d-%02d.txt"
+	       personal-log-dir
+	       (nth 0 date)		; Year
+	       (nth 1 date))))		; Month
+
+;; TKB: always calculate this, so if your emacs session overlaps a month end
+;; you don't end up in the wrong place.
+(defvar personal-log-file nil
+  "File where the personal log is to be stored; if nil, calculates the
+filename.")
+
+
+(defvar personal-log-font-lock-keywords
+  (list
+   '("\\(^@@@@\\)\\([^@]+\\)\\(@@@@\\)\\([^@]+\\)\\(@@@@\\)" 
+     (1 font-lock-keyword-face)
+     (2 font-lock-function-name-face)
+     (3 font-lock-keyword-face)
+     (4 font-lock-function-name-face)
+     (5 font-lock-keyword-face))
+   '("\\(^[ \t]*[*]\\)"
+     (1 font-lock-variable-name-face)))
+  "Keywords to highlight in 'personal-log-mode' buffers.")
+
+
+(defun personal-log-mode ()
+  "Major mode for editing change logs; like Indented Text Mode.
+Prevents numeric backups and sets `left-margin' to 8 and `fill-column' to 74.
+New log entries are usually made with \\[add-personal-log-entry] or \\[add-personal-log-entry-other-window].
+Each entry behaves as a paragraph, and the entries for one day as a page.
+Runs `personal-log-mode-hook'."
+  (interactive)
+  (kill-all-local-variables)
+  (indented-text-mode)
+  (setq major-mode 'personal-log-mode
+	mode-name "Personal Log"
+	;left-margin 8
+	;left-margin 2
+	;fill-column 74
+	fill-prefix "  "
+	)
+
+  (use-local-map personal-log-mode-map)
+ 
+  ;; Let each entry behave as one paragraph:
+  ;; We really do want "^" in paragraph-start below: it is only the lines that
+  ;; begin at column 0 (despite the left-margin of 8) that we are looking for.
+  (set (make-local-variable 'paragraph-start) "\\s *$\\|\f\\|^\\sw")
+  (set (make-local-variable 'paragraph-separate) "\\s *$\\|\f\\|^\\sw")
+
+  ;; Let all entries for one day behave as one page.
+  ;; Match null string on the date-line so that the date-line
+  ;; is grouped with what follows.
+  (set (make-local-variable 'page-delimiter) "^\\<\\|^\f")
+  (set (make-local-variable 'version-control) 'never)
+  (set (make-local-variable 'adaptive-fill-regexp) "\\s *")
+  (set (make-local-variable 'font-lock-defaults)
+       '(personal-log-font-lock-keywords t))
+  (run-hooks 'personal-log-mode-hook))
+
+
+
+
+
+(defun personal-log-fill-paragraph (&optional justify)
+  "Fill the paragraph, but preserve open parentheses at beginning of lines.
+Prefix arg means justify as well."
+  (interactive "P")
+  (let ((end (save-excursion (forward-paragraph) (point)))
+	(beg (save-excursion (backward-paragraph)(point)))
+	(paragraph-start (concat paragraph-start "\\|\\s *\\s(")))
+    (fill-region beg end justify)))
