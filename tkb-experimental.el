@@ -6,6 +6,23 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (require 'cl)
 
+(when-directory (d ["/sw/versions/oo2c/2.1.11/lib/oo2c/emacs/"
+		    "/sw/versions/m64/oo2c/2.1.11/lib/oo2c/emacs/"
+		    "/usr/local/lib/oo2c/emacs/"])
+  (add-to-list 'load-path d)
+  (autoload #'oberon-2-mode "oberon2" "Major mode for editing Oberon-2 code.")
+  (add-to-list 'auto-mode-alist '("\\.\\([Mm]od\\|obn\\)$" . oberon-2-mode)))
+
+(eval-after-load "w3m"
+  '(define-key w3m-mode-map "f" #'w3m-find-file))
+
+(when-directory (d "/sw/src/go/misc/emacs/")
+  (defun tkb-go-hook ()
+    (setq tab-width 4))
+  (add-hook 'go-mode-hook #'tkb-go-hook)
+  (add-to-list 'load-path d t)
+  (require 'go-mode-load))
+
 (defun tkb-unhex-buffer ()
   (interactive)
   (let* ((s (buffer-substring (point) (mark)))
@@ -114,7 +131,9 @@ Interactively, prompts for a numeric string giving the code."
   (require 'org-install)
   (setq org-agenda-clockreport-parameter-plist (quote (:link t :maxlevel 3)))
   (setq org-agenda-files "~/current/org/.agenda_files")
-  (setq org-columns-default-format "%30ITEM(Details) %TAGS(Context) %7TODO(To Do) %5Effort(Time){:} %6CLOCKSUM{Total}")
+  (setq org-columns-default-format
+	(concat "%30ITEM(Details) %TAGS(Context) %7TODO(To Do) "
+		"%5Effort(Time){:} %6CLOCKSUM{Total}"))
   ;;(setq org-log-done (quote (done state clock-out)))
 
   (setq org-agenda-text-search-extra-files '("~/current/org/notes.org"))
@@ -142,17 +161,36 @@ Interactively, prompts for a numeric string giving the code."
   (require 'remember)
   (org-remember-insinuate)
   (setq org-directory "~/current/org")
-  (setq org-default-notes-file (concat org-directory "/notes.org"))
-  (autoload 'org-remember "org-remember" nil t)
-  (setq org-remember-templates
-	'(("Journal" ?j "* %^{Title} %U\n  %i\n  %?\n"
-	   "~/current/org/journal.org" "Journal")
-	  ("Contacts Log" ?c "* %^{Title} %U\n  %i\n  %?\n"
-	   "~/current/org/contact-log.org" "Contact-Log")
-	  ("Notes" ?n "\n\n* %^{Title} %U\n  %i\n  %?\n  %a\n\n"
-	   "~/current/org/notes.org" "Notes")
-	  ("Tasks" ?t "* TODO %^{Title} %U\n  %i\n  %?\n  %a"
-	   "~/current/org/tasks.org" "Tasks")))
+  (flet ((orgd (filename) (expand-file-name filename org-directory))
+	 (mpld (filename) (expand-file-name filename "~/job/MPL/Org/")))
+    (setq org-default-notes-file (orgd "notes.org"))
+    (autoload 'org-remember "org-remember" nil t)
+    (setq org-remember-templates
+	  `(("Journal"      ?j   "* %^{Title} %U\n  %i\n  %?\n"
+	     ,(orgd "journal.org") "Journal")
+	    ("Contacts Log" ?c   "* %^{Title} %U\n  %i\n  %?\n"
+	     ,(orgd "contacts.org") "Contacts")
+	    ("Notes"        ?n   "\n\n* %^{Title} %U\n  %i\n  %?\n  %a\n\n"
+	     ,(orgd "notes.org") "Notes")
+	    ("Tasks"        ?t   "* TODO %^{Title} %U\n  %i\n  %?\n  %a"
+	     ,(orgd "tasks.org") "Tasks")
+	    ("Video"        ?v   "* TODO %^{Title} %U\n  %^C%i%?\n"
+	     ,(orgd "video.org") "Video")
+	    
+	    ;; ??? Ought to have this in a truecrypt volume. 
+	    ;; ("Private"      ?p   "* %^{Title} %U\n  %i\n  %?\n"
+	    ;; ,(orgd "private/private.org") "Private")
+
+	    ;; MPL
+	    ("MPL Journal"      ?J   "* %^{Title} %U\n  %i\n  %?\n"
+	     ,(mpld "journal.org") "MPL Journal")
+	    ("MPL Contacts Log" ?C   "* %^{Title} %U\n  %i\n  %?\n"
+	     ,(mpld "contacts.org") "MPL Contacts")
+	    ("MPL Notes"        ?N   "\n\n* %^{Title} %U\n  %i\n  %?\n  %a\n\n"
+	     ,(mpld "notes.org") "MPL Notes")
+	    ("MPL Tasks"        ?T   "* TODO %^{Title} %U\n  %i\n  %?\n  %a"
+	     ,(mpld "tasks.org") "MPL Tasks")
+	    )))
   (tkb-keys ("\C-ckor" #'org-remember)))
 
 (progn
@@ -272,8 +310,8 @@ Interactively, prompts for a numeric string giving the code."
   ;; See Info: (org)Activation.
   ;; The following lines are always needed.  Choose your own keys.
   (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
-  (tkb-keys ("\C-cks" #'org-store-link)
-	    ("\C-cka" #'org-agenda))
+  (tkb-keys ("\C-ckos" #'org-store-link)
+	    ("\C-ckoa" #'org-agenda))
   (global-font-lock-mode 1)			; for all buffers
   (add-hook 'org-mode-hook 'turn-on-font-lock))	; org-mode buffers only
 
@@ -597,6 +635,10 @@ where the \"FILE\" is optional and the \".\" can also be a \",\"."
 	    (b (match-beginning 0))
 	    (e (match-end 0)))
 	(setq s (concat (substring s 0 (1+ b)) (substring s e)))))
+    (while (string-match "\\.-" s)
+      (setq s (concat (substring s 0 (match-beginning 0))
+		      "-"
+		      (substring s (match-end 0)))))
     s))
 
 (defun tkb-insert-rst-section (title char &optional above)
@@ -726,7 +768,12 @@ where the \"FILE\" is optional and the \".\" can also be a \",\"."
 (defun tkb-blog (title tags category date &optional title-prefix)
   "Create a blog entry, prompting for various values and creating the
 appropriate directory structure."
-  (interactive "sTitle: \nsTags: \nsCategory: \nsDate: ")
+  ;;(interactive "sTitle: \nsTags: \nDCategory: \nsDate: ")
+  (interactive (list
+		(read-string "Title: ")
+		(read-string "Tags: ")
+		(read-directory-name "Category: " "~/myblog/entries/")
+		(read-string "Date: ")))
   (let* ((date-time (if (listp date)
 			date
 		      (if (empty-string-p date)
@@ -734,11 +781,10 @@ appropriate directory structure."
 			(tkb-parse-iso-date date))))
 	 (no-spaces (tkb-cleanup-title title))
 	 (filename (increment-filename
-		    (concat "~/myblog/entries/" (if (zerop (length category))
-						   ""
-						 (concat category "/"))
+		    (concat (file-name-as-directory
+			     (expand-file-name category "~/myblog/entries/"))
 			   no-spaces)
-		    ".rst" nil))
+		    ".rst-pending" nil))
 	 (dirname (file-name-directory filename))
 	 (published (format-time-string "#published %Y-%m-%d %H:%M:%S"
 					date-time)))
@@ -1063,7 +1109,7 @@ over 40 is morbidly obese."
   (save-excursion
     (while (re-search-forward "[ \t]+$" nil t)
       (replace-match "" nil nil))))
-(tkb-keys ("\C-cT" 'tkb-trim-buffer))
+;;(tkb-keys ("\C-cT" 'tkb-trim-buffer))
 
 (defun tkb-trim-region ()
   (interactive)
@@ -1262,7 +1308,9 @@ Not under a window system, so you can't ispell the selection")))))
   (add-hook 'message-send-hook 'check-attachments-attached))
 
 
-(when-directory (d ["/sw/versions/slime/cvs/slime/" "/sw/src/slime"])
+(when-directory (d [
+		    ;; "/sw/versions/slime/cvs/slime/" "/sw/src/slime"
+		    ])
   (add-to-list 'load-path d)
   (require 'slime)
   (tkb-keys
@@ -1272,12 +1320,18 @@ Not under a window system, so you can't ispell the selection")))))
 	`(,(when-exec-found (f ["/sw/versions/cygwin/clisp/2.47/bin/clisp.exe"
 				"c:/PROGRA~1/clisp-2.47/clisp.exe"
 				"c:/sw/versions/clisp-bin/clisp-2.41/clisp.exe"
+				"/sw/versions/32bits/clisp/cvs/bin/clisp"
 				"clisp"])
 	     (list 'clisp (list f)))
 	  ,(when-exec-found (f ["c:/Program Files/Steel Bank Common Lisp/1.0.29/sbcl.exe"
+				"/sw/versions/m64/sbcl/cvs/bin/sbcl"
 				"sbcl"])
 	     (setq inferior-lisp-program f)
 	     (list 'sbcl (list f)))
+	  ,(when-exec-found (f ["/sw/src/ccl/scripts/ccl.tkb"])
+	     (list 'ccl (list f)))
+	  ,(when-exec-found (f ["/sw/versions/m64/ecl/cvs/bin/ecl"])
+	     (list 'ecl (list f)))
 	  ,(when-exec-found (f ["lisp"])
 	     (list 'cmucl (list f)))))
   ;; add '(slime-repl) or '(slime-fancy)
@@ -1544,7 +1598,9 @@ Goes backward if ARG is negative; error if CHAR not found."
   (setq auto-mode-alist
 	(append '(("\\.rst$" . rst-mode)
 		  ("\\.rsti$" . rst-mode) ; include files.
-		  ("\\.rest$" . rst-mode)) auto-mode-alist))
+		  ("\\.rest$" . rst-mode)
+		  ("\\.rst-pending$" . rst-mode) ;for my blog.
+		  ) auto-mode-alist))
   (autoload 'rst-repeat-last-character "rst")
   (tkb-keys ("\C-cR" 'rst-repeat-last-character))
   (when nil			  ; replaced by tkb-smart-unicode-mode
@@ -1554,7 +1610,7 @@ Goes backward if ARG is negative; error if CHAR not found."
 	 (define-key rst-mode-map "-" #'unicode-smart-hyphen)
 	 (define-key rst-mode-map "\"" #'unicode-smart-double-quote))))
   
-(defun tkb-rst-mode-hook ()
+  (defun tkb-rst-mode-hook ()
     (interactive)
     (unless window-system
       ;; rst-mode fontlock is unreadable with the colors screen uses.
@@ -1564,29 +1620,40 @@ Goes backward if ARG is negative; error if CHAR not found."
 	    font-lock-support-mode nil)
       (make-local-variable 'font-lock-mode)
       (font-lock-mode -1))
-    (message "tkb-rst-mode-hook ran; font-lock-mode: %S" font-lock-mode)
+    ;;(message "tkb-rst-mode-hook ran; font-lock-mode: %S" font-lock-mode)
     (tkb-smart-unicode-mode)
     (flyspell-mode 1)
     (cond
-     ((string-match ".*/myblog/entries/.*\\.\\(rst\\|rsti\\)$" buffer-file-name)
+     ((string-match "status-.+\\.rst$" buffer-file-name)
+      ;; Don't set compile-command.
+      nil)
+     ((string-match ".*/myblog/entries/.*\\.\\(rst\\|rsti\\)\\(-pending\\)?$" buffer-file-name)
+      (message "tkb-rst-mode-hook: matched myblog")
       (set (make-local-variable 'compile-command)
 	   (concat "pybloxrst "
 		   (file-name-nondirectory buffer-file-name)
 		   " >~/tmp/x.html"
-		   (if (memq system-type '(ms-dos windows-nt cygwin))
-		       " && shell2 ~/tmp/x.html"
-		     ""))))
+		   (cond ((memq system-type '(ms-dos windows-nt cygwin))
+			  " && shell2 ~/tmp/x.html")
+			 ((memq system-type '(darwin))
+			  " && open ~/tmp/x.html")
+			 (t "")))))
      (t
-      (let ((pdf-name (concat
-		       (file-name-nondirectory
-			(file-name-sans-extension buffer-file-name))
-		       ".pdf")))
+      (message "didn't match myblog")
+      (let* ((rst-name (file-name-nondirectory buffer-file-name))
+	     (ltx-name (concat (file-name-sans-extension rst-name) ".ltx"))
+	     (pdf-name (concat (file-name-sans-extension rst-name) ".pdf")))
 	(set (make-local-variable 'compile-command)
-	     (concat "make " pdf-name
-		     (if (memq system-type '(ms-dos windows-nt cygwin))
-			 (concat " && shell2 " pdf-name)
-		       "")))))
-    (add-hook 'before-save-hook 'time-stamp nil t)))
+	     (concat "make " pdf-name ; " && make -W " ltx-name " " pdf-name 
+		     (case system-type
+		       ((ms-dos windows-nt cygwin)
+			" && shell2 ")
+		       ((darwin)
+			" && open ")
+		       (t
+			" && o "))
+		     pdf-name)))))
+    (add-hook 'before-save-hook 'time-stamp nil t))
   (add-hook 'rst-mode-hook 'tkb-rst-mode-hook))
 
 (fset 'tkb-mtnet-spam
@@ -1909,6 +1976,57 @@ switch problems."
 			 `(,quote-string ,value)
 		       `,value))
 	(current-buffer))))
+
+
+(defalias 'λ #'lambda)
+
+(when-file (f "~/lib/emacs/others/nxhtml/autostart.el")
+  (unless (version< emacs-version "23.4")
+    (load-file f)))
+
+;;; ??? Needs finished; see describe-variable and describe-symbol.
+(defun describe-structure (structure)
+  "Display the full documentation of STRUCTURE (a symbol)."
+  (interactive
+   (let ((v (variable-at-point))
+	 (enable-recursive-minibuffers t)
+	 val)
+     (setq val (completing-read (if (symbolp v)
+				    (format
+				     "Describe structure (default %s): " v)
+				  "Describe variable: ")
+				obarray
+				(lambda (vv)
+                                  (or (get vv 'structure-documentation)
+                                      (and (boundp vv) (not (keywordp vv)))))
+				t nil nil
+				(if (symbolp v) (symbol-name v))))
+     (list (if (equal val "") v (intern val))))))
+
+(load-file "~/lib/emacs/tkb-status-reports.el")
+
+(defun t:get-hostname-from-http ()
+  (interactive)
+  (let* ((s (x-get-selection))
+	 (s* (progn
+	       (string-match "\\(https?://\\|file:///\\)\\([^/]+\\)" s)
+	       (match-string 2 s))))
+    (kill-new s*)))
+(tkb-keys ("\C-ckC" #'t:get-hostname-from-http))
+
+(defun t:get-directory-for-download-from-http ()
+  "Hmmm.  a (non)work(ing) in progress."
+  (interactive)
+  (let* ((s (x-get-selection))
+	 (s1 (progn
+	       (string-match "\\(https?://\\|file:///\\)\\(.+\\)$" s)
+	       (match-string 2 s)))
+	 (s2 (substitute ?- ?/ s1))
+	 (s3 (replace-regexp-in-string "--?" "-" s2))
+	 (s4 (replace-regexp-in-string "-$" ""
+				       (replace-regexp-in-string "^-" "" s3)))) 
+    s3))
+    
 
 (message "End of tkb-experimental.el")
 ;;; end of tkb-experimental.el

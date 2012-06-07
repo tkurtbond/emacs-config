@@ -326,4 +326,8 @@ buffer."
 
 (when-load-file (f "o2-default.el") :load 
   )
+
+(when-load-file (f "graphviz-dot-mode.el")
+  (autoload 'graphviz-dot-mode f nil t)
+  (add-to-list 'auto-mode-alist '("\\.dot\\'" . graphviz-dot-mode)))
 ;;; end of tkb-lang.el

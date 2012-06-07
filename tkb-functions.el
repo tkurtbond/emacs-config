@@ -4,6 +4,17 @@
 ;;; $ProjectHeader: tkbconfig 0.5 Tue, 09 May 2000 20:50:39 -0400 tkb $
 ;;; $Id: tkb-functions.el 1.2 Tue, 09 May 2000 20:50:39 -0400 tkb $
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defun y-or-n-p/timeout (prompt &optional timeout default)
+  "Ask user a \"y or n\" question, but after TIMEOUT seconds return DEFAULT,
+which should be `t' or `nil'.  TIMEOUT defaults to 5 seconds."
+  (interactive)
+  (unless timeout (setq timeout 5.0))
+  (with-timeout (timeout
+		 (message "%s timed out after %f seconds; returning %S"
+			    prompt timeout default)
+		 default)
+    (y-or-n-p prompt)))
+
 (defun empty-string-p (s)
   "Return true if S is empty"
   (zerop (length s)))
@@ -198,9 +209,48 @@ BINDINGS-LIST optionally contains the new bindings (functions)."
   (format-time-string "%a, %e %b %y %T %Z" time t))
 
 (defun trim-end (s)
+  "Delete any whitespace at the end of a string."
   (replace-regexp-in-string "\\( \\|\f\\|\t\\|\n\\)+$" "" s))
 
 (defun trim-start (s)
+  "Delete any whitespace at the start of a string."
   (replace-regexp-in-string "^\\( \\|\f\\|\t\\|\n\\)+" "" s))
+
+(defun trim (s)
+  "Delete any whitespace at the start or end of a string."
+  (trim-start (trim-end s)))
+
+
+(defun t:zap-to-char (arg char)
+  "Kill up to (but not including ARGth) occurrence of CHAR.
+Case is ignored if `case-fold-search' is non-nil in the current buffer.
+Goes backward if ARG is negative; error if CHAR not found."
+  (interactive "p\ncZap to char: ")
+  ;; Avoid "obsolete" warnings for translation-table-for-input.
+  (with-no-warnings
+    (if (char-table-p translation-table-for-input)
+	(setq char (or (aref translation-table-for-input char) char))))
+  (kill-region (point) (progn
+			 (search-forward (char-to-string char) nil nil arg)
+			 (goto-char (if (> arg 0) (1- (point)) (1+ (point))))
+			 (point))))
+(tkb-keys ("\M-Z" #'t:zap-to-char))
+
+(defun tkb-push-env-var (var newval &optional first)
+  (let ((val (getenv var)))
+    (setenv var (if val
+		    (if first
+			(concat newval ":" val)
+		      (concat val ":" newval))
+		  newval))))
+
+
+;;; http://www.emacswiki.org/emacs/UnfillParagraph
+;;; Stefan Monnier <foo at acm.org>. It is the opposite of fill-paragraph    
+(defun unfill-paragraph ()
+  "Takes a multi-line paragraph and makes it into a single line of text."
+  (interactive)
+  (let ((fill-column (point-max)))
+    (fill-paragraph nil)))
 
 ;;; end of tkb-functions.el

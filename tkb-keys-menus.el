@@ -28,12 +28,28 @@
 ;;; Keys
 (define-prefix-command 'tkb-date-map)
 (global-set-key "\C-cd" 'tkb-date-map)
+
 (define-prefix-command 'tkb-log-map)
 (global-set-key "\C-cl" 'tkb-log-map)
+
 (define-prefix-command 'tkb-map)
 (global-set-key "\C-ck" 'tkb-map)	; 'k' for Kurt!
+
+(define-key tkb-map "l" (λ () (interactive) (insert ?λ)))
+(define-key tkb-map "L" (λ () (interactive) (insert ?Λ)))
+(define-key tkb-map " " (λ () (interactive) (insert 160))) ; non-breaking space
+
 (define-prefix-command 'tkb-forms-map)
 (global-set-key "\C-cF" 'tkb-forms-map)
+
+(define-prefix-command 'tkb-indent-map)
+(global-set-key "\C-ci" 'tkb-indent-map)
+
+(define-prefix-command 'tkb-status-map)
+(define-key tkb-map "s" 'tkb-status-map)
+
+(define-prefix-command 'tkb-time-map)
+(global-set-key "\C-cT" 'tkb-time-map)
 
 (global-set-key [f3] 'tkb-start-categorizing-links)
 (global-set-key [f4] 'tkb-categorize-next-link)
@@ -41,10 +57,10 @@
 ;(global-set-key [f6] 'searoom-ins-digest)
 ;(global-set-key [f9] 'browse-url)
 
-(global-set-key "\C-c\C-i" 'indent-to)
 
 (global-set-key "\C-c#" 'query-replace-regexp)
 
+(global-set-key "\C-c\C-i" 'indent-to)
 (global-set-key "\C-ckI" #'(lambda (column)
 			     (interactive "P")
 			     (let ((column (cond ((null column) 40)
@@ -67,8 +83,12 @@
 (global-set-key "\C-cb" 'tkb-mail-bosses)
 (global-set-key "\C-cC" 'compile)
 (global-set-key "\C-cc" 'center-line)
+
 (global-set-key "\C-cdi" 'tkb-insert-iso-date)
+(global-set-key "\C-cdI" #'tkb-kill-iso-date)
 (global-set-key "\C-cdp" 'tkb-insert-date)
+(global-set-key "\C-cdP" #'tkb-kill-date)
+
 (global-set-key "\C-cg" 'goto-line)
 (global-set-key "\C-cFf" 'forms-find-file)
 (global-set-key "\C-cFi" 'tkb-edit-incoming-links)
@@ -80,8 +100,11 @@
 (global-set-key "\C-cf" 'tkb-insert-buffer-filename)
 (global-set-key "\C-ch" 'tkb-reset-isearch-highlight)
 (global-set-key "\C-cI" (function tkb-insert-cut-buffer))
-(global-set-key "\C-ci" 'indent-rigidly)
+(global-set-key "\C-ciR" 'indent-rigidly)
+(global-set-key "\C-cir" 'indent-relative)
+(global-set-key "\C-cit" 'indent-to)
 (global-set-key "\C-ckD" 'describe-char)
+(tkb-keys ("\C-cKG" #'goto-char))
 (global-set-key "\C-ckn" 'tkb-insert-name)
 (global-set-key "\C-cke" 'tkb-insert-e-mail)
 (tkb-keys ("\C-ckE" #'edebug-defun))
@@ -112,5 +135,9 @@
   '(progn
      (global-set-key "\C-clm" #'tkb-personal-log-insert-date-marker)
      (global-set-key "\C-clk" #'tkb-personal-log)))
+
+(eval-after-load "rst"
+  '(define-key rst-mode-map "\C-c "
+     #'(lambda () (interactive) (ucs-insert 160 1 t))))
 
 ;;; end of tkb-keys-menus.el

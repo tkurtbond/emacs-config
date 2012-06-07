@@ -49,32 +49,32 @@ where
 (put 'when-directory 'lisp-indent-function 1)
 (defmacro when-directory (spec &rest body)
   "When a directory in SPEC exists, execute BODY.
-SPEC = dirname
-     | [dirname ...]
-     | (varname dirname)
-     | (varname [dirname ...]) 
-     | (varname (dirname ...))
-where DIRNAME is a string that specifies a directory name and
+SPEC = (DIR-FORM)
+     | (VARNAME DIR-FORM)
+where DIR-NAME is form that is evaluated to produce either a string
+or a list or vector of strings that specify directories, and 
 VARNAME is a symbol to which is bound the directory name found."
-  (declare (debug ([&or symbolp (symbolp form) form] body)))
-  (unless (or (not (listp spec)) (= (length spec) 2))
+  (declare (debug [&or (form) (place form)] body))
+  (unless (and (listp spec)
+	       (or (and (= (length spec) 2)
+			(symbolp (car spec)))
+		   (= (length spec) 1)))
     (error "misformed SPEC in when-directory: %S" spec))
   (let* ((dirvarname (gensym "when-file-dirvarname-"))
-	 (varname (if (listp spec) (car spec) (gensym "when-file-var-")))
-	 (dirvalues (if (listp spec) (cadr spec) spec))
-	 (dirvalues
-	  (cond ((stringp dirvalues)
-		 ;; put literal in vector
-		 (vector dirvalues))
-		((and (consp dirvalues) (eq 'quote (car dirvalues)))
-		 ;; quoted, so leave it alone: it should be a quoted
-		 ;; list of dirnames.
-		 dirvalues)
-		(t
-		 ;; Anything else should be a form to be evaluated,
-		 ;; so put it in a (vector ...) form.
-		 `(vector ,dirvalues)))))
-    `(let* ((,dirvarname ,dirvalues)
+	 (varname (if (= (length spec) 1)
+		      (gensym "when-file-var-")
+		    (car spec)))
+	 (dir-form (if (= (length spec) 1)
+		       (car spec)
+		     (cadr spec))))
+    `(let* ((,dirvarname ,dir-form)
+	    (,dirvarname (cond ((stringp ,dirvarname)
+				(vector ,dirvarname))
+			       ((or (listp ,dirvarname)
+				    (vectorp ,dirvarname))
+				,dirvarname)
+			       (t
+				(error "when-directory: not a string, vector, or list: %S" ,dirvarname))))
 	    (,varname
 	     (some #'(lambda (filename)
 		       (when (file-readable-p filename) filename))
@@ -82,16 +82,16 @@ VARNAME is a symbol to which is bound the directory name found."
        (when ,varname
 	 ,@body))))
   
-(test (when-directory "/home/tkb" 'yes) yes)
-(test (when-directory "/home/tkb/bogus" (list 'yes d)) nil)
-(test (when-directory (d "/home/tkb" nil) t) t error)
-(test (when-directory (d "/home/tkb") d) "/home/tkb")
-(test (when-directory (d '("/home/tkb/bogus" "/home/tkb")) d) "/home/tkb")
-(test (when-directory (d (vector "/home/tkb/bogus" "/home/tkb")) d) "/home/tkb")
-(test (when-directory (d ["/home/tkb/bogus" "/home/tkb"]) d) "/home/tkb")
+(test (when-directory ("~/tkb") 'yes) yes)
+(test (when-directory ("~/tkb/bogus") (list 'yes d)) nil)
+(test (when-directory (d "~/tkb" nil) t) t error)
+(test (when-directory (d "~/tkb") d) "~/tkb")
+(test (when-directory (d '("~/tkb/bogus" "~/tkb")) d) "~/tkb")
+(test (when-directory (d (vector "~/tkb/bogus" "~/tkb")) d) "~/tkb")
+(test (when-directory (d ["~/tkb/bogus" "~/tkb"]) d) "~/tkb")
 (test (when-directory (d) nil) nil error)
-(test (when-directory ["/home/tkb/bogus" "/home/tkb"] t) t)
-(test (when-directory d 'yes) nil void-variable)
+(test (when-directory ["~/tkb/bogus" "~/tkb"] t) nil error)
+(test (when-directory (d unbound-variable) 'yes) nil void-variable)
 
 
 
@@ -314,7 +314,7 @@ be followed by the name of a keymap."
 		  (when (or (not existing-bindings)
 			    ,(if just-warn-p
 				 `(message "Rebinding some keys:\n %s" msg)
-			       `(y-or-n-p (concat "\
+			       `(y-or-n-p/timeout (concat "\
 Some key bindings \
 are already bound:\n" msg "Rebind them? "))))
 		    ,@set-keys)))))))

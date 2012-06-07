@@ -178,7 +178,7 @@ Warning: Call this only after having matched tkb-time-interval-rx."
 display it, and optionally insert it at the beginning of the
 line."
   (interactive)
-  (let (e)
+  (let (e p)
     (if (save-excursion
 	  (end-of-line)
 	  (setq e (point))
@@ -190,11 +190,15 @@ line."
 	  (save-excursion
 	    (beginning-of-line)
 	    (if (search-forward-regexp tkb-duration-with-or-rx e t)
-		(when (y-or-n-p (format "Replace %s with %s? "
-					(match-string 0)
-					formatted-duration))
-
-		  (replace-match formatted-duration t t))
+		(progn 
+		  (setq p (match-beginning 0))
+		  (cond ((string-equal (match-string 0) formatted-duration)
+			 (message "Duration is same, not replacing %s"
+				  (match-string 0)))
+			((y-or-n-p (format "Replace %s with %s? "
+					   (match-string 0)
+					   formatted-duration))
+			 (replace-match formatted-duration t t))))
 	      (when (y-or-n-p (format "Duration: %s; insert? "
 				      formatted-duration))
 		(end-of-line)
@@ -202,7 +206,9 @@ line."
 			  (backward-char)
 			  (looking-at " "))
 		  (insert " "))
-		(insert formatted-duration)))))))))
+		(setq p (point))
+		(insert formatted-duration))))
+	  (when p (goto-char p)))))))
 (tkb-keys ("\C-cj" 'tkb-insert-duration))
   
 

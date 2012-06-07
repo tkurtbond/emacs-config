@@ -61,8 +61,7 @@ if EXPECTED-ERROR is signaled; otherwise report failure."
 	    (princ (format "===%d& signaled UNEXPECTED error: %S\n" err) buf)
 	    nil))
        (princ test-line buf)
-       (with-current-buffer buf (goto-char (point-max)))
-       )))
+       (with-current-buffer buf (goto-char (point-max))))))
 
     (defmacro test (form expected &optional expected-error)
       "Unit testing is turned off; try toggle-test."

@@ -65,21 +65,29 @@ and return the encoded time."
       (encode-time 0 0 0 dom mon year))))
 
 (defun tkb-insert-date (prefix)
+  "Insert a traditional date."
   (interactive "P")
   (let ((time (if prefix (tkb-get-date-from-user) (current-time))))
     (insert (tkb-timestamp nil time))))
+
+(defun tkb-kill-date (prefix)
+  "Copy a traditional date to the kill ring."
+  (interactive "P")
+  (let ((time (if prefix (tkb-get-date-from-user) (current-time))))
+    (kill-new (tkb-timestamp nil time))))
 
 (defun date ()
   (interactive)
   (message "Date: %s" (tkb-timestamp)))
 
 (defun tkb-insert-iso-date (prefix)
-  (interactive "P")
-  "'C-u' prompts for date.
+  "Insert an ISO format date.
+'C-u' prompts for date.
 'C-u -' gets YYYY-MM-DD Weekday
 'C-u NUM' adds or subtracts NUM from the date.
 'C-u - C-u' adds the time.
 "
+  (interactive "P")
   (let ((time (cond
 	       ((null prefix)		;No prefix specified
 		(current-time))
@@ -101,10 +109,41 @@ and return the encoded time."
 			(format-time-string " %H:%M:%S" time) "")))))
 
 
+(defun tkb-kill-iso-date (prefix)
+  "Copy an ISO format date to the kill ring.
+'C-u' prompts for date.
+'C-u -' gets YYYY-MM-DD Weekday
+'C-u NUM' adds or subtracts NUM from the date.
+'C-u - C-u' adds the time.
+"
+  (interactive "P")
+  (let ((time (cond
+	       ((null prefix)		;No prefix specified
+		(current-time))
+	       (prefix
+		;; Condition used to be: 
+		(and (consp prefix)
+		     (>= (car prefix) 0)) ;Just the default prefix
+		(tkb-get-date-from-user))
+	       ((integerp prefix)	;Prefix is delta in days
+		(tkb-get-date-from-user
+		 (time-add (current-time)
+			   (seconds-to-time (* 24 60 60 prefix)))))
+	       (t (current-time)))))
+    (kill-new (format "%s%s"
+		      (format-time-string (if (and (symbolp prefix)
+						   (eq prefix '-))
+					      "%Y-%2m-%2d %A"
+					    "%Y-%2m-%2d") time)
+		      (if (and (consp prefix)
+			       (< (car prefix) 0))
+			  (format-time-string " %H:%M:%S" time) "")))))
+
+
 (defun tkb-insert-timestamp (&optional use-time)
   "Insert a timestamp to my liking."
   (interactive "P")
-  (insert (tkb-timestamp use-time)))t     ;Did have "Last modified: "
+  (insert (tkb-timestamp use-time)))	;Did have "Last modified: "
 
 (defvar tkb-timestamp-format-regexp
   (concat "\\(monday\\|tuesday\\|wednesday\\|"
@@ -137,7 +176,7 @@ If TIME is true, use it for the time to format."
       (hhmm         (format-time-string "%I:%M %p" time))
       (dow          (format-time-string "%A" time))
       (day          (int-to-string (string-to-int
-                         (format-time-string "%e" time))))
+                         (format-time-string "%e" time)))) ;fixme: %-e
       (month   (format-time-string "%B" time))
       (year         (format-time-string "%Y" time))
       (result       (concat dow ", " day " " month " " year))
@@ -164,6 +203,7 @@ If TIME is true, use it for the time to format."
   (aref tkb-month-names (1- number)))
 
 (defun tkb-months ()
+  "Display month numbers and abbreviations in a buffer."
   (interactive)
   (let ((b (get-buffer-create "*tkb months*")))
     (with-current-buffer b
