@@ -151,6 +151,4 @@ form (MONTH DAY YEAR)."
 	  ("\C-cksp" #'tkb-status-report-previous)
 	  ("\C-cksn" (lambda () (interactive) (tkb-status-report-previous -1))))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;- Status Reports
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; end of tkb-status-reports.el

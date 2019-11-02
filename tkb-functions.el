@@ -279,4 +279,8 @@ Goes backward if ARG is negative; error if CHAR not found."
 (global-set-key (kbd "C-c +") 'increment-number-at-point)
 )
 
+(defun tkb-list-properties ()
+  (interactive)
+  (message "%s" (text-properties-at (point))))
+
 ;;; end of tkb-functions.el

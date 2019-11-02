@@ -30,12 +30,12 @@
 
 ;; Lisp
 
-;; (setq open-paren-in-column-0-is-defun-start nil) ; didn't work.
-(defun tkb-beginning-of-defun-function (&optional arg)
-  (interactive)
-  (re-search-backward "^[ \t]*\\s(def"))
-
-(setq beginning-of-defun-function #'tkb-beginning-of-defun-function)
+(when nil 
+  ;; (setq open-paren-in-column-0-is-defun-start nil) ; didn't work.
+  (defun tkb-beginning-of-defun-function (&optional arg)
+    (interactive)
+    (re-search-backward "^[ \t]*\\s(def"))
+  (setq beginning-of-defun-function #'tkb-beginning-of-defun-function))
 
 ;; I found these useful when working with the meta parsing technique in
 ;; Common Lisp.

@@ -130,7 +130,6 @@
 (load-library "tkb-lang.el")
 (load-library "tkb-links.el")
 (load-library "tkb-mail.el")
-(load-library "tkb-obsolete.el")
 (load-library "tkb-text.el")
 (load-library "tkb-vc.el")
 (load-library "tkb-unicode.el")

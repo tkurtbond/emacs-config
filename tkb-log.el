@@ -1,3 +1,0 @@
-(defun tkb-log ()
-  (interactive)
-  )

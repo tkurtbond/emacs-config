@@ -2179,7 +2179,7 @@ switch problems."
     (path-set path env-variable)))
 
 (defun path-append (directories &optional env-variable)
-    (path-set (append (path-get env-variable) directories) env-variable))
+  (path-set (append (path-get env-variable) directories) env-variable))
 
 (when nil 				;not needed now porst has texlive 2012
   (path-prepend '("/usr/local/texlive/2011/bin/x86_64-darwin"

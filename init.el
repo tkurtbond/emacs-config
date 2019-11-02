@@ -78,27 +78,15 @@
 	(error "%s: wl-icon-directory is wrong: %S " #$ wl-icon-directory)))
     d))
 
-(when nil
-  (when-load-file (f "wl")
-    :load 
-    (load "~/lib/emacs/tkb/tkb-wl")))
-
-(when nil
-  (when-load-dir (d "mew")
-    (message "Found mew: %s" d)
-    (load "~/lib/emacs/tkb/tkb-mew")))
-
-(when nil
-  (load "~/lib/emacs/tkb/tkb-mh-e.el"))
-
 (when nil 
   (when (locate-file "w3m" load-path '(".el" ".el.gz"))
     (load "~/lib/emacs/tkb/tkb-w3m.el")))
 (load "~/lib/emacs/tkb/tkb-fortune.el")
 (when nil (load "~/lib/emacs/tkb/tkb-timeclock.el"))
 
-(when window-system (add-hook 'after-init-hook
-			      (lambda () (load "~/lib/emacs/tkb/tkb-gui-setup"))))
+(when window-system
+  (add-hook 'after-init-hook
+	    (lambda () (load "~/lib/emacs/tkb/tkb-gui-setup"))))
 
 (unless (version< emacs-version "24.1.1")
   (require 'cl)

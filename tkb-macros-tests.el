@@ -1,4 +1,4 @@
-;;; Testing when-exec-found
+;;; Testing debugging of when-exec-found
 
 (defun x ()
   (interactive)
