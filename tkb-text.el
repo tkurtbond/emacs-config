@@ -37,6 +37,7 @@ since the end of line is very important in [gtn]roff."
             (make-local-variable 'auto-fill-function)
             (setq auto-fill-function (function nroff-do-auto-fill))
             (electric-nroff-mode)
+	    (flyspell-mode)
             (push (cons ".(F" ".)F") nroff-brace-table)
             (push (cons ".Bn" ".En") nroff-brace-table))))
 
@@ -79,6 +80,9 @@ Puts a full-stop before comments on a line by themselves."
      (skip-chars-backward " \t")
      (max (if (bolp) 0 (1+ (current-column)))
           comment-column)))))
+
+;; ConTeXt
+(push '("\\.ctx\\'" . tex-mode) auto-mode-alist)
 
 
 ;; SGML and friends

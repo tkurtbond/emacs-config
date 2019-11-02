@@ -30,6 +30,13 @@
 
 ;; Lisp
 
+;; (setq open-paren-in-column-0-is-defun-start nil) ; didn't work.
+(defun tkb-beginning-of-defun-function (&optional arg)
+  (interactive)
+  (re-search-backward "^[ \t]*\\s(def"))
+
+(setq beginning-of-defun-function #'tkb-beginning-of-defun-function)
+
 ;; I found these useful when working with the meta parsing technique in
 ;; Common Lisp.
 (defun tkb-syn ()
@@ -39,12 +46,73 @@
   (modify-syntax-entry ?\{ "(}")
   (modify-syntax-entry ?\} "){"))
 
+(push '("\\.cl\\'" . lisp-mode) auto-mode-alist)
+
 (defadvice lisp-mode (after tkb-lisp-mode-adv first activate)
   (tkb-syn))
 
+
+(when-file (fn "~/quicklisp/slime-helper.el") (load fn))
+;; Replace "sbcl" with the path to your implementation
+;;(when-exec-found (fn "/sw/versions/m64/sbcl/1.0.51/bin/sbcl")
+;;  (setq inferior-lisp-program fn))
+
+(when nil				;not installed right now: 2015-10-16
+  (when-directory (d "/opt/local/share/doc/lisp/HyperSpec-7-0/HyperSpec/")
+    (setq common-lisp-hyperspec-root (concat "file://" d))))
+
 (when nil
-  (progn (require 'slime)
-	 (slime-setup)))
+  (when-directory (d "~/.roswell")
+    (load (expand-file-name "~/.roswell/helper.el"))
+    ;;(setq inferior-lisp-program "ros -Q run")
+    ))
+
+
+(progn
+  ;; see also the code in tkb-experimental that would set 
+  ;; slime-lisp-implementations if it wasn't commented out.
+  (tkb-keys
+    ("\C-c;" 'slime-insert-balanced-comments)
+    ("\C-c\M-;" 'slime-remove-balanced-comments))
+
+  ;; Set slime-lisp-implementations and use `C-u - M-x slime' to get slime
+  ;; to prompt you for one of the found implemenations by name!
+  (setq slime-lisp-implementations
+	`(,(when-exec-found (f ["sbcl"])
+	     (message "Found an SBCL:  %s" f)
+	     (setq inferior-lisp-program f) ;I guess this makes it the default
+	     (let ((dir (file-name-directory f)))
+	       (when dir
+		 (setq dir (file-name-directory dir))
+		 (let ((sbcl-info (expand-file-name "share/info/" dir)))
+		   (push sbcl-info Info-default-directory-list))))
+	     (list 'sbcl (list f)))
+	  ,(when-exec-found (f ["clisp"])
+	     (message "Found a CLISP:  %s" f)
+	     (list 'clisp (list f)))
+	  ,(when-exec-found (f ["ccl64"])
+	     (message "Found a CCL:  %s" f)
+	     (list 'ccl (list f)))
+	  ,(when-exec-found (f ["ecl"])
+	     (message "Found an ECL:  %s" f)
+	     (list 'ecl (list f)))
+	  ,(when-exec-found (f ["abcl"])
+	     (message "Found an ABCL:  %s" f)
+	     (list 'abcl (list f)))
+	  ,(when-exec-found (f ["lisp"])
+	     (message "Found an CMUCL:  %s" f)
+	     (list 'cmucl (list f)))
+	  ,(when-exec-found (f ["ros"])
+	     (message "Found a ROSWELL: %s" f)
+	     (list 'roswell (list f "-Q run")))
+	  ))
+  ;; Get rid of the NILs from missing implementations
+  (setq slime-lisp-implementations
+	(loop for e in slime-lisp-implementations
+	      when (not (null e)) collect e))
+  (loop for (name running) in slime-lisp-implementations
+	do (progn (when name (princ name) (princ " ")))
+	finally do (terpri)))
 
 
 ;; Caml
@@ -98,6 +166,9 @@
 (put 'c/cwd 'scheme-indent-function 1)
 (put 'sensortable 'scheme-indent-function 1)
 (put 'module 'scheme-indent-function 2)
+(put 'receive 'scheme-indent-function 2)
+(put 'condition-case 'scheme-indent-function 1)
+(put 'receive 'scheme-indent-function 1)
 
 ;; For scheme code from 3imp
 (put 'rec 'scheme-indent-function 1)
@@ -111,9 +182,14 @@
 
 ;; For Unroff code
 (put 'with-output-to-stream 'scheme-indent-function 1)
+
 ;; For MzScheme
 (put 'let-values 'scheme-indent-function 'scheme-let-indent)
 (put 'with-handlers 'scheme-indent-function 1)
+
+;; For Chicken Scheme
+(put 'do-list 'scheme-indent-function 2)
+(put 'match-let 'scheme-indent-function 1)
 
 ;; For Emacs lisp
 (put 'eval-after-load 'lisp-indent-function 1)
@@ -124,8 +200,8 @@
 (put 'do 'lisp-indent-function 2)
 (put 'block 'lisp-indent-function 1)
 (put 'with-open-file 'lisp-indent-function 1)
-
 (put 'and-let* 'lisp-indent-function 1)
+(put 'when-in-hash 'lisp-indent-function 1)
 
 ;; For EuLisp
 (put 'dynamic-let 'lisp-indent-function 1)
@@ -217,12 +293,6 @@
 buffer."
   t)
 
-;; Newer emacen have python.el.
-;;(autoload 'python "python-mode"
-;;  "Mode for editing and running python." t)
-
-;(autoload 'lout-mode "lout"
-;  "Mode for editing Lout (a typesetting language) source.")
 
 (autoload 'lout-mode "lout-mode"
   "Mode for editing Lout (a typesetting language) source.")
@@ -272,7 +342,7 @@ buffer."
 (defun tkb-gupta-outline-level ()
   (interactive)
   (looking-at "\\.head[ \t]+\\([0-9]+\\)")
-  (1+ (string-to-int (buffer-substring (match-beginning 1) (match-end 1)))))
+  (1+ (string-to-number (buffer-substring (match-beginning 1) (match-end 1)))))
 
 
 ;; Mostly of historical interest, except when I get dragged back into
@@ -330,4 +400,6 @@ buffer."
 (when-load-file (f "graphviz-dot-mode.el")
   (autoload 'graphviz-dot-mode f nil t)
   (add-to-list 'auto-mode-alist '("\\.dot\\'" . graphviz-dot-mode)))
+
+(add-hook 'oberon-2-mode-hook (λ () (define-key o2-mode-map "\M-c"  nil)))
 ;;; end of tkb-lang.el

@@ -45,7 +45,7 @@ or at the column specified by the prefix arg."
        (left (assq 'left params))
        (height (assq 'height params))
        (width (assq 'width params)))
-    (message "%s %s %s %s" top left height width)))
+    (message "(%s,%s) %sx%s" top left height width)))
 
 
 (defun tkb-insert-buffer-filename (prefix)
@@ -252,5 +252,31 @@ Goes backward if ARG is negative; error if CHAR not found."
   (interactive)
   (let ((fill-column (point-max)))
     (fill-paragraph nil)))
+
+
+
+(progn 
+;;; http://www.danielehrman.com/blog/2014/5/25/11-must-haves-for-every-power-programmer
+(defun save-macro (name)                  
+  "save a macro. Take a name as argument
+     and save the last defined macro under 
+     this name at the end of your .emacs"
+  (interactive "SName of the macro :")  ; ask for the name of the macro    
+  (name-last-kbd-macro name)            ; use this name for the macro    
+  (find-file user-init-file)            ; open ~/.emacs or other user init file 
+  (goto-char (point-max))               ; go to the end of the .emacs
+  (newline)                             ; insert a newline
+  (insert-kbd-macro name)               ; copy the macro 
+  (newline)                             ; insert a newline
+  (switch-to-buffer nil))               ; return to the initial buffer
+
+(defun increment-number-at-point ()
+  (interactive)
+  (skip-chars-backward "0123456789")
+  (or (looking-at "[0123456789]+")
+      (error "No number at point"))
+  (replace-match (number-to-string (1+ (string-to-number (match-string 0))))))
+(global-set-key (kbd "C-c +") 'increment-number-at-point)
+)
 
 ;;; end of tkb-functions.el

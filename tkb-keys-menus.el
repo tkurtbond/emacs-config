@@ -38,6 +38,14 @@
 (define-key tkb-map "l" (λ () (interactive) (insert ?λ)))
 (define-key tkb-map "L" (λ () (interactive) (insert ?Λ)))
 (define-key tkb-map " " (λ () (interactive) (insert 160))) ; non-breaking space
+(define-key tkb-map "b" #'browse-url-at-point)
+
+(define-prefix-command 'tkb-matching-map)
+(global-set-key "\C-ckm" 'tkb-matching-map)
+(define-key tkb-matching-map "q" [?“])
+(define-key tkb-matching-map "Q" [?”])
+(define-key tkb-matching-map "s" [?‘])
+(define-key tkb-matching-map "S" [?’])
 
 (define-prefix-command 'tkb-forms-map)
 (global-set-key "\C-cF" 'tkb-forms-map)
@@ -88,7 +96,9 @@
 (global-set-key "\C-cdI" #'tkb-kill-iso-date)
 (global-set-key "\C-cdp" 'tkb-insert-date)
 (global-set-key "\C-cdP" #'tkb-kill-date)
+(global-set-key "\C-cdt" #'tkb-insert-time)
 
+(global-set-key (kbd "C-c DEL") 'backward-delete-char-untabify)
 (global-set-key "\C-cg" 'goto-line)
 (global-set-key "\C-cFf" 'forms-find-file)
 (global-set-key "\C-cFi" 'tkb-edit-incoming-links)
@@ -129,7 +139,7 @@
 
 ;(define-key ctl-x-4-map "l" 'add-logbook-entry-other-window)
 
-;; See /home/tkb/lib/emacs/cpb/personal-log.el
+;; See /home/tkb/lib/emacs/tkb/cpb/personal-log.el
 
 (eval-after-load "personal-log"
   '(progn
@@ -139,5 +149,9 @@
 (eval-after-load "rst"
   '(define-key rst-mode-map "\C-c "
      #'(lambda () (interactive) (ucs-insert 160 1 t))))
+
+(eval-after-load "dired"
+  '(progn
+     (define-key dired-mode-map (kbd "<f11>") 'dired-view-file)))
 
 ;;; end of tkb-keys-menus.el

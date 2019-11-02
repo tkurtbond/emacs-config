@@ -8,7 +8,7 @@
 ;; Display; see Emacs > Display > European Display
 (when nil
   ;; Not with LANG=en_US.UTF-8
-  (cond ((<= (string-to-int (car (split-string emacs-version "\\."))) 21)
+  (cond ((<= (string-to-number (car (split-string emacs-version "\\."))) 21)
 	 (standard-display-european 1)
 	 (unless tkb-xemacs-p
 	   (set-language-environment "Latin-1")))

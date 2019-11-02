@@ -5,21 +5,22 @@
 ;;; $Id$
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(setq mail-host-address "unwind-protect.org")
+(when nil 
+  (setq mail-host-address "unwind-protect.org"))
 
 (when nil ;; ??? FIXME: I'm doing this in custom.el and below
-;; MH expects things under ~/Mail while feedmail.el expects things under 
-;; ~/mail and since I sync to MSWoe and its' case insenstitivity
-;; this is problematical.
-(setq feedmail-queue-directory
-      (expand-file-name "~/Mail/feedmail/q"))
-(unless (file-directory-p feedmail-queue-directory)
-  (make-directory feedmail-queue-directory t))
-(setq feedmail-queue-draft-directory
-      (expand-file-name "~/Mail/feedmail/drafts"))
-(unless (file-directory-p feedmail-queue-draft-directory)
-  (make-directory feedmail-queue-draft-directory t))
-)
+  ;; MH expects things under ~/Mail while feedmail.el expects things under 
+  ;; ~/mail and since I sync to MSWoe and its' case insenstitivity
+  ;; this is problematical.
+  (setq feedmail-queue-directory
+	(expand-file-name "~/Mail/feedmail/q"))
+  (unless (file-directory-p feedmail-queue-directory)
+    (make-directory feedmail-queue-directory t))
+  (setq feedmail-queue-draft-directory
+	(expand-file-name "~/Mail/feedmail/drafts"))
+  (unless (file-directory-p feedmail-queue-draft-directory)
+    (make-directory feedmail-queue-draft-directory t))
+  )
 
 ;; Mailcrypt
 (when nil
@@ -98,114 +99,117 @@
     (setq smtpmail-debug-info t)
     (load-library "smtpmail")))
 
-(defun tkb-set-mail (host smtp-host &optional user port)
-  (if (not user) (setq user "tkb"))
-  (if (not port) (setq port 25))
-  ;;broken: (setq user-mail-address (concat "T. Kurt Bond <" user "@" host ">"))
-  (setq user-mail-address (concat user "@" host))
-  ;; I used to think you had to set the following before loading smtpmail.
-  ;; Now I'm not sure.
-  (setq smtpmail-default-smtp-server smtp-host)
-  ;;(setq mail-default-headers (concat "BCC: " user-mail-address "\n"))
-  (setq mail-self-blind t)
-  (setq message-default-mail-headers
-	(concat "Bcc: " user-mail-address
-		;; always copy mail to tkb@unwind-protect.org.
-		(if (string-equal user-mail-address "tkb@unwind-protect.org")
-		    ""
-		  "\nBcc: tkb@unwind-protect.org")))
-  (setq mail-signature (concat "\n-- \nT. Kurt Bond, " user-mail-address "\n"))
-  (setq message-signature (concat "T. Kurt Bond, " user-mail-address "\n"))
-  (setq smtpmail-smtp-server smtp-host)
-  (setq smtpmail-local-domain nil)
-  (setq smtpmail-smtp-service port)
-  (cond				      ; Don't try to use sendmail (:-)
-   (nil				      ; using smtpmail
-    (setq send-mail-function 'smtpmail-send-it)
-    (setq message-send-mail-function 'smtpmail-send-it))
-   (t					; using feedmail
-    (setq send-mail-function 'feedmail-send-it)
-    (setq message-send-mail-function 'feedmail-send-it)))
-  (setq smtpmail-debug-info t) ; I like to see the SMTP messages flash by
-  (require 'smtpmail))
+(when nil
 
-(defun tkb-mail-citynet ()
-  (interactive)
-  (tkb-set-mail "citynet.net" "smtp.citynet.net" "tkb"))
+  (defun tkb-set-mail (host smtp-host &optional user port)
+    (if (not user) (setq user "tkb"))
+    (if (not port) (setq port 25))
+    ;;broken: (setq user-mail-address (concat "T. Kurt Bond <" user "@" host ">"))
+    (setq user-mail-address (concat user "@" host))
+    ;; I used to think you had to set the following before loading smtpmail.
+    ;; Now I'm not sure.
+    (setq smtpmail-default-smtp-server smtp-host)
+    ;;(setq mail-default-headers (concat "BCC: " user-mail-address "\n"))
+    (setq mail-self-blind t)
+    (setq message-default-mail-headers
+	  (concat "Bcc: " user-mail-address
+		  ;; always copy mail to tkb@unwind-protect.org.
+		  (if (string-equal user-mail-address "tkb@unwind-protect.org")
+		      ""
+		    "\nBcc: tkb@unwind-protect.org")))
+    (setq mail-signature (concat "\n-- \nT. Kurt Bond, " user-mail-address "\n"))
+    (setq message-signature (concat "T. Kurt Bond, " user-mail-address "\n"))
+    (setq smtpmail-smtp-server smtp-host)
+    (setq smtpmail-local-domain nil)
+    (setq smtpmail-smtp-service port)
+    (cond			      ; Don't try to use sendmail (:-)
+     (nil			      ; using smtpmail
+      (setq send-mail-function 'smtpmail-send-it)
+      (setq message-send-mail-function 'smtpmail-send-it))
+     (t					; using feedmail
+      (setq send-mail-function 'feedmail-send-it)
+      (setq message-send-mail-function 'feedmail-send-it)))
+    (setq smtpmail-debug-info t) ; I like to see the SMTP messages flash by
+    (require 'smtpmail))
 
-(defun tkb-mail-mtnet ()
-  (interactive)
-  (tkb-set-mail "access.mountain.net" "smtp.mountain.net"))
+  (defun tkb-mail-citynet ()
+    (interactive)
+    (tkb-set-mail "citynet.net" "smtp.citynet.net" "tkb"))
 
-;; Obsolete.
-(defun tkb-mail-mtnet2 ()
-  (interactive)
-  (tkb-set-mail "mtnet2.wvnet.edu" "tkb"))
+  (defun tkb-mail-mtnet ()
+    (interactive)
+    (tkb-set-mail "access.mountain.net" "smtp.mountain.net"))
 
-(defun tkb-mail-wvlink ()
-  (interactive)
-  (tkb-set-mail "wvlink.com" "pop.mountain.net" "Kurt_Bond"))
+  ;; Obsolete.
+  (defun tkb-mail-mtnet2 ()
+    (interactive)
+    (tkb-set-mail "mtnet2.wvnet.edu" "tkb"))
 
-(defun tkb-mail-mpl ()
-  "Send mail  as Kurt_Bond@mpl.com via ssh to unwind-protect.org."
-  (interactive)
-  (tkb-set-mail "mpl.com" "localhost" "Kurt_Bond" 6005)
-  (message "Remember: ssh -L 6005:localhost:25 tkb@unwind-protect.org"))
+  (defun tkb-mail-wvlink ()
+    (interactive)
+    (tkb-set-mail "wvlink.com" "pop.mountain.net" "Kurt_Bond"))
 
-(defun tkb-mail-thor ()
-  "Send mail  as Kurt_Bond@mpl.com via ssh to thor.mpl.com."
-  (interactive)
-  (tkb-set-mail "mpl.com" "localhost" "Kurt_Bond" 6005)
-  (message "Remember: ssh -L 6005:localhost:25 tkb@thor.mpl.com"))
+  (defun tkb-mail-mpl ()
+    "Send mail  as Kurt_Bond@mpl.com via ssh to unwind-protect.org."
+    (interactive)
+    (tkb-set-mail "mpl.com" "localhost" "Kurt_Bond" 6005)
+    (message "Remember: ssh -L 6005:localhost:25 tkb@unwind-protect.org"))
 
-(defun tkb-mail-tkb ()
-  (interactive)
-  (tkb-set-mail 
-   "unwind-protect.org"
-   tkb-localhost			; was "tkb.mpl.com"
-   "tkb"))
+  (defun tkb-mail-thor ()
+    "Send mail  as Kurt_Bond@mpl.com via ssh to thor.mpl.com."
+    (interactive)
+    (tkb-set-mail "mpl.com" "localhost" "Kurt_Bond" 6005)
+    (message "Remember: ssh -L 6005:localhost:25 tkb@thor.mpl.com"))
 
-(defun tkb-mail-localhost ()
-  (interactive)
-  (tkb-set-mail 
-   "unwind-protect.org"
-   "localhost"			; was "tkb.mpl.com"
-   "tkb"))
+  (defun tkb-mail-tkb ()
+    (interactive)
+    (tkb-set-mail 
+     "unwind-protect.org"
+     tkb-localhost			; was "tkb.mpl.com"
+     "tkb"))
 
-(defun tkb-mail-ssh ()
-  (interactive)
-  (tkb-set-mail "unwind-protect.org" "localhost" "tkb" 6005)
-  (message "Remember: ssh -L 6005:localhost:25 tkb@unwind-protect.org"))
+  (defun tkb-mail-localhost ()
+    (interactive)
+    (tkb-set-mail 
+     "unwind-protect.org"
+     "localhost"			; was "tkb.mpl.com"
+     "tkb"))
 
-(defun tkb-mail-cpb ()
-  (interactive)
-  (tkb-set-mail "inforesrch.com" "unwind-protect" "kbond"))
+  (defun tkb-mail-ssh ()
+    (interactive)
+    (tkb-set-mail "unwind-protect.org" "localhost" "tkb" 6005)
+    (message "Remember: ssh -L 6005:localhost:25 tkb@unwind-protect.org"))
 
-;; What about mplvax?
-(setq tkb-localhost (or (getenv "TKB_LOCALHOST") (system-name)
-			"localhost"))
+  (defun tkb-mail-cpb ()
+    (interactive)
+    (tkb-set-mail "inforesrch.com" "unwind-protect" "kbond"))
 
-(defun tkb-add-reply-to-tkb ()
-  (mail-reply-to)
-  (insert "tkb@unwind-protect.org")
-  (mail-to))
+  ;; What about mplvax?
+  (setq tkb-localhost (or (getenv "TKB_LOCALHOST") (system-name)
+			  "localhost"))
 
-(cond ((or (string-equal tkb-localhost "tkb.mpl.com")
-	   (string-equal tkb-localhost "ns1.mpl.com")
-	   (string-equal tkb-localhost "erekose.mpl.com"))
-       ;; At one point I thought I'd not not actually use feedmail and
-       ;; smtpmail on tkb.mpl.com, but that messes up BCC and signature.
-       (tkb-mail-tkb))
-      ((or (string-match "corum" tkb-localhost)
-	   (eq system-type 'darwin))
-       (tkb-mail-ssh)
-       (if (= 6005 smtpmail-smtp-service)
-	   (add-hook 'mail-setup-hook 'tkb-add-reply-to-tkb)))
-      (t
-       (tkb-mail-mpl)))
+  (defun tkb-add-reply-to-tkb ()
+    (mail-reply-to)
+    (insert "tkb@unwind-protect.org")
+    (mail-to))
+
+  (cond ((or (string-equal tkb-localhost "tkb.mpl.com")
+	     (string-equal tkb-localhost "ns1.mpl.com")
+	     (string-equal tkb-localhost "erekose.mpl.com"))
+	 ;; At one point I thought I'd not not actually use feedmail and
+	 ;; smtpmail on tkb.mpl.com, but that messes up BCC and signature.
+	 (tkb-mail-tkb))
+	((or (string-match "corum" tkb-localhost)
+	     (eq system-type 'darwin))
+	 (tkb-mail-ssh)
+	 (if (= 6005 smtpmail-smtp-service)
+	     (add-hook 'mail-setup-hook 'tkb-add-reply-to-tkb)))
+	(t
+	 (tkb-mail-mpl)))
+  )
 
 
-(when t
+(when nil
   ;; Switching to always using feedmail: 2006/02/13
   (not (or (string-equal tkb-localhost "tkb.mpl.com")
 	   (string-equal tkb-localhost "unwind-protect.org")
@@ -287,20 +291,22 @@
           (mail-to)))))
   (add-hook 'mail-setup-hook (function tkb-mail-setup-hook)))
 
-(add-hook 'mail-mode-hook (function
+(when nil
+  ;; This appears obsolete, since message-mode is now the default.
+  (add-hook 'mail-mode-hook (function
                   (lambda ()
                     (setq paragraph-seperate
                        (concat paragraph-separate "\\|^--"))
                     (setq paragraph-start
                        (concat paragraph-start "\\|^--"))
-                    (auto-fill-mode))))
+                    (auto-fill-mode)))))
 
 ;; Rmail
 
 ;; Switched to VM, so only use that.
 (unless tkb-xemacs-p
   (defadvice rmail (before tkb-no-rmail activate)
-    (when (interactive-p)
+    (when (not (or executing-kbd-macro noninteractive))
       (error "You don't use rmail any more.")))
   (when nil 
     (fset 'tkb-orig-rmail (symbol-function 'rmail))

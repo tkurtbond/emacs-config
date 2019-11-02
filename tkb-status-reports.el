@@ -31,7 +31,7 @@ templates")
     (insert " — ")	   ;format-time-string doesnt understand utf-8
     (insert (format-time-string "%A, %-e %B %Y" time))
     (end-of-line 2)
-    (rst-repeat-last-character)))
+    (rst-repeat-last-character nil)))
 
 (push `("status-.+\\.rst$" . [,tkb-status-report-template
 			      tkb-auto-update-status-report-template])
@@ -71,7 +71,15 @@ to emacs time (as from `current-time')"
 				     tkb-status-report-directory)))
     filename))
 
+(when nil
+  (defun tkb-status-report-filename (time)
+    (let* ((iso (format-time-string "%Y/%2m/status-%Y-%2m-%2d.rst" time))
+	   (filename (expand-file-name iso
+				       tkb-status-report-directory)))
+      filename)))
+
 (defun tkb-status-report-find-file (time)
+  (interactive (list (tkb-parse-iso-date (read-string "ISO Date: "))))
   (find-file (tkb-status-report-filename time)))
 
 (defun tkb-status-report-today (prefix)
@@ -79,6 +87,15 @@ to emacs time (as from `current-time')"
   (let* ((now (cond ((consp prefix) (tkb-get-date-from-user))
 		    (t (current-time)))))
     (tkb-status-report-find-file now)))
+
+(defun tkb-status-report-insert-interval ()
+  (interactive)
+  (call-interactively #'tkb-status-report-today)
+  (goto-char (point-min))
+  (search-forward ".. \n   (")
+  (up-list)
+  (backward-char)
+  (t:insert-interval))
 
 (defun* ci2g (&optional time)
   (let ((year  (s2n (format-time-string "%Y" time)))
@@ -129,7 +146,8 @@ form (MONTH DAY YEAR)."
   (tkb-status-report-find-file (tkb-status-report-find-previous-date n)))
 
 
-(tkb-keys ("\C-ckst" #'tkb-status-report-today)
+(tkb-keys ("\C-cksf" #'tkb-status-report-find-file)
+	  ("\C-ckst" #'tkb-status-report-today)
 	  ("\C-cksp" #'tkb-status-report-previous)
 	  ("\C-cksn" (lambda () (interactive) (tkb-status-report-previous -1))))
 

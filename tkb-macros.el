@@ -54,7 +54,7 @@ SPEC = (DIR-FORM)
 where DIR-NAME is form that is evaluated to produce either a string
 or a list or vector of strings that specify directories, and 
 VARNAME is a symbol to which is bound the directory name found."
-  (declare (debug [&or (form) (place form)] body))
+  ;;(declare (debug ([&or (form) (place form)] body)))
   (unless (and (listp spec)
 	       (or (and (= (length spec) 2)
 			(symbolp (car spec)))
@@ -81,6 +81,7 @@ VARNAME is a symbol to which is bound the directory name found."
 		   ,dirvarname)))
        (when ,varname
 	 ,@body))))
+;;(def-edebug-spec when-directory ([&or (symbolp &rest form) (&rest form)] &rest form))
   
 (test (when-directory ("~/tkb") 'yes) yes)
 (test (when-directory ("~/tkb/bogus") (list 'yes d)) nil)
@@ -97,44 +98,32 @@ VARNAME is a symbol to which is bound the directory name found."
 
 
 (put 'when-file 'lisp-indent-function 1)
-(cond
- (nil 
-  (defmacro when-file (binding &rest body)
-    "If file in SPEC exists, then execute body.  SPEC 
-can be a filename or a (VARNAME FILENAME) pair.  In the latter case, 
-VARNAME is bound to FILENAME."
-    (let ((var (if (consp binding) (car binding) (make-symbol "when-file-var")))
-	  (val (if (consp binding) (cadr binding) binding)))
-      `(let ((,var ,val))
-	 (when (file-readable-p ,var)
-	   ,@body)))))
- (t
-  
-
-  (defmacro when-file (spec &rest body)
-    "When a directory in SPEC exists, execute BODY.
+(defmacro when-file (spec &rest body)
+  "When a filename in SPEC exists, execute BODY.
 SPEC = filename
      | [filename ...]
      | (varname filename)
      | (varname [filename ...]) 
      | (varname (filename ...))
-where FILENAME is a string that specifies a directory name and
-VARNAME is a symbol to which is bound the directory name found."
-    (declare (debug ([&or symbolp (symbolp form) form] body)))
-    (unless (and (listp spec) (= (length spec) 2))
-      (error "misformed SPEC in when-file: %S" spec))
-    (let* ((varname (if (listp spec) (car spec) (gensym "when-file-var-")))
-	   (filevalues (if (listp spec) (cadr spec) spec))
-	   (filevalues
-	    (if (stringp filevalues)
-		(vector filevalues)
-	      filevalues)))
-      `(let* ((,varname
-	       (some #'(lambda (filename)
-			 (when (file-readable-p filename) filename))
-		     ,filevalues)))
-	 (when ,varname
-	   ,@body))))))
+where FILENAME is a string that specifies a file and
+VARNAME is a symbol to which is bound the first filename found."
+  (declare (debug ([&or symbolp (symbolp form) form] body)))
+  (unless (or (stringp spec)
+	      (vectorp spec)
+	      (and (listp spec) (= (length spec) 2)))
+    (error "misformed SPEC in when-file: %S" spec))
+  (let* ((varname (if (listp spec) (car spec) (gensym "when-file-var-")))
+	 (filevalues (if (listp spec) (cadr spec) spec))
+	 (filevalues
+	  (if (stringp filevalues)
+	      (vector filevalues)
+	    filevalues)))
+    `(let* ((,varname
+	     (some #'(lambda (filename)
+		       (when (file-readable-p filename) filename))
+		   ,filevalues)))
+       (when ,varname
+	 ,@body))))
 
 ;; look at locate-library???
 (defun find-load-dir (subdirs)
@@ -246,19 +235,30 @@ the first form of BODY is :load) and execute the forms in BODY."
     (loop for dir in path
 	  thereis (tkb-is-executable-in-dir exe dir))))
 
-;; (when-exec-found "exename" body)
-;; (when-exec-found (var "exename") body)
-;; (when-exec-found (var '("exename" ...)) body)
-;; (when-exec-found (var exenames path-list) body)
+
 (put 'when-exec-found 'lisp-indent-function 1)
 (defmacro when-exec-found (spec &rest body)
-  "Examples: 
+  "Evaluate BODY when the executable name in SPEC is found on a path, with VAR
+bound to the found executable name if VAR was specified.
+
+SPEC = exename
+     | (var exename)
+     | (var \"exename\")
+     | (var '(\"exename\" ...))
+     | (var exenames path-list)
+
+Examples: 
     (when-exec-found \"exename\" body)
     (when-exec-found (var \"exename\") body)
     (when-exec-found (var '(\"exename\" ...)) body)
     (when-exec-found (var exenames path-list) body)"
-  ;(declare (debug ((&or (symbolp form &optional form) sexp) body)))
-  (declare (debug t))
+  ;; See: (info "(elisp)Specification List")
+  (declare (debug (&or [(symbolp &rest form) body]
+		       [(symbolp form) body]
+		       [form body]
+		       )))
+  ;; See (info "(elisp)Declare Form")
+  (declare (indent 1))	     ; doesn't seem to work, so the put above.
   (if (not (or (stringp spec)
 	       (and (listp spec)
 		    (>= (length spec) 2)
@@ -267,8 +267,8 @@ the first form of BODY is :load) and execute the forms in BODY."
     (let ((var   (if (stringp spec) (gensym) (car spec)))
 	  (exes  (if (stringp spec) spec     (cadr spec)))
 	  (paths (if (stringp spec) '()      (caddr spec)))
-	  (e (gensym))
-	  (p (gensym)))
+	  (e (gensym "g-exename"))
+	  (p (gensym "g-path-list")))
       `(let ((,e ,exes)
 	     (,p ,paths))
 	 (if (not (or (listp ,e) (vectorp ,e)))
@@ -281,6 +281,9 @@ the first form of BODY is :load) and execute the forms in BODY."
 		  nil)
 		 (t 
 		  ,@body)))))))
+
+(defvar tkb-keys-warn-only t 
+"Just warn when redefining keys.")
 
 (defmacro tkb-keys (&rest defns)
   "Ok, this is way too complicated.
@@ -312,7 +315,7 @@ be followed by the name of a keymap."
 		    (tkb-check-bindings ',keys ',funs ,(if (list keymap)
 							    keymap nil))
 		  (when (or (not existing-bindings)
-			    ,(if just-warn-p
+			    ,(if (or just-warn-p tkb-keys-warn-only)
 				 `(message "Rebinding some keys:\n %s" msg)
 			       `(y-or-n-p/timeout (concat "\
 Some key bindings \
@@ -354,5 +357,35 @@ are already bound:\n" msg "Rebind them? "))))
        (erase-buffer)
        ,@body)))
 (put 'with-work-buffer 'lisp-indent-function 1)      
+
+
+;; Straight from *On Lisp*, p. 191.
+(defmacro aif (test-form then-form &optional else-form)
+  `(let ((it, test-form))
+     (if it ,then-form ,else-form)))
+
+(defmacro awhen (test-form &rest body)
+  `(aif ,test-form
+	(progn ,@body)))
+
+(defmacro awhile (expr &rest body)
+  `(do ((it ,expr ,expr))
+       ((not it))
+     ,@body))
+
+(defmacro aand (&rest args)
+  (cond ((null args) t)
+	((null (cdr args)) (car args))
+	(t `(aif ,(car args) (aand ,@(cdr args))))))
+
+(defmacro acond (&rest clauses)
+  (if (null clauses)
+      nil
+    (let ((cl1 (car clauses))
+	  (sym (gensym)))
+      `(let ((,sym ,(car cl1)))
+	 (if ,sym
+	     (let ((it ,sym)) ,@(cdr cl1))
+	   (acond ,@(cdr clauses)))))))
 
 ;;; tkb-macros.el

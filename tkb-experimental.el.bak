@@ -5,42 +5,6 @@
 ;;; $Id: tkb-experimental.el 1.1 Sun, 26 Mar 2000 15:10:50 -0500 tkb $
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (require 'cl)
-(message "%s" #$)
-
-(when-directory (d ["/sw/versions/oo2c/2.1.11/lib/oo2c/emacs/"
-		    "/sw/versions/m64/oo2c/2.1.11/lib/oo2c/emacs/"
-		    "/usr/local/lib/oo2c/emacs/"])
-  (add-to-list 'load-path d)
-  (autoload #'oberon-2-mode "oberon2" "Major mode for editing Oberon-2 code.")
-  (add-to-list 'auto-mode-alist '("\\.\\([Mm]od\\|obn\\)$" . oberon-2-mode)))
-
-(eval-after-load "w3m"
-  '(define-key w3m-mode-map "f" #'w3m-find-file))
-
-(when-directory (d "/sw/src/go/misc/emacs/")
-  (defun tkb-go-hook ()
-    (setq tab-width 4))
-  (add-hook 'go-mode-hook #'tkb-go-hook)
-  (add-to-list 'load-path d t)
-  (require 'go-mode-load))
-
-(defun tkb-unhex-buffer ()
-  (interactive)
-  (let* ((s (buffer-substring (point) (mark)))
-	 (s* (url-unhex-string s t)))
-    (kill-region (point) (mark))
-    (insert s*)))
-
-(defun tkb-rst-print-subheads ()
-  (interactive)
-  (with-work-buffer " *ReST heads"
-      (loop for c
-	    ;; recommended list from the rst quickref: http://tinyurl.com/47lkhk
-	    across "=-`:'\"~^_*+#<>"
-	    for i from 1
-	    do (let* ((s (format "Depth %d" i))
-		      (u (make-string (length s) c)))
-		 (insert (format "%s\n%s\n\n" s u))))))
 
 (defadvice mh-file-command-p (around tkb-mh-file-command-p-ad activate)
   (message "tkb-mh-file-command-p-ad ran at %s" (format-time-string "%r"))
@@ -117,28 +81,22 @@ Interactively, prompts for a numeric string giving the code."
 (tkb-keys ((kbd "C-c A") #'tkb-select-frame))
 
 (defun tkb-load-file ()
-  "Load the current file into emacs lisp"
   (interactive)
   (load-file (buffer-file-name)))
+
 (tkb-keys :keymap emacs-lisp-mode-map
 	  ("\C-xL" #'tkb-load-file))
-
-(defun tkb-locate-file (filename)
-  (interactive "M")
-  (message "file: %s" (locate-file filename load-path (get-load-suffixes))))
 
 (tkb-keys ("\C-cko\C-c" #'org-ctrl-c-ctrl-c))
 (tkb-check-bindings '("\C-cko\C-c"))
 
-(when-load-dir (d "org-7.8.11/lisp")
+(when-load-dir (d "org/lisp")
   (add-to-list 'Info-default-directory-list
 	       (expand-file-name (format "%s/../%s/" d "doc")))
   (require 'org-install)
   (setq org-agenda-clockreport-parameter-plist (quote (:link t :maxlevel 3)))
   (setq org-agenda-files "~/current/org/.agenda_files")
-  (setq org-columns-default-format
-	(concat "%30ITEM(Details) %TAGS(Context) %7TODO(To Do) "
-		"%5Effort(Time){:} %6CLOCKSUM{Total}"))
+  (setq org-columns-default-format "%30ITEM(Details) %TAGS(Context) %7TODO(To Do) %5Effort(Time){:} %6CLOCKSUM{Total}")
   ;;(setq org-log-done (quote (done state clock-out)))
 
   (setq org-agenda-text-search-extra-files '("~/current/org/notes.org"))
@@ -161,89 +119,22 @@ Interactively, prompts for a numeric string giving the code."
 	    (tags "CHARGE")
 	    (tags "CLOCK"))))))
 
-(defun tkb-find-org-log-file ()
-  "Look in the current directory or its parents for a file named *-log.org
-and return it."
-  ;; So I can us M-x tkb-find-org-log and not bring up the debugger on the
-  ;; call to error when testing.
-  (interactive)
-  (let ((default-directory default-directory)
-	(original-directory default-directory)
-	log-files)
-    (while (not (setq log-files (file-expand-wildcards "*-log.org" t)))
-      (cd "..")
-      (when (string-equal default-directory "/")
-	(error "unable to find *-log.org starting at %s"
-	       original-directory)))
-    (car log-files)))
-
-(defun tkb-find-org-log ()
-  "Look in the current directory or its parents for a file named *-log.org
-and switch to a buffer visiting it."
-  (interactive)
-  (let* ((org-file (tkb-find-org-log-file)))
-    (find-file org-file)))
-(tkb-keys ("\C-ckof" #'tkb-find-org-log))
-;; (defalias 'x #'tkb-find-org-log) 
-
-(defun tkb-add-org-log ()
-  "Look in the current directory or its parents for a file named *-log.org
-and add a log entry to it."
-  (interactive)
-  (let* ((org-file (tkb-find-org-log-file))
-	 (org-remember-templates 
-	  `(("Log"      ?j   "* %^{Title} %U\n  %i\n  %?\n"
-	     ,org-file "Log"))))
-    (org-remember)))
-(tkb-keys ("\C-ckol" #'tkb-add-org-log))
-
-(when nil
-  (when-load-dir (d "remember/")
-    (add-to-list 'Info-default-directory-list d)))
-
-(progn
-  (unless (require 'remember nil t)
-    (add-to-list 'load-path
-		 (expand-file-name "~/lib/emacs/obsolete-others/remember/"))
-    (require 'remember))
+(when-load-dir (d "remember/")
+  (add-to-list 'Info-default-directory-list d)
+  (require 'remember)
   (org-remember-insinuate)
   (setq org-directory "~/current/org")
-  (flet ((orgd (filename) (expand-file-name filename org-directory))
-	 (mpld (filename) (expand-file-name filename "~/job/MPL/Org/")))
-    (setq org-default-notes-file (orgd "notes.org"))
-    (autoload 'org-remember "org-remember" nil t)
-    (setq org-remember-templates
-	  `(("Journal"      ?j   "* %^{Title} %U\n  %i\n  %?\n"
-	     ,(orgd "journal.org") "Journal")
-	    ("Contacts Log" ?c   "* %^{Title} %U\n  %i\n  %?\n"
-	     ,(orgd "contacts.org") "Contacts")
-	    ("Health"       ?h   "* %^{Title} %U\n  %i\n  %?\n"
-	     ,(orgd "health.org") "Health")
-	    ("Notes"        ?n   "\n\n* %^{Title} %U\n  %i\n  %?\n  %a\n\n"
-	     ,(orgd "notes.org") "Notes")
-	    ("RPG"        ?r   "\n\n* %^{Title} %U\n  %i\n  %?\n  %a\n\n"
-	     ,(orgd "rpg.org") "RPG")
-	    ("Tasks"        ?t   "* TODO %^{Title} %U\n  %i\n  %?\n  %a"
-	     ,(orgd "tasks.org") "Tasks")
-	    ("Video"        ?v   "* TODO %^{Title} %U\n  %^C%i%?\n"
-	     ,(orgd "video.org") "Video")
-	    
-	    ;; ??? Ought to have this in a truecrypt volume. 
-	    ;; ("Private"      ?p   "* %^{Title} %U\n  %i\n  %?\n"
-	    ;; ,(orgd "private/private.org") "Private")
-
-	    ;; MPL
-	    ("MPL Journal"      ?J   "* %^{Title} %U\n  %i\n  %?\n"
-	     ,(mpld "journal.org") "MPL Journal")
-	    ("MHST Journal"     ?M   "* %^{Title} %U\n  %i\n  %?\n"
-	     ,(mpld "mhst-journal.org") "MHST Journal")
-	    ("MPL Contacts Log" ?C   "* %^{Title} %U\n  %i\n  %?\n"
-	     ,(mpld "contacts.org") "MPL Contacts")
-	    ("MPL Notes"        ?N   "\n\n* %^{Title} %U\n  %i\n  %?\n  %a\n\n"
-	     ,(mpld "notes.org") "MPL Notes")
-	    ("MPL Tasks"        ?T   "* TODO %^{Title} %U\n  %i\n  %?\n  %a"
-	     ,(mpld "tasks.org") "MPL Tasks")
-	    )))
+  (setq org-default-notes-file (concat org-directory "/notes.org"))
+  (autoload 'org-remember "org-remember" nil t)
+  (setq org-remember-templates
+	'(("Journal" ?j "* %^{Title} %U\n  %i\n  %?\n"
+	   "~/current/org/journal.org" "Journal")
+	  ("Contacts Log" ?c "* %^{Title} %U\n  %i\n  %?\n"
+	   "~/current/org/contact-log.org" "Contact-Log")
+	  ("Notes" ?n "\n\n* %^{Title} %U\n  %i\n  %?\n  %a\n\n"
+	   "~/current/org/notes.org" "Notes")
+	  ("Tasks" ?t "* TODO %^{Title} %U\n  %i\n  %?\n  %a"
+	   "~/current/org/tasks.org" "Tasks")))
   (tkb-keys ("\C-ckor" #'org-remember)))
 
 (progn
@@ -257,43 +148,21 @@ and add a log entry to it."
   (setq show-trailing-whitespace (not show-trailing-whitespace)))
 
 
-(defun increment-filename (prefix &optional suffix always start)
-  "Generate a unique filename using PREFIX and optionally SUFFIX"
-  (let* ((suffix (if suffix suffix ""))
-	 (start (if start start 0))
-	 (sep1   "_")
-	 (sep2   "_")
-	 (fileprefix (concat prefix)))
-    (loop for i from start
-	  ;; The zeroth filename doesn't have the number.
-	  for testname = (if always
-			     (format "%s%s%d%s" fileprefix sep2 i suffix)
-			   (format "%s%s" fileprefix suffix))
-	  then (format "%s%s%d%s" fileprefix sep2 i suffix)
-	  until (not (file-exists-p testname))
-	  finally return testname)))
-
-(defun increment-filename-date (prefix &optional suffix always date)
+(defun increment-filename (prefix &optional suffix)
   "Generate a unique filename using PREFIX and optionally SUFFIX"
   (let* ((suffix (if suffix suffix ""))
 	 (sep1   "_")
 	 (sep2   "_")
-	 (date   (if date
-		     (if (listp date)
-			 (format-time-string "%F" date)
-		       date)
-		   (format-time-string "%F")))
+	 (date   (format-time-string "%F"))
 	 (fileprefix (concat prefix sep1 date)))
     (loop for i from 0
 	  ;; The zeroth filename doesn't have the number.
-	  for testname = (if always
-			     (format "%s%s%d%s" fileprefix sep2 i suffix)
-			   (format "%s%s" fileprefix suffix))
+	  for testname = (format "%s%s" fileprefix suffix)
 	  then (format "%s%s%d%s" fileprefix sep2 i suffix)
 	  until (not (file-exists-p testname))
 	  finally return testname)))
 
-(defun increment-filename-date-prefix (prefix &optional suffix always date)
+(defun increment-filename-prefix (prefix &optional suffix always date)
   "Generate a unique filename using PREFIX and optionally SUFFIX"
   (let* ((suffix (if suffix suffix ""))
 	 (sep1   "_")
@@ -325,15 +194,13 @@ and add a log entry to it."
   (interactive)
   (rename-buffer (loop with bufname =
 		       (progn
-			 (if (string-match (rx (and
+			 (string-match (rx (and
 					    string-start
 					    (group (+ anything))
 					    (group
 					     (? "[0-9]+"))
 					    string-end))
-				       (buffer-name))
-			     (match-string 1)
-			     (buffer-name)))
+				       (buffer-name)))
 		       for i from 1
 		       with newname = (format "%s-%d" bufname i)
 		       while (get-buffer newname)
@@ -365,8 +232,8 @@ and add a log entry to it."
   ;; See Info: (org)Activation.
   ;; The following lines are always needed.  Choose your own keys.
   (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
-  (tkb-keys ("\C-ckos" #'org-store-link)
-	    ("\C-ckoa" #'org-agenda))
+  (tkb-keys ("\C-cks" #'org-store-link)
+	    ("\C-cka" #'org-agenda))
   (global-font-lock-mode 1)			; for all buffers
   (add-hook 'org-mode-hook 'turn-on-font-lock))	; org-mode buffers only
 
@@ -378,8 +245,7 @@ and add a log entry to it."
   (dynamic-completion-mode)
   (global-set-key (kbd "M-<return>") 'complete))
 
-(unless (or window-system (member system-name '("consp.org")))
-  (load "tkb-tty-colors.el"))
+(unless window-system (load "tkb-tty-colors.el"))
 
 
 (setq tkb-color-list '(("black" "white")
@@ -680,7 +546,8 @@ where the \"FILE\" is optional and the \".\" can also be a \",\"."
 (defun tkb-cleanup-title (title)
   (let ((s
 	 (substitute ?- 32
-		     (remove-if-not #'(lambda (c) (or (memq c '(?- 32 ?.))
+		     (remove-if-not #'(lambda (c) (or (char-equal c ?-)
+						      (char-equal c 32)
 						      (and (<= ?a c)
 							   (<= c ?z))
 						      (and (<= ?0 c)
@@ -691,10 +558,6 @@ where the \"FILE\" is optional and the \".\" can also be a \",\"."
 	    (b (match-beginning 0))
 	    (e (match-end 0)))
 	(setq s (concat (substring s 0 (1+ b)) (substring s e)))))
-    (while (string-match "\\.-" s)
-      (setq s (concat (substring s 0 (match-beginning 0))
-		      "-"
-		      (substring s (match-end 0)))))
     s))
 
 (defun tkb-insert-rst-section (title char &optional above)
@@ -753,24 +616,20 @@ where the \"FILE\" is optional and the \".\" can also be a \",\"."
 
 ;; http://www.unicode.org/Public/UNIDATA/UnicodeData.txt
 ;; describe-char-unicodedata-file
-(let* ((udf-url "http://www.unicode.org/Public/UNIDATA/UnicodeData.txt")
-       (udf-dest "~/tmp/UnicodeData.txt")
-       (udf-dir  (file-name-directory udf-dest)))
+(let ((udf-url "http://www.unicode.org/Public/UNIDATA/UnicodeData.txt")
+      (udf-dest "~/tmp/UnicodeData.txt"))
   (if (file-readable-p udf-dest)
       (setq describe-char-unicodedata-file udf-dest)
-    (eval-after-load* "tkb-last" (udf-dest udf-url udf-dir)
+    (eval-after-load* "tkb-last" (udf-dest udf-url)
       (when (y-or-n-p (format "You need to download %s ! Do it? " udf-url))
 	;; Really weird: wget -O 'file' complains that file doesn't exist!
-	(unless (file-directory-p udf-dir)
-	  (make-directory udf-dir t))
-	(let ((cmd (format "cd ~/tmp/ && wget -O %s --progress=dot '%s' &"
-			   udf-dest udf-url)))
+	(let ((cmd (format "cd ~/tmp/ && wget -O %s --progress=dot '%s' &" udf-dest udf-url)))
 	  (message "cmd: %s" cmd)
 	  (shell-command cmd)
 	  (setq describe-char-unicodedata-file "~/tmp/UnicodeData.txt"))))))
 
 (define-minor-mode tkb-smart-unicode-mode
-  "Toggle smart unicode punctuation" nil " ♻⚔☣☥☸◉⅙✽☮" ; "✘▧▧⚅☑☢☹☺♠♥♦♣♨"
+  "Toggle smart unicode punctuation" nil " ☣☥☸▧◉✘✽☮⅙▧⚅☑☢☹☺♠♥♦♣♨♻⚔"
   '(("\"" . unicode-smart-double-quote)
     ("'"  . unicode-smart-single-quote)
     ("-"  . unicode-smart-hyphen)
@@ -825,57 +684,38 @@ where the \"FILE\" is optional and the \".\" can also be a \",\"."
 	 (display-buffer timebuf)
 	 (princ (format "%s\n" (fmt-duration delta)) timebuf)))))
 
-(defun tkb-blog (title tags category date &optional title-prefix no-increment)
+(defun tkb-blog (title tags category date &optional title-prefix)
   "Create a blog entry, prompting for various values and creating the
 appropriate directory structure."
-  ;;(interactive "sTitle: \nsTags: \nDCategory: \nsDate: ")
-  (interactive (list
-		(read-string "Title: ")
-		(read-string "Tags: ")
-		(read-directory-name "Category: " "~/myblog/entries/")
-		(read-string "Date: ")))
+  (interactive "sTitle: \nsTags: \nsCategory: \nsDate: ")
   (let* ((date-time (if (listp date)
 			date
 		      (if (empty-string-p date)
 			  nil
 			(tkb-parse-iso-date date))))
 	 (no-spaces (tkb-cleanup-title title))
-	 (filename (funcall
-		    (if no-increment
-			#'(lambda (&rest args)
-			    (apply #'concatenate `(string ,@args)))
-		      #'increment-filename)
-		    (concat (file-name-as-directory
-			     (expand-file-name category "~/myblog/entries/"))
-			    no-spaces)
-		    ".rst" nil))
+	 (filename (increment-filename-prefix
+		    (concat "~/myblog/entries/" (if (zerop (length category))
+						   ""
+						 (concat category "/"))
+			   no-spaces)
+		    ".rst" nil date-time))
 	 (dirname (file-name-directory filename))
 	 (published (format-time-string "#published %Y-%m-%d %H:%M:%S"
 					date-time)))
     (if (not (file-directory-p dirname))
 	(make-directory dirname 'and-parents))
-    ;; FIXME: warn about existing files, ask to increment???
+    ;; FIXME: warn about existing files...
     (find-file filename)
-    (unless (file-exists-p filename)
-      (if title-prefix
-	  (insert title-prefix))
-      (insert title)
-      (insert "\n")
-      (insert published)
-      (insert "\n")
-      (unless (zerop (length tags))
-	(insert (concat "#tags " tags))
-	(insert "\n")))))
-
-(defun tkb-reading-monthly (date)
-  (interactive "sDate: ")
-  (let* ((date-time (if (empty-string-p date)
-			(current-time)
-		      (tkb-parse-iso-date date)))
-	 (tags "recent reading")
-	 (category (format-time-string "books/read/%Y/%m" date-time)))
-    (tkb-blog (format-time-string "Recent Reading: %B %Y" date-time)
-	      tags category date-time nil t)))
+    (if title-prefix
+	(insert title-prefix))
+    (insert title)
+    (insert "\n")
+    (insert published)
+    (insert "\n")
+    (unless (zerop (length tags))
+      (insert (concat "#tags " tags))
+      (insert "\n"))))
 
 (defun tkb-reading (authors tags date)
   "Create a blog entry about my recent reading"
@@ -902,7 +742,7 @@ appropriate directory structure."
     (tkb-blog titles tags category date-time "Recent Viewing: ")))
 
 (progn			       ; used by my hooks for rst and asciidoc
-  (add-to-list 'load-path (expand-file-name "~/lib/emacs/others/misc"))
+  (add-to-list 'load-path (expand-file-name "~/lib/emacs/others"))
   (load-library "unichars")
   (load-library "xmlunicode"))
 
@@ -973,16 +813,6 @@ if it is a unicode character."
       (while (string-match "\\`\\(.*\\)\\\\\n\\([[:ascii:][:nonascii:]]*\\)\\'" text)
 	(setq text (concat (match-string 1 text) (match-string 2 text))))
       (kill-new text))))
-
-(defun t:kill-host-from-url ()
-  (interactive)
-  (require 'url-parse)
-  (let* ((url (current-kill 0))
-	 (host (url-host (url-generic-parse-url url))))
-    (kill-new host)
-    (message "Killed %s\nto %s" url host)))
-
-(tkb-keys ("\C-ckuh" #'t:kill-host-from-url))
 
 (progn
   (defun tkb-fill-list ()
@@ -1070,17 +900,15 @@ over 40 is morbidly obese."
        ;;'sgml-doctype-face "cyan")
        (message "!!!cyan rules!!!"))))
 
-(when nil
-  (progn
-    (setq version-control nil)
-    (or (file-directory-p "~/backup") (make-directory "~/backup" t))
-    (let ((backup-dir (expand-file-name "~/backup")))
-      (setq backup-directory-alist
-	    `((".*" . ,backup-dir)))
-      (setq auto-save-file-name-transforms
-	    `((".*" ,backup-dir t))))))
+;; Make numbered backups for files that already have numbered backups.
 (progn
-  (setq backup-directory-alist '(("." . ".~"))))
+  (setq version-control nil)
+  ;; Save backups in the .~ directory
+  ;; Visual Studio failes to update VSWebCache when directories starting with
+  ;; "." are present.
+  (cond ((memq system-type '(windows-nt cygwin))
+	 (setq backup-directory-alist '(("." . "_~"))))
+	(t (setq backup-directory-alist '(("." . ".~"))))))
 
 (defun tkb-next-blank-line ()
   (interactive)
@@ -1190,27 +1018,13 @@ over 40 is morbidly obese."
 	      (insert (format output-format result))))
 	(error (message "Invalid expression: %s" xs))))))
 
-(when nil
-  ;; http://emacsredux.com/blog/2013/06/21/eval-and-replace/
-  ;; but see fc-eval-and-replace
-  (defun eval-and-replace ()
-    "Replace the preceding sexp with its value."
-    (interactive)
-    (backward-kill-sexp)
-    (condition-case nil
-	(prin1 (eval (read (current-kill 0)))
-	       (current-buffer))
-      (error (message "Invalid expression")
-	     (insert (current-kill 0))))))
-
-
 (defun tkb-trim-buffer ()
   (interactive)
   (beginning-of-buffer)
   (save-excursion
     (while (re-search-forward "[ \t]+$" nil t)
       (replace-match "" nil nil))))
-;;(tkb-keys ("\C-cT" 'tkb-trim-buffer))
+(tkb-keys ("\C-cT" 'tkb-trim-buffer))
 
 (defun tkb-trim-region ()
   (interactive)
@@ -1264,24 +1078,21 @@ over 40 is morbidly obese."
 
 
 (progn
-  (defun tkb-copy-buffer-file-name (whole)
+  (defun tkb-copy-buffer-name (whole)
     (interactive "P")
     (message "whole: %s numeric: %d" whole (prefix-numeric-value whole))
     (let ((fn (buffer-file-name)))
       (kill-new (if whole fn (file-name-nondirectory fn)))))
-  (tkb-keys ("\C-cP" #'tkb-copy-buffer-file-name))
-  (defun tkb-copy-downcase-buffer-file-name (whole)
+  (tkb-keys ("\C-cP" #'tkb-copy-buffer-name))
+  (defun tkb-copy-downcase-buffer-name (whole)
     (interactive "P")
     (message "whole: %s numeric: %d" whole (prefix-numeric-value whole))
     (let* ((fn (buffer-file-name))
 	   (fn (if whole fn (file-name-nondirectory fn))))
       (kill-new (downcase fn))))
-  (tkb-keys ("\C-cY" #'tkb-copy-downcase-buffer-file-name))
+  (tkb-keys ("\C-cY" #'tkb-copy-downcase-buffer-name))
 
-  (defun tkb-copy-buffer-name ()
-    (interactive)
-    (kill-new (buffer-name)))
-  (tkb-keys ("\C-cB" #'tkb-copy-buffer-name))
+
   (defun tkb-lower-to-register (register start end)
     (interactive "cLowercase to register: \nr")
     (set-register register (downcase (buffer-substring start end))))
@@ -1349,19 +1160,18 @@ Not under a window system, so you can't ispell the selection")))))
   (tkb-keys ("\C-cj" #'my-search-google)))
 
 
-(when nil
-  (when-load-file "mailcrypt"
-    (load-library "mailcrypt")
-    (mc-setversion "gpg")
+(when-load-file "mailcrypt"
+  (load-library "mailcrypt")
+  (mc-setversion "gpg")
 
-    (autoload 'mc-install-write-mode "mailcrypt" nil t)
-    (autoload 'mc-install-read-mode "mailcrypt" nil t)
-					;(add-hook 'mail-mode-hook 'mc-install-write-mode)
+  (autoload 'mc-install-write-mode "mailcrypt" nil t)
+  (autoload 'mc-install-read-mode "mailcrypt" nil t)
+  (add-hook 'mail-mode-hook 'mc-install-write-mode)
 
-    (add-hook 'vm-mode-hook 'mc-install-read-mode)
-    (add-hook 'vm-summary-mode-hook 'mc-install-read-mode)
-    (add-hook 'vm-virtual-mode-hook 'mc-install-read-mode)
-    (add-hook 'vm-mail-mode-hook 'mc-install-write-mode)))
+  (add-hook 'vm-mode-hook 'mc-install-read-mode)
+  (add-hook 'vm-summary-mode-hook 'mc-install-read-mode)
+  (add-hook 'vm-virtual-mode-hook 'mc-install-read-mode)
+  (add-hook 'vm-mail-mode-hook 'mc-install-write-mode))
 
 (eval-after-load "rng-loc"
   '(progn
@@ -1377,14 +1187,6 @@ Not under a window system, so you can't ispell the selection")))))
   ;; This requires using message-user-agent for composing mail.
   (setq mail-user-agent 'message-user-agent)
   (setq message-from-style 'angles)
-  (require 'smtpmail)
-  (setq smtpmail-debug-info t)
-  (setq message-send-mail-function 'smtpmail-send-it
-	smtpmail-stream-type 'starttls
-	smtpmail-default-smtp-server "smtp.gmail.com"
-	smtpmail-smtp-server "smtp.gmail.com"
-	smtpmail-smtp-service 587)
-  (setq message-mail-alias-type 'ecomplete)
   (defun check-attachments-attached ()
     (interactive)
     (save-excursion
@@ -1418,45 +1220,29 @@ Not under a window system, so you can't ispell the selection")))))
 			 )
 			(error "Aborted send")))))
 	  (set-marker end-of-headers nil)))))
-  (add-hook 'message-send-hook 'check-attachments-attached)
-  (defun tkb-messsage-header-setup-hook ()
-    (insert "BCC: tkurtbond@gmail.com\n"))
-  (setq message-header-setup-hook #'tkb-messsage-header-setup-hook))
+  (add-hook 'message-send-hook 'check-attachments-attached))
 
 
-(when nil
-  ;; look at setting slime-lisp-implementations in tkb-lang.el, too
-  ;; using quicklisp to install slime these days
-  (when-directory (d [ ;;"/sw/versions/slime/cvs/slime/" "/sw/src/slime"
-		      ])
-    (add-to-list 'load-path d)
-    (require 'slime)
-    (tkb-keys
-      ("\C-c;" 'slime-insert-balanced-comments)
-      ("\C-c\M-;" 'slime-remove-balanced-comments))
-    (setq slime-lisp-implementations
-	  `(,(when-exec-found (f ["/sw/versions/cygwin/clisp/2.47/bin/clisp.exe"
-				  "c:/PROGRA~1/clisp-2.47/clisp.exe"
-				  "c:/sw/versions/clisp-bin/clisp-2.41/clisp.exe"
-				  "/sw/versions/32bits/clisp/cvs/bin/clisp"
-				  "clisp"])
-	       (list 'clisp (list f)))
-	    ,(when-exec-found (f ["c:/Program Files/Steel Bank Common Lisp/1.0.29/sbcl.exe"
-				  "/sw/versions/m64/sbcl/git/bin/sbcl"
-				  "/sw/versions/m64/sbcl/cvs/bin/sbcl"
-				  "sbcl"])
-	       (setq inferior-lisp-program f)
-	       (list 'sbcl (list f)))
-	    ,(when-exec-found (f ["/sw/src/ccl/scripts/ccl.tkb"])
-	       (list 'ccl (list f)))
-	    ,(when-exec-found (f ["/sw/versions/m64/ecl/cvs/bin/ecl"])
-	       (list 'ecl (list f)))
-	    ,(when-exec-found (f ["/sw/src/abcl/abcl-src-1.1.1/abcl"])
-	       (list 'abcl (list f)))
-	    ,(when-exec-found (f ["lisp"])
-	       (list 'cmucl (list f)))))
-    ;; add '(slime-repl) or '(slime-fancy)
-    (slime-setup)))
+(when-directory (d "/sw/versions/slime/cvs/slime/")
+  (add-to-list 'load-path d)
+  (require 'slime)
+  (tkb-keys
+    ("\C-c;" 'slime-insert-balanced-comments)
+    ("\C-c\M-;" 'slime-remove-balanced-comments))
+  (setq slime-lisp-implementations
+	`(,(when-exec-found (f ["/sw/versions/cygwin/clisp/2.47/bin/clisp.exe"
+				"c:/PROGRA~1/clisp-2.47/clisp.exe"
+				"c:/sw/versions/clisp-bin/clisp-2.41/clisp.exe"
+				"clisp"])
+	     (list 'clisp (list f)))
+	  ,(when-exec-found (f ["c:/Program Files/Steel Bank Common Lisp/1.0.29/sbcl.exe"
+				"sbcl"])
+	     (setq inferior-lisp-program f)
+	     (list 'sbcl (list f)))
+	  ,(when-exec-found (f ["lisp"])
+	     (list 'cmucl (list f)))))
+  ;; add '(slime-repl) or '(slime-fancy)
+  (slime-setup))
 
 
 
@@ -1698,20 +1484,6 @@ Goes backward if ARG is negative; error if CHAR not found."
 		   new-geometry))))
   (tkb-position)))
 
-(defun tkb-position-frame (&optional new-left)
-  (interactive "P")
-  (let* ((new-left (if new-left (prefix-numeric-value new-left) -50))
-	 (dw (display-pixel-width))
-	 (fw (frame-pixel-width))
-	 (nl (- dw fw 50))
-	 (top (frame-parameter nil 'top)))
-    ;;(set-frame-position (selected-frame) nl top)
-    ;;(set-frame-parameter nil 'left nl)
-    ;;(frame-notice-user-settings)
-    (set-frame-parameter nil 'left new-left)
-    (set-frame-parameter nil 'top 20)
-    (message "Yowza! %d %d %d %s" dw fw nl (current-time-string))))
-
 
 (defun livejorunal-rss-url (name)
   (interactive "Mname:")
@@ -1733,9 +1505,7 @@ Goes backward if ARG is negative; error if CHAR not found."
   (setq auto-mode-alist
 	(append '(("\\.rst$" . rst-mode)
 		  ("\\.rsti$" . rst-mode) ; include files.
-		  ("\\.rest$" . rst-mode)
-		  ("\\.rst-pending$" . rst-mode) ;for my blog.
-		  ) auto-mode-alist))
+		  ("\\.rest$" . rst-mode)) auto-mode-alist))
   (autoload 'rst-repeat-last-character "rst")
   (tkb-keys ("\C-cR" 'rst-repeat-last-character))
   (when nil			  ; replaced by tkb-smart-unicode-mode
@@ -1745,9 +1515,8 @@ Goes backward if ARG is negative; error if CHAR not found."
 	 (define-key rst-mode-map "-" #'unicode-smart-hyphen)
 	 (define-key rst-mode-map "\"" #'unicode-smart-double-quote))))
   
-  (defun tkb-rst-mode-hook ()
+(defun tkb-rst-mode-hook ()
     (interactive)
-    (setq indent-tabs-mode nil)
     (unless window-system
       ;; rst-mode fontlock is unreadable with the colors screen uses.
       (make-local-variable 'rst-mode-lazy)
@@ -1756,29 +1525,28 @@ Goes backward if ARG is negative; error if CHAR not found."
 	    font-lock-support-mode nil)
       (make-local-variable 'font-lock-mode)
       (font-lock-mode -1))
-    ;;(message "tkb-rst-mode-hook ran; font-lock-mode: %S" font-lock-mode)
+    (message "tkb-rst-mode-hook ran; font-lock-mode: %S" font-lock-mode)
     (tkb-smart-unicode-mode)
-    ;;FIXME: makes all emacs hang???
-    (when t (flyspell-mode 1))
+    (flyspell-mode 1)
     (cond
-     ((string-match "status-.+\\.rst$" buffer-file-name)
-      ;; Don't set compile-command.
-      nil)
-     ((string-match ".*/myblog/entries/.*\\.\\(rst\\|rsti\\)\\(-pending\\)?$" buffer-file-name)
-      (message "tkb-rst-mode-hook: matched myblog")
+     ((string-match ".*/myblog/entries/.*\\.\\(rst\\|rsti\\)$" buffer-file-name)
       (set (make-local-variable 'compile-command)
 	   (concat "pybloxrst "
 		   (file-name-nondirectory buffer-file-name)
-		   " >~/tmp/x.rst && rst -o -h ~/tmp/x.rst")))
+		   " >~/tmp/x.html"
+		   (if (memq system-type '(ms-dos windows-nt cygwin))
+		       " && shell2 ~/tmp/x.html"
+		     ""))))
      (t
-      (message "didn't match myblog")
-      (let* ((rst-name (file-name-nondirectory buffer-file-name))
-	     (ltx-name (concat (file-name-sans-extension rst-name) ".ltx"))
-	     (pdf-name (concat (file-name-sans-extension rst-name) ".pdf")))
+      (let ((pdf-name (concat
+		       (file-name-nondirectory
+			(file-name-sans-extension buffer-file-name))
+		       ".pdf")))
 	(set (make-local-variable 'compile-command)
-	     (if (file-exists-p "rststyle.tex")
-		 (format "make %s && open %s" pdf-name pdf-name)
-	       (concat "rst -o -p " rst-name)))))
+	     (concat "make " pdf-name
+		     (if (memq system-type '(ms-dos windows-nt cygwin))
+			 (concat " && shell2 " pdf-name)
+		       "")))))
     (add-hook 'before-save-hook 'time-stamp nil t)))
   (add-hook 'rst-mode-hook 'tkb-rst-mode-hook))
 
@@ -2102,249 +1870,6 @@ switch problems."
 			 `(,quote-string ,value)
 		       `,value))
 	(current-buffer))))
-
-
-(defalias 'λ #'lambda)			;this doesn't work right.
-
-(when nil 				;nxhtml sets debug-on-error too often!!!
-  (when-file (f "~/lib/emacs/others/nxhtml/autostart.el")
-    (unless (version< emacs-version "23.4")
-      (load-file f))))
-
-;;; ??? Needs finished; see describe-variable and describe-symbol.
-(defun describe-structure (structure)
-  "Display the full documentation of STRUCTURE (a symbol)."
-  (interactive
-   (let ((v (variable-at-point))
-	 (enable-recursive-minibuffers t)
-	 val)
-     (setq val (completing-read (if (symbolp v)
-				    (format
-				     "Describe structure (default %s): " v)
-				  "Describe variable: ")
-				obarray
-				(lambda (vv)
-                                  (or (get vv 'structure-documentation)
-                                      (and (boundp vv) (not (keywordp vv)))))
-				t nil nil
-				(if (symbolp v) (symbol-name v))))
-     (list (if (equal val "") v (intern val))))))
-
-(load-file "~/lib/emacs/tkb/tkb-status-reports.el")
-
-(defun t:get-hostname-from-http ()
-  (interactive)
-  (let* ((s (x-get-selection))
-	 (s* (progn
-	       (string-match "\\(https?://\\|file:///\\)\\([^/]+\\)" s)
-	       (match-string 2 s))))
-    (kill-new s*)))
-(tkb-keys ("\C-ckC" #'t:get-hostname-from-http))
-
-(defun t:get-directory-for-download-from-http ()
-  "Hmmm.  a (non)work(ing) in progress."
-  (interactive)
-  (let* ((s (x-get-selection))
-	 (s1 (progn
-	       (string-match "\\(https?://\\|file:///\\)\\(.+\\)$" s)
-	       (match-string 2 s)))
-	 (s2 (substitute ?- ?/ s1))
-	 (s3 (replace-regexp-in-string "--?" "-" s2))
-	 (s4 (replace-regexp-in-string "-$" ""
-				       (replace-regexp-in-string "^-" "" s3)))) 
-    s3))
-
-(when-exec-found (gls "gls")
-  (setq insert-directory-program gls))
-
-(defun path-get (&optional env-variable)
-  (unless env-variable (setq env-variable "PATH"))
-  (split-string (getenv "PATH") ":"))
-
-(defun path-set (path-elements &optional env-variable)
-  (unless env-variable (setq env-variable "PATH"))
-  (setenv "PATH" (mapconcat #'identity path-elements ":")))
-
-(defun path-prepend (directories &optional env-variable)
-  (let ((path (path-get env-variable)))
-    (loop for dir in (reverse directories)
-	  do (unless (member* dir path :test #'string-equal)
-	       (push dir path)))
-    (path-set path env-variable)))
-
-(defun path-delete (directories &optional env-variable)
-  (let ((path (path-get env-variable)))
-    (loop for dir in directories
-	  do (setq path (delete* dir path :test #'string-equal)))
-    (path-set path env-variable)))
-
-(defun path-append (directories &optional env-variable)
-    (path-set (append (path-get env-variable) directories) env-variable))
-
-(when nil 				;not needed now porst has texlive 2012
-  (path-prepend '("/usr/local/texlive/2011/bin/x86_64-darwin"
-		  "/usr/local/texlive/2011/bin/universal-darwin")))
-
-;;; ¿¿¿Doesn't handle single word links???
-(defun t:extract-targets (start end)
-  (interactive "r")
-  (save-excursion
-    (let (refs)
-      (goto-char start)
-      (save-restriction
-	(narrow-to-region start end)
-	;; (flet ((noprop (s) (set-text-properties 0 (length s) nil s))))???
-	(while (re-search-forward "\\(`[^`]+`\\)\\(_+\\)" nil t)
-	  (message "point is %d" (point))
-	  (let ((name  (match-string 1))
-		(under (match-string 2)))
-	    (push (format "\n.. %s %s: " under name) refs))))
-      (goto-char end)
-      (insert "\n\n" (apply #'concat refs)))))
-
-(defun zap-upto-char (arg char)
-  ;; From emacs-18.59.
-  "Kill up to (but not including) ARG'th occurrence of CHAR.
-Goes backward if ARG is negative; goes to end of buffer if CHAR not found."
-  (interactive "*p\ncZap to char: ")
-  (kill-region (point) (if (search-forward (char-to-string char) nil t arg)
-                           (progn (goto-char (if (> arg 0) (1- (point)) (1+ (point))))
-                                  (point))
-			 (if (> arg 0) (point-max) (point-min)))))
-(tkb-keys ("\C-ckz" #'zap-upto-char))
-
-(defun tkb-vms-tape-blocks/hour (start-block start-time end-block end-time)
-  (interactive "nStart block? \nnEnd block? \nsStart Time? \nsEnd Time? ")
-  (let* ((hours    (t:time-diff start-time end-time))
-	 (blocks   (- end-block start-block))
-	 ;; BACKUP$DATA:[BACKUP]8MM_BACKUP.COM has /BLOCK=32528, but 
-	 ;; BACKUP Ctrl-T reports 32768 byte blocks
-	 (bytes    (* blocks 32768))
-	 (meg      (/ bytes 1024.0 1024.0))
-	 (meg/hr   (/ meg hours))
-	 (seconds  (* hours 60 60))
-	 (bytes/s  (/ bytes seconds))
-	 (bytes/s* (/ (* meg/hr 1024 1024) 60 60))
-	 (ans    `(hours
-		   ,hours blocks ,blocks bytes ,bytes meg ,meg meg/hr ,meg/hr
-		   bytes/s ,bytes/s bytes/s* ,bytes/s*)))
-    (message "%S" ans)
-    ans))
-
-(when nil 
-  (tkb-vms-tape-blocks/hour 6 "12:50p" 31901 "14:20p")
-  )
-
-
-
-;; (when nil 
-;;   (unless (version< emacs-version "24.1")
-;;     (require 'package)
-;;     (add-to-list 'package-archives
-;; 		 '("marmalade" . "http://marmalade-repo.org/packages/"))
-;;     (package-initialize)
-
-;;     (when (not (package-installed-p 'clojure-mode))
-;;       (package-install 'clojure-mode))))
-
-(defun d4   () (1+ (random   4)))
-(defun d6   () (1+ (random   6)))
-(defun d8   () (1+ (random   8)))
-(defun d10  () (1+ (random  10)))
-(defun d12  () (1+ (random  12)))
-(defun d20  () (1+ (random  20)))
-(defun d100 () (1+ (random 100)))
-(defun dF   () (- (1+ (random 3)) 2))
-
-(defun dice (sides &optional number op mod repeat)
-  "Roll dice, returning a list.
-SIDES and must be an integer or the string \"F\".
-NUMBER is the number of times to roll and add.
-OP is the operation to perform: + - * h l.
-MOD is the modifier for the op.
-REPEAT is how many times to repeat the roll."
-  (error "dice is not yet implemented"))
-
-(defun d (sides number mod repeat)
-  (interactive "nSides: \nnNumber: \nnMod: \nnRepeat: ")
-  (loop repeat repeat
-	collect (loop repeat number
-		      sum (1+ (random sides)) into roll
-		      finally return (+ roll mod))
-	into rolls
-	finally (insert (mapconcat #'int-to-string rolls ", "))))
-
-(load-library "iso-transl.el")
-;; This sticks keys in iso-transl-ctl-x-8-map.
-(iso-transl-define-keys '(("gl" . [?λ])   ; greek lowercase lambda
-			  ("gL" . [?Λ])   ; greek uppercase lambda
-			  ("pb" . [?•])
-			  ("pe" . [?…])
-			  ("pn" . [?–])	;N-dash
-			  ("pm" . [?—]) ;M-dash
-			  ("p-" . [?−])	;Minus sign
-			  ("p " . [? ]) ;non-breaking space.
-			  ;; section and pilcrow are in C-x 8: S and P
-			  ("pS" . [?‘])
-			  ("ps" . [?’])	  
-			  ("pq" . [?”])
-			  ("pQ" . [?“])
-			  ("p*" . [?×])
-			  ("p/" . [?÷])
-			  ))
-
-  
-
-
-(when-file (f "/sw/src/go/go/misc/emacs/go-mode-load.el")
-  (add-to-list 'load-path (file-name-directory f) t)
-  (require 'go-mode-load))
-
-
-
-
-(eval-after-load "tkb-keys-menus.el"
-  '(progn 
-     (fset 'mung-recent-reading
-	   [?\C-k ?R ?e ?c ?e ?n ?t ?  ?R ?e ?a ?d ?i ?n ?g ?\C-n ?\C-n ?, ?R ?e ?c ?e ?n ?t ?  ?R ?e ?a ?d ?i ?n ?g ?r backspace ?\C-f ?\C-k ?\C-k ?\C-k ?\C-k ?\C-k ?\C-k ?\C-k ?\C-k ?\C-k ?\C-k ?\C-k ?\C-k ?\C-x ?\C-s])
-
-     (define-key tkb-map "M" 'mung-recent-reading)))
-
-
-(when nil
-  ;; https://www.reddit.com/r/emacs/comments/31xezm/common_byte_units_in_calc/
-  (setq math-additional-units '(
-				(GiB "1024 * MiB" "Giga Byte")
-				(MiB "1024 * KiB" "Mega Byte")
-				(KiB "1024 * B" "Kilo Byte")
-				(B nil "Byte")
-				(Gib "1024 * Mib" "Giga Bit")
-				(Mib "1024 * Kib" "Mega Bit")
-				(Kib "1024 * b" "Kilo Bit")
-				(b "B / 8" "Bit")))
-
-  ;; This resets calc's cache
-  (setq math-units-table nil))
-
-(progn 
-  ;; http://pragmaticemacs.com/emacs/uniquify-your-buffer-names/
-  ;; meaningful names for buffers with the same name
-  ;; from prelude
-  ;; https://github.com/bbatsov/prelude
-  (require 'uniquify)
-  (setq uniquify-buffer-name-style 'forward)
-  (setq uniquify-separator "/")
-  (setq uniquify-after-kill-buffer-p t)	; rename after killing uniquified
-  (setq uniquify-ignore-buffers-re "^\\*") ; don't muck with special buffers
-  )
-
-(when nil
-  (require 'yaml-mode)
-  (add-to-list 'auto-mode-alist '("\\.\\(yml\\|yaml\\)\\'" . yaml-mode)))
-
-(when-exec-found (e "chez") (setq geiser-chez-binary e))
-
-;;(setq message-mail-alias-type 'mailabbrev) ; doesn't work? 2019-10-30
 
 (message "End of tkb-experimental.el")
 ;;; end of tkb-experimental.el

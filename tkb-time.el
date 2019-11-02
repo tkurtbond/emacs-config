@@ -16,7 +16,7 @@
 
 (defun string-or-nil-to-int (s)
   (if s
-      (string-to-int s)
+      (string-to-number s)
     0))
 
 (defun tkb-parse-iso-date (date)
@@ -25,9 +25,9 @@ and return the encoded time."
   (cond ((string-match			;YYYY-MM-DD
 	  "\\([0-9]\\{4\\}\\)[-/]\\([0-1][0-9]\\)[-/]\\([0-3][0-9]\\)\\( \\([0-2][0-9]\\)\\(\:\\([0-6][0-9]\\)\\)?\\(\:\\([0-6][0-9]\\)\\)?\\)?$"
 	  date)
-	 (let ((year (string-to-int (match-string 1 date)))
-	       (mon  (string-to-int (match-string 2 date)))
-	       (dom  (string-to-int (match-string 3 date)))
+	 (let ((year (string-to-number (match-string 1 date)))
+	       (mon  (string-to-number (match-string 2 date)))
+	       (dom  (string-to-number (match-string 3 date)))
 	       (hour (string-or-nil-to-int (match-string 5 date)))
 	       (min  (string-or-nil-to-int (match-string 7 date)))
 	       (sec  (string-or-nil-to-int (match-string 9 date))))
@@ -35,9 +35,9 @@ and return the encoded time."
 	((string-match			;MM-DD-YYYY
 	  "\\([0-1][0-9]\\)[-/]\\([0-3][0-9]\\)[-/]\\([0-9]\\{4\\}\\)\\( \\([0-2][0-9]\\)\\(\:\\([0-6][0-9]\\)\\)?\\(\:\\([0-6][0-9]\\)\\)?\\)?$"
 	  date)
-	 (let ((year (string-to-int (match-string 3 date)))
-	       (mon  (string-to-int (match-string 1 date)))
-	       (dom  (string-to-int (match-string 2 date)))
+	 (let ((year (string-to-number (match-string 3 date)))
+	       (mon  (string-to-number (match-string 1 date)))
+	       (dom  (string-to-number (match-string 2 date)))
 	       (hour (string-or-nil-to-int (match-string 5 date)))
 	       (min  (string-or-nil-to-int (match-string 7 date)))
 	       (sec  (string-or-nil-to-int (match-string 9 date))))
@@ -59,9 +59,9 @@ and return the encoded time."
 	    "\\([0-1][0-9]\\)[-/]\\([0-3][0-9]\\)[-/]\\([0-9]\\{4\\}\\)"
 	    d))
       (error "invalid date: %s" d)
-    (let ((year (string-to-int (match-string 3 d)))
-	  (mon  (string-to-int (match-string 1 d)))
-	  (dom  (string-to-int (match-string 2 d))))
+    (let ((year (string-to-number (match-string 3 d)))
+	  (mon  (string-to-number (match-string 1 d)))
+	  (dom  (string-to-number (match-string 2 d))))
       (encode-time 0 0 0 dom mon year))))
 
 (defun tkb-insert-date (prefix)
@@ -75,6 +75,27 @@ and return the encoded time."
   (interactive "P")
   (let ((time (if prefix (tkb-get-date-from-user) (current-time))))
     (kill-new (tkb-timestamp nil time))))
+
+(defun get-ampm (&optional time)
+  (interactive)
+  (let ((ampm (downcase (substring (format-time-string "%p" time) 0 1))))
+    (let ((c (aref ampm 0)))
+      (assert (member c '(?a ?p))
+	      t "get-ampm: '%c' is not 'a' or 'p' - is locale weird?" c)
+      ampm)))
+
+(defun tkb-time ()
+  "Return the current time, in \"HH:MM[ap]\" format."
+  (let* ((now (current-time))
+	 (ampm (get-ampm now)))
+    (format "%s%s" (format-time-string "%I:%M") ampm)))
+
+(defun tkb-insert-time ()
+  "Insert the current time, in \"HH:MM[ap]\" format."
+  (interactive)
+  (insert (tkb-time)))
+
+
 
 (defun date ()
   (interactive)
@@ -117,27 +138,29 @@ and return the encoded time."
 'C-u - C-u' adds the time.
 "
   (interactive "P")
-  (let ((time (cond
-	       ((null prefix)		;No prefix specified
-		(current-time))
-	       (prefix
-		;; Condition used to be: 
-		(and (consp prefix)
-		     (>= (car prefix) 0)) ;Just the default prefix
-		(tkb-get-date-from-user))
-	       ((integerp prefix)	;Prefix is delta in days
-		(tkb-get-date-from-user
-		 (time-add (current-time)
-			   (seconds-to-time (* 24 60 60 prefix)))))
-	       (t (current-time)))))
-    (kill-new (format "%s%s"
-		      (format-time-string (if (and (symbolp prefix)
-						   (eq prefix '-))
-					      "%Y-%2m-%2d %A"
-					    "%Y-%2m-%2d") time)
-		      (if (and (consp prefix)
-			       (< (car prefix) 0))
-			  (format-time-string " %H:%M:%S" time) "")))))
+  (let* ((time (cond
+		((null prefix)		;No prefix specified
+		 (current-time))
+		(prefix
+		 ;; Condition used to be: 
+		 (and (consp prefix)
+		      (>= (car prefix) 0)) ;Just the default prefix
+		 (tkb-get-date-from-user))
+		((integerp prefix)	;Prefix is delta in days
+		 (tkb-get-date-from-user
+		  (time-add (current-time)
+			    (seconds-to-time (* 24 60 60 prefix)))))
+		(t (current-time))))
+	 (s (format "%s%s"
+		    (format-time-string (if (and (symbolp prefix)
+						 (eq prefix '-))
+					    "%Y-%2m-%2d %A"
+					  "%Y-%2m-%2d") time)
+		    (if (and (consp prefix)
+			     (< (car prefix) 0))
+			(format-time-string " %H:%M:%S" time) ""))))
+    (kill-new s)
+    (message "Killed ISO Date: %s" s)))
 
 
 (defun tkb-insert-timestamp (&optional use-time)
@@ -175,7 +198,7 @@ If TIME is true, use it for the time to format."
   (let* ((time      (if time time (current-time)))
       (hhmm         (format-time-string "%I:%M %p" time))
       (dow          (format-time-string "%A" time))
-      (day          (int-to-string (string-to-int
+      (day          (int-to-string (string-to-number
                          (format-time-string "%e" time)))) ;fixme: %-e
       (month   (format-time-string "%B" time))
       (year         (format-time-string "%Y" time))
