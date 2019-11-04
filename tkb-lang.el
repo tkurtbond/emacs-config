@@ -116,19 +116,24 @@
 
 
 ;; Caml
-(cond-load-dir
- (["caml" "caml-mode" "ocaml-mode"]
-  (setq tkb-caml-keys t)
-  (if (or window-system (fboundp 'facep)) (require 'caml-font))
-  (autoload 'caml-mode "caml" "Major mode for editing Caml code." t)
-  (autoload 'run-caml "inf-caml" "Run an inferior Caml process." t)
-  (autoload 'camldebug "camldebug" "Run the Caml debugger" t)
+(when (require 'caml nil t)
+  (require 'caml-font)
   (push '("\\.ml[iylp]?$" . caml-mode) auto-mode-alist))
- ("tuareg-mode"
-  (setq auto-mode-alist (cons '("\\.ml\\w?" . tuareg-mode) auto-mode-alist))
-  (autoload 'tuareg-mode "tuareg" "Major mode for editing Caml code" t)
-  (autoload 'camldebug "camldebug" "Run the Caml debugger" t)
-  (setq tuareg-in-indent 0)))
+
+(when nil
+  (cond-load-dir
+   (["caml" "caml-mode" "ocaml-mode"]
+    (setq tkb-caml-keys t)
+    (if (or window-system (fboundp 'facep)) (require 'caml-font))
+    (autoload 'caml-mode "caml" "Major mode for editing Caml code." t)
+    (autoload 'run-caml "inf-caml" "Run an inferior Caml process." t)
+    (autoload 'camldebug "camldebug" "Run the Caml debugger" t)
+    (push '("\\.ml[iylp]?$" . caml-mode) auto-mode-alist))
+   ("tuareg-mode"
+    (setq auto-mode-alist (cons '("\\.ml\\w?" . tuareg-mode) auto-mode-alist))
+    (autoload 'tuareg-mode "tuareg" "Major mode for editing Caml code" t)
+    (autoload 'camldebug "camldebug" "Run the Caml debugger" t)
+    (setq tuareg-in-indent 0))))
 
 
 ;; Python

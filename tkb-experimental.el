@@ -130,36 +130,37 @@ Interactively, prompts for a numeric string giving the code."
 (tkb-keys ("\C-cko\C-c" #'org-ctrl-c-ctrl-c))
 (tkb-check-bindings '("\C-cko\C-c"))
 
-(when-load-dir (d "org-7.8.11/lisp")
-  (add-to-list 'Info-default-directory-list
-	       (expand-file-name (format "%s/../%s/" d "doc")))
-  (require 'org-install)
-  (setq org-agenda-clockreport-parameter-plist (quote (:link t :maxlevel 3)))
-  (setq org-agenda-files "~/current/org/.agenda_files")
-  (setq org-columns-default-format
-	(concat "%30ITEM(Details) %TAGS(Context) %7TODO(To Do) "
-		"%5Effort(Time){:} %6CLOCKSUM{Total}"))
-  ;;(setq org-log-done (quote (done state clock-out)))
+(when nil
+  (when-load-dir (d "org-7.8.11/lisp")
+    (add-to-list 'Info-default-directory-list
+		 (expand-file-name (format "%s/../%s/" d "doc")))
+    (require 'org-install)
+    (setq org-agenda-clockreport-parameter-plist (quote (:link t :maxlevel 3)))
+    (setq org-agenda-files "~/current/org/.agenda_files")
+    (setq org-columns-default-format
+	  (concat "%30ITEM(Details) %TAGS(Context) %7TODO(To Do) "
+		  "%5Effort(Time){:} %6CLOCKSUM{Total}"))
+    ;;(setq org-log-done (quote (done state clock-out)))
 
-  (setq org-agenda-text-search-extra-files '("~/current/org/notes.org"))
-  (setq org-agenda-custom-commands
-	'(("H" "Office and Home Lists"
-	   ((agenda)
-	    (tags-todo "WORK")
-	    (tags-todo "HOME")
-	    (tags-todo "COMPUTER")
-	    (tags-todo "DVD")
-	    (tags-todo "READING")
-	    (tags "CHARGE")))
-	  ("D" "Daily Action List"
-	   ((agenda "" ((org-agenda-ndays 1)
-			(org-agenda-sorting-strategy
-			 (quote ((agenda time-up priority-down tag-up) )))
-			(org-deadline-warning-days 0)
-			))
-	    (tags "WORK")
-	    (tags "CHARGE")
-	    (tags "CLOCK"))))))
+    (setq org-agenda-text-search-extra-files '("~/current/org/notes.org"))
+    (setq org-agenda-custom-commands
+	  '(("H" "Office and Home Lists"
+	     ((agenda)
+	      (tags-todo "WORK")
+	      (tags-todo "HOME")
+	      (tags-todo "COMPUTER")
+	      (tags-todo "DVD")
+	      (tags-todo "READING")
+	      (tags "CHARGE")))
+	    ("D" "Daily Action List"
+	     ((agenda "" ((org-agenda-ndays 1)
+			  (org-agenda-sorting-strategy
+			   (quote ((agenda time-up priority-down tag-up) )))
+			  (org-deadline-warning-days 0)
+			  ))
+	      (tags "WORK")
+	      (tags "CHARGE")
+	      (tags "CLOCK")))))))
 
 (defun tkb-find-org-log-file ()
   "Look in the current directory or its parents for a file named *-log.org
@@ -201,7 +202,48 @@ and add a log entry to it."
   (when-load-dir (d "remember/")
     (add-to-list 'Info-default-directory-list d)))
 
-(progn
+(when t
+  (tkb-keys ("\C-ckoc" #'org-capture))
+  (setq org-capture-templates
+	'(("j" "Journal" entry
+	   (file+headline "/Users/tkb/current/org/journal.org" "Journal")
+	   "* %^{Title} %U\n  %i\n  %?\n")
+	  ("c" "Contacts Log" entry
+	   (file+headline "/Users/tkb/current/org/contacts.org" "Contacts")
+	   "* %^{Title} %U\n  %i\n  %?\n")
+	  ("h" "Health" entry
+	   (file+headline "/Users/tkb/current/org/health.org" "Health")
+	   "* %^{Title} %U\n  %i\n  %?\n")
+	  ("n" "Notes" entry
+	   (file+headline "/Users/tkb/current/org/notes.org" "Notes")
+	   "\n\n* %^{Title} %U\n  %i\n  %?\n  %a\n\n")
+	  ("r" "RPG" entry
+	   (file+headline "/Users/tkb/current/org/rpg.org" "RPG")
+	   "\n\n* %^{Title} %U\n  %i\n  %?\n  %a\n\n")
+	  ("t" "Tasks" entry
+	   (file+headline "/Users/tkb/current/org/tasks.org" "Tasks")
+	   "* TODO %^{Title} %U\n  %i\n  %?\n  %a\n")
+	  ("v" "Video" entry
+	   (file+headline "/Users/tkb/current/org/video.org" "Video")
+	   "* TODO %^{Title} %U\n  %^C%i%?\n")
+	  ("J" "MPL Journal" entry
+	   (file+headline "/Users/tkb/job/MPL/Org/journal.org" "MPL Journal")
+	   "* %^{Title} %U\n  %i\n  %?\n")
+	  ("M" "MHST Journal" entry
+	   (file+headline "/Users/tkb/job/MPL/Org/mhst-journal.org" "MHST Journal")
+	   "* %^{Title} %U\n  %i\n  %?\n")
+	  ("C" "MPL Contacts Log" entry
+	   (file+headline "/Users/tkb/job/MPL/Org/contacts.org" "MPL Contacts")
+	   "* %^{Title} %U\n  %i\n  %?\n")
+	  ("N" "MPL Notes" entry
+	   (file+headline "/Users/tkb/job/MPL/Org/notes.org" "MPL Notes")
+	   "\n\n* %^{Title} %U\n  %i\n  %?\n  %a\n\n")
+	  ("T" "MPL Tasks" entry
+	   (file+headline "/Users/tkb/job/MPL/Org/tasks.org" "MPL Tasks")
+	   "* TODO %^{Title} %U\n  %i\n  %?\n  %a\n")))
+  )
+
+(when nil 
   (unless (require 'remember nil t)
     (add-to-list 'load-path
 		 (expand-file-name "~/lib/emacs/obsolete-others/remember/"))
@@ -769,13 +811,6 @@ where the \"FILE\" is optional and the \".\" can also be a \",\"."
 	  (shell-command cmd)
 	  (setq describe-char-unicodedata-file "~/tmp/UnicodeData.txt"))))))
 
-(define-minor-mode tkb-smart-unicode-mode
-  "Toggle smart unicode punctuation" nil " ♻⚔☣☥☸◉⅙✽☮" ; "✘▧▧⚅☑☢☹☺♠♥♦♣♨"
-  '(("\"" . unicode-smart-double-quote)
-    ("'"  . unicode-smart-single-quote)
-    ("-"  . unicode-smart-hyphen)
-    ("."  . unicode-smart-period)))
-
 ;; http://www.ossh.com/emacs/imap/howto.html
 (defun gnus-browse-imaps-server (server)
   "Browse a mail server in Gnus via IMAP-SSL."
@@ -901,10 +936,26 @@ appropriate directory structure."
 	 (category (format-time-string "media/viewing/%Y/%m" date-time)))
     (tkb-blog titles tags category date-time "Recent Viewing: ")))
 
-(progn			       ; used by my hooks for rst and asciidoc
+(when t			       ; used by my hooks for rst and asciidoc
   (add-to-list 'load-path (expand-file-name "~/lib/emacs/others/misc"))
   (load-library "unichars")
-  (load-library "xmlunicode"))
+  (load-library "xmlunicode")
+
+  (defun tkb-describe-character (after)
+    "Describe the character before point (after if a prefix was specified)
+if it is a unicode character."
+    (interactive "P")
+    (let ((char (if after (char-after) (char-before))))
+      (message "%S" (assoc (encode-char char 'ucs)
+			   unicode-character-list))))
+  (tkb-keys ("\C-ckd" #'tkb-describe-character))
+
+  (define-minor-mode tkb-smart-unicode-mode
+    "Toggle smart unicode punctuation" nil " ♻⚔☣☥☸◉⅙✽☮" ; "✘▧▧⚅☑☢☹☺♠♥♦♣♨"
+    '(("\"" . unicode-smart-double-quote)
+      ("'"  . unicode-smart-single-quote)
+      ("-"  . unicode-smart-hyphen)
+      ("."  . unicode-smart-period))))
 
 (defun tkb-asciidoc-version-increment ()
   (interactive)
@@ -925,7 +976,7 @@ appropriate directory structure."
 (defun tkb-doc-mode-hook ()
   (add-hook 'write-contents-functions #'tkb-asciidoc-version-increment))
 
-(progn
+(when nil				;retiring doc-mode 2019-11-03
   (autoload 'doc-mode "doc-mode")
   (add-to-list 'auto-mode-alist '("\\.adc$" . doc-mode))
   (eval-after-load "compile"
@@ -946,17 +997,6 @@ appropriate directory structure."
 	(set-input-method 'xml))
       (add-hook 'doc-mode-hook #'bind-doc-mode-keys)
       (add-hook 'doc-mode-hook #'tkb-doc-mode-hook))))
-
-(defun tkb-describe-character (after)
-  "Describe the character before point (after if a prefix was specified)
-if it is a unicode character."
-  (interactive "P")
-  (let ((char (if after (char-after) (char-before))))
-    (message "%S" (assoc (encode-char char 'ucs)
-			 unicode-character-list))))
-(tkb-keys ("\C-ckd" #'tkb-describe-character))
-
-
 
 (progn
   ;; Yank from emacs in screen
@@ -1735,7 +1775,8 @@ Goes backward if ARG is negative; error if CHAR not found."
 		  ("\\.rsti$" . rst-mode) ; include files.
 		  ("\\.rest$" . rst-mode)
 		  ("\\.rst-pending$" . rst-mode) ;for my blog.
-		  ) auto-mode-alist))
+		  )
+		auto-mode-alist))
   (autoload 'rst-repeat-last-character "rst")
   (tkb-keys ("\C-cR" 'rst-repeat-last-character))
   (when nil			  ; replaced by tkb-smart-unicode-mode

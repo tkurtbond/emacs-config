@@ -333,16 +333,6 @@ currently under the curser"
 ;;__________________________________________________________________________
 
 
-(defun tkb-insert-buffer-filename ()
-  (interactive)
-  (insert (file-name-nondirectory
-	   (buffer-file-name))))
-
-(defun tkb-insert-buffer-filename-sans-extension ()
-  (interactive)
-  (insert (file-name-sans-extension
-	   (file-name-nondirectory (buffer-file-name)))))
-
 (defun tkb-filename-to-registers-for-utplsql ()
   (interactive)
   (let* ((bfn (file-name-nondirectory (buffer-file-name)))

@@ -30,10 +30,7 @@
        ("Return-Path" . "<thomas.bond@leo.gov>"))))))
  '(package-selected-packages
    (quote
-    (jabber cider clojure-mode racket-mode go-guru go-mode use-package yaml-mode markdown-mode w3m projectile nim-mode geiser fuel f docbook clojure-snippets clojure-quick-repls clojure-mode-extra-font-locking ada-ref-man ada-mode)))
- '(quack-programs
-   (quote
-    ("racket" "bigloo" "csi" "csi -hygienic" "gosh" "gsi" "gsi ~~/syntax-case.scm -" "guile" "kawa" "mit-scheme" "mred -z" "mzscheme" "mzscheme -M errortrace" "rs" "scheme" "scheme48" "scsh" "sisc" "stklos" "sxi")))
+    (adoc-mode caml jabber cider clojure-mode racket-mode go-guru go-mode use-package yaml-mode markdown-mode w3m projectile nim-mode geiser fuel f docbook clojure-snippets clojure-quick-repls clojure-mode-extra-font-locking ada-ref-man ada-mode)))
  '(read-file-name-completion-ignore-case t)
  '(rst-level-face-max 10)
  '(send-mail-function (quote mailclient-send-it))

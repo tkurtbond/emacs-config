@@ -49,10 +49,16 @@ or at the column specified by the prefix arg."
 
 
 (defun tkb-insert-buffer-filename (prefix)
-  (interactive "P")
-  (insert (if prefix (buffer-file-name)
-	    (file-name-nondirectory
-	     (buffer-file-name)))))
+  "Insert the filename part of the buffer filename, or the whole filename
+if a prefix greater than 1 is specified (remember C-u by itself is 4,
+or the filename part without an extension)."
+  (interactive "p")
+  (insert (if (> prefix 1)
+	      (buffer-file-name)
+	    (if (< prefix 0)
+		(file-name-sans-extension
+		 (file-name-nondirectory (buffer-file-name)))
+	      (file-name-nondirectory (buffer-file-name))))))
 
 (defun tkb-count-region ()
   (interactive)

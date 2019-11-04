@@ -107,25 +107,31 @@
   (package-initialize)
 
   (let ((tkb-packages '(
-			;; it says its already installed because
+			;; installing ada-mode using package-install
+			;; says its already installed because
 			;; ada-mode.el comes with emacs; so installing
 			;; a newer version only works from the
 			;; list-packages buffer.
 			ada-mode
-			ada-ref-man	; not available?
-			cider		; not available?
+			ada-ref-man
+			adoc-mode
+			caml
+			cider
 			clojure-mode
 			clojure-quick-repls
 			clojure-snippets
 			projectile 
 			docbook
+			;;elscreen ; Did I ever really use this?
 			f
 			fuel
 			geiser
 			markdown-mode
+			;; moz ; Did I every really use this?
 			nim-mode
 			racket-mode
-			;;w3m - not currently using
+			;; regex-tool ; not currently using
+			;;w3m - Not currently using.
 			use-package ;; too strict?
 			;;wanderlust ;; not using right now.
 			)))
@@ -175,7 +181,7 @@
     (message "Converting %s from %o to %o" filename old-modes new-modes)
     (chmod filename new-modes)))
 
-(require 'mercurial)
+;;(require 'mercurial)
 
 (setq abbrev-file-name "~/lib/emacs/tkb/abbrev_defs")
 
