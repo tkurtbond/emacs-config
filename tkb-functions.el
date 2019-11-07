@@ -121,9 +121,9 @@ or the filename part without an extension)."
 		(if (stringp self)
 		    self
 		  (completing-read "Username: "
-				   `(((concat "tkb+note@" mail-host-address)  1)
-				     ("kurt_bond@mpl.com" 2))))
-	      (concat "tkb+note@" mail-host-address))))
+				   `(("tkurtbond+note@gmail.com" 1)
+				     ("kbond+note@mpl.com" 2))))
+	      "tkurtbond+note@gmail.com")))
     ;; Whoa, way too fiddly. ???
     (let ((mail-self-blind (and self
 				(or (and (numberp self)
@@ -131,16 +131,18 @@ or the filename part without an extension)."
 				    (eq self '-)))))
       (compose-mail to)
       (mail-subject))))
+(global-set-key "\C-cn" 'tkb-mail-self-note)
 
 (defun tkb-mail-self-note-mpl ()
   (interactive)
-  (tkb-mail-self-note "kurt_bond@mail.mpl.com"))
+  (tkb-mail-self-note "kbond+note@mpl.com"))
+(global-set-key "\C-cN" 'tkb-mail-self-note-mpl)
 
 (defun tkb-mail-bosses ()
   (interactive)
   (random t)
-  (let ((bosses ["Hayes_Theiling@mail.mpl.com" "Linda_Wellings@mail.mpl.com"
-		 "Phil_Loftis@mail.mpl.com"])
+  (let ((bosses ["htheiling@mpl.com" "dsweda@mpl.com" "cbenson@mpl.com"
+		 "bmoats@mpl.com"])
 	to)
     (while (not (= (length to) 3))
       (let ((user (aref bosses (random 3))))
@@ -149,7 +151,7 @@ or the filename part without an extension)."
     (message "To: %S" to)
     (compose-mail (mapconcat (function (lambda (n) n)) to ", "))
     (mail-subject)))
-    
+(global-set-key "\C-cb" 'tkb-mail-bosses)    
 
 (defun tkb-edit-incoming-links ()
   (interactive)

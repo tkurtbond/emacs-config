@@ -276,3 +276,5 @@ line."
 
 (test (tkb-interval-to-string "10:15a to 12:15p") (120 "2:00" "2.00"))
 (test (tkb-interval-to-string "10a to 12a") (120 "2:00" "2.00"))
+
+;;; end of tkb-duration.el

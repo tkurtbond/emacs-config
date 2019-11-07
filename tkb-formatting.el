@@ -5,17 +5,6 @@
 ;;; $Id: tkb-formatting.el 1.2 Tue, 09 May 2000 20:50:39 -0400 tkb $
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; Display; see Emacs > Display > European Display
-(when nil
-  ;; Not with LANG=en_US.UTF-8
-  (cond ((<= (string-to-number (car (split-string emacs-version "\\."))) 21)
-	 (standard-display-european 1)
-	 (unless tkb-xemacs-p
-	   (set-language-environment "Latin-1")))
-	(t
-	 )))
-
-
 ;;; Faces
 ;; When I don't actually have a bold italic...
 (unless (face-font 'bold-italic)
@@ -55,14 +44,9 @@
 ;; magenta, darkorchid, blueviolet, or scheme, lightsteelblue3, darkgoldenrod3,
 ;; purple
 
-(when (or window-system tkb-xemacs-p (and (boundp 'emacs-major-version)
-					  (>= emacs-major-version 21)))
-  (load-library "font-lock")
-  (cond (tkb-xemacs-p
-	 (font-lock-use-default-maximal-decoration))
-	(t
-	 (setq font-lock-maximum-decoration t)
-	 (global-font-lock-mode 1))))
+(load-library "font-lock")
+(setq font-lock-maximum-decoration t)
+(global-font-lock-mode 1)
 
 ;; Turn off multi-byte characters.
 ; (setq-default enable-multibyte-characters nil)

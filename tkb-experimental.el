@@ -1,30 +1,15 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; tkb-experimental.el -- Experimental -*- coding-system: utf-8 -*-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; $ProjectHeader: tkbconfig 0.5 Tue, 09 May 2000 20:50:39 -0400 tkb $
-;;; $Id: tkb-experimental.el 1.1 Sun, 26 Mar 2000 15:10:50 -0500 tkb $
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (require 'cl)
-(message "%s" #$)
 
-(when-directory (d ["/sw/versions/oo2c/2.1.11/lib/oo2c/emacs/"
-		    "/sw/versions/m64/oo2c/2.1.11/lib/oo2c/emacs/"
-		    "/usr/local/lib/oo2c/emacs/"])
-  (add-to-list 'load-path d)
-  (autoload #'oberon-2-mode "oberon2" "Major mode for editing Oberon-2 code.")
-  (add-to-list 'auto-mode-alist '("\\.\\([Mm]od\\|obn\\)$" . oberon-2-mode)))
+;; #$ Outputs the current filename.  It's not supposed to be used in lisp code.
+(message "%s" #$)
 
 (eval-after-load "w3m"
   '(define-key w3m-mode-map "f" #'w3m-find-file))
 
-(when-directory (d "/sw/src/go/misc/emacs/")
-  (defun tkb-go-hook ()
-    (setq tab-width 4))
-  (add-hook 'go-mode-hook #'tkb-go-hook)
-  (add-to-list 'load-path d t)
-  (require 'go-mode-load))
-
-(defun tkb-unhex-buffer ()
+(defun tkb-unhex-region ()
   (interactive)
   (let* ((s (buffer-substring (point) (mark)))
 	 (s* (url-unhex-string s t)))
@@ -42,78 +27,16 @@
 		      (u (make-string (length s) c)))
 		 (insert (format "%s\n%s\n\n" s u))))))
 
-(defadvice mh-file-command-p (around tkb-mh-file-command-p-ad activate)
-  (message "tkb-mh-file-command-p-ad ran at %s" (format-time-string "%r"))
-  ad-do-it
-  (when (not ad-return-value)
-    (ad-set-arg 0 (concat (ad-get-arg 0) ".exe"))
-    ad-do-it))
-
-(progn
-
-(put 'ucs-error 'error-conditions '(error tkb-errors ucs-error))
-(put 'ucs-error 'error-message "UCS error")
-
-(defun tkb-ucs-check (code-point)
-  (let ((c (decode-char 'ucs code-point)))
-    (if c
-	c
-      (if (or (< code-point 0) (> code-point #x10FFFF))
-	  (signal 'ucs-error
-		  (list
-		   (format "U+%X is not a unicode character code" code-point)
-		   code-point))
-	(signal 'ucs-error
-		(list
-		 (format "Character U+%X is not yet supported" code-point)
-		 code-point))))))
-
-(defun tkb-ucs-insert (arg &optional base)
-  "Insert the Emacs character representation of the given Unicode.
-Interactively, prompts for a numeric string giving the code."
-  (interactive
-   (let* ((base (cond
-		 ((null current-prefix-arg)     16)
-		 ((consp current-prefix-arg)    10) ;C-u, arg is (<integer>)
-		 ((integerp current-prefix-arg) current-prefix-arg)
-		 (t
-		  (error "Uninterpretable BASE %S\n" current-prefix-arg))))
-	  (s (read-string (format "Unicode (base %d): " base)))
-	  (n (string-to-number s base)))
-     (list n base)))
-  (if (null base) (setq base 16))
-  (or (integerp arg)
-      (setq arg (string-to-number arg base)))
-  (insert (tkb-ucs-check arg)))
-(tkb-keys ("\C-cKu" #'tkb-ucs-insert))
-
-(defun tkb-superscript ()
-  (interactive)
-  (loop for c in '(#x2070 #x00B9 #x00B2 #x00B3 #x2074
-		   #x2075 #x2076 #x2077 #x2078 #x2079)
-	do (tkb-ucs-insert c)))
-
-(defun tkb-subscript ()
-  (interactive)
-  (loop for c in '(#x2080 #x2081 #x2082 #x2083 #x2084
-		  #x2085 #x2086 #x2087 #x2088 #x2089)
-	do (tkb-ucs-insert c)))
-;; (tkb-ucs-insert "2014") ; em dash
-)
-
-(defun frame-completions ()
-  (loop for frame in (frame-list)
-	collect (cons (frame-parameter frame 'name) frame) into frames
-	finally return frames))
-
 (defun tkb-select-frame ()
   (interactive)
-  (let* ((frames (frame-completions))
+  (let* ((frames (loop for frame in (frame-list)
+		       collect (cons (frame-parameter frame 'name)
+				     frame)
+		       into frames finally return frames))
 	 (frame-name (completing-read "Frame? " frames))
 	 (frame (cdr (assoc-string frame-name frames))))
     (raise-frame frame)
     (select-frame frame)))
-
 (tkb-keys ((kbd "C-c A") #'tkb-select-frame))
 
 (defun tkb-load-file ()
@@ -127,82 +50,7 @@ Interactively, prompts for a numeric string giving the code."
   (interactive "M")
   (message "file: %s" (locate-file filename load-path (get-load-suffixes))))
 
-(tkb-keys ("\C-cko\C-c" #'org-ctrl-c-ctrl-c))
-(tkb-check-bindings '("\C-cko\C-c"))
-
-(when nil
-  (when-load-dir (d "org-7.8.11/lisp")
-    (add-to-list 'Info-default-directory-list
-		 (expand-file-name (format "%s/../%s/" d "doc")))
-    (require 'org-install)
-    (setq org-agenda-clockreport-parameter-plist (quote (:link t :maxlevel 3)))
-    (setq org-agenda-files "~/current/org/.agenda_files")
-    (setq org-columns-default-format
-	  (concat "%30ITEM(Details) %TAGS(Context) %7TODO(To Do) "
-		  "%5Effort(Time){:} %6CLOCKSUM{Total}"))
-    ;;(setq org-log-done (quote (done state clock-out)))
-
-    (setq org-agenda-text-search-extra-files '("~/current/org/notes.org"))
-    (setq org-agenda-custom-commands
-	  '(("H" "Office and Home Lists"
-	     ((agenda)
-	      (tags-todo "WORK")
-	      (tags-todo "HOME")
-	      (tags-todo "COMPUTER")
-	      (tags-todo "DVD")
-	      (tags-todo "READING")
-	      (tags "CHARGE")))
-	    ("D" "Daily Action List"
-	     ((agenda "" ((org-agenda-ndays 1)
-			  (org-agenda-sorting-strategy
-			   (quote ((agenda time-up priority-down tag-up) )))
-			  (org-deadline-warning-days 0)
-			  ))
-	      (tags "WORK")
-	      (tags "CHARGE")
-	      (tags "CLOCK")))))))
-
-(defun tkb-find-org-log-file ()
-  "Look in the current directory or its parents for a file named *-log.org
-and return it."
-  ;; So I can us M-x tkb-find-org-log and not bring up the debugger on the
-  ;; call to error when testing.
-  (interactive)
-  (let ((default-directory default-directory)
-	(original-directory default-directory)
-	log-files)
-    (while (not (setq log-files (file-expand-wildcards "*-log.org" t)))
-      (cd "..")
-      (when (string-equal default-directory "/")
-	(error "unable to find *-log.org starting at %s"
-	       original-directory)))
-    (car log-files)))
-
-(defun tkb-find-org-log ()
-  "Look in the current directory or its parents for a file named *-log.org
-and switch to a buffer visiting it."
-  (interactive)
-  (let* ((org-file (tkb-find-org-log-file)))
-    (find-file org-file)))
-(tkb-keys ("\C-ckof" #'tkb-find-org-log))
-;; (defalias 'x #'tkb-find-org-log) 
-
-(defun tkb-add-org-log ()
-  "Look in the current directory or its parents for a file named *-log.org
-and add a log entry to it."
-  (interactive)
-  (let* ((org-file (tkb-find-org-log-file))
-	 (org-remember-templates 
-	  `(("Log"      ?j   "* %^{Title} %U\n  %i\n  %?\n"
-	     ,org-file "Log"))))
-    (org-remember)))
-(tkb-keys ("\C-ckol" #'tkb-add-org-log))
-
-(when nil
-  (when-load-dir (d "remember/")
-    (add-to-list 'Info-default-directory-list d)))
-
-(when t
+(when t					; Using org-capture now.
   (tkb-keys ("\C-ckoc" #'org-capture))
   (setq org-capture-templates
 	'(("j" "Journal" entry
@@ -241,58 +89,53 @@ and add a log entry to it."
 	  ("T" "MPL Tasks" entry
 	   (file+headline "/Users/tkb/job/MPL/Org/tasks.org" "MPL Tasks")
 	   "* TODO %^{Title} %U\n  %i\n  %?\n  %a\n")))
-  )
+  (tkb-keys ("\C-cko\C-c" #'org-ctrl-c-ctrl-c))
+  (tkb-check-bindings '("\C-cko\C-c"))
 
-(when nil 
-  (unless (require 'remember nil t)
-    (add-to-list 'load-path
-		 (expand-file-name "~/lib/emacs/obsolete-others/remember/"))
-    (require 'remember))
-  (org-remember-insinuate)
-  (setq org-directory "~/current/org")
-  (flet ((orgd (filename) (expand-file-name filename org-directory))
-	 (mpld (filename) (expand-file-name filename "~/job/MPL/Org/")))
-    (setq org-default-notes-file (orgd "notes.org"))
-    (autoload 'org-remember "org-remember" nil t)
-    (setq org-remember-templates
-	  `(("Journal"      ?j   "* %^{Title} %U\n  %i\n  %?\n"
-	     ,(orgd "journal.org") "Journal")
-	    ("Contacts Log" ?c   "* %^{Title} %U\n  %i\n  %?\n"
-	     ,(orgd "contacts.org") "Contacts")
-	    ("Health"       ?h   "* %^{Title} %U\n  %i\n  %?\n"
-	     ,(orgd "health.org") "Health")
-	    ("Notes"        ?n   "\n\n* %^{Title} %U\n  %i\n  %?\n  %a\n\n"
-	     ,(orgd "notes.org") "Notes")
-	    ("RPG"        ?r   "\n\n* %^{Title} %U\n  %i\n  %?\n  %a\n\n"
-	     ,(orgd "rpg.org") "RPG")
-	    ("Tasks"        ?t   "* TODO %^{Title} %U\n  %i\n  %?\n  %a"
-	     ,(orgd "tasks.org") "Tasks")
-	    ("Video"        ?v   "* TODO %^{Title} %U\n  %^C%i%?\n"
-	     ,(orgd "video.org") "Video")
-	    
-	    ;; ??? Ought to have this in a truecrypt volume. 
-	    ;; ("Private"      ?p   "* %^{Title} %U\n  %i\n  %?\n"
-	    ;; ,(orgd "private/private.org") "Private")
+  (defun tkb-find-org-log-file ()
+    "Look in the current directory or its parents for a file named *-log.org
+and return it."
+    ;; So I can us M-x tkb-find-file-org-log and not bring up the debugger on the
+    ;; call to error when testing.
+    (interactive)
+    (let ((default-directory default-directory)
+	  (original-directory default-directory)
+	  log-files)
+      (while (not (setq log-files (file-expand-wildcards "*-log.org" t)))
+	(cd "..")
+	(when (string-equal default-directory "/")
+	  (error "unable to find *-log.org starting at %s"
+		 original-directory)))
+      (car log-files)))
 
-	    ;; MPL
-	    ("MPL Journal"      ?J   "* %^{Title} %U\n  %i\n  %?\n"
-	     ,(mpld "journal.org") "MPL Journal")
-	    ("MHST Journal"     ?M   "* %^{Title} %U\n  %i\n  %?\n"
-	     ,(mpld "mhst-journal.org") "MHST Journal")
-	    ("MPL Contacts Log" ?C   "* %^{Title} %U\n  %i\n  %?\n"
-	     ,(mpld "contacts.org") "MPL Contacts")
-	    ("MPL Notes"        ?N   "\n\n* %^{Title} %U\n  %i\n  %?\n  %a\n\n"
-	     ,(mpld "notes.org") "MPL Notes")
-	    ("MPL Tasks"        ?T   "* TODO %^{Title} %U\n  %i\n  %?\n  %a"
-	     ,(mpld "tasks.org") "MPL Tasks")
-	    )))
-  (tkb-keys ("\C-ckor" #'org-remember)))
+  (defun tkb-find-file-org-log ()
+    "Look in the current directory or its parents for a file named *-log.org
+and switch to a buffer visiting it."
+    (interactive)
+    (let* ((org-file (tkb-find-org-log-file)))
+      (find-file org-file)))
+  (tkb-keys ("\C-ckof" #'tkb-find-file-org-log))
+  ;; (defalias 'x #'tkb-find-file-org-log) 
+
+  (defun tkb-add-org-log ()
+    "Look in the current directory or its parents for a file named *-log.org
+and add a log entry to it."
+    (interactive)
+    (let* ((org-file (tkb-find-org-log-file))
+	   (org-capture-templates 
+	    `(("l" "Log" entry (file+headline ,org-file "Log")
+	       "* %^{Title} %U\n  %i\n  %?\n"))))
+      (org-capture)))
+  (tkb-keys ("\C-ckol" #'tkb-add-org-log)))
 
 (progn
-  (autoload 'daily "daily")
-  (autoload 'daily-add-time-range-entry "daily")
-  (tkb-keys ("\C-ckj" #'daily)
-	    ("\C-ckA" #'daily-add-time-range-entry)))
+  ;; See Info: (org)Activation.
+  ;; The following lines are always needed.  Choose your own keys.
+  (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
+  (tkb-keys ("\C-ckos" #'org-store-link)
+	    ("\C-ckoa" #'org-agenda))
+  (add-hook 'org-mode-hook 'turn-on-font-lock))	; org-mode buffers only
+
 
 (defun tkb-toggle-trailing-whitespace-display ()
   (interactive)
@@ -359,11 +202,11 @@ and add a log entry to it."
 
 
 (defun rename-buffer-uniquely ()
+  "Rename the current buffer to something that will be unique."
   ;; (rename-buffer x t) and (generate-new-buffer-name) only work if
   ;; buffers with the names to be avoided already exist.  I want
   ;; something so I can rename a buffer so I can have things like two
   ;; greps running at once.
-  "Rename the current buffer to something that will be unique."
   (interactive)
   (rename-buffer (loop with bufname =
 		       (progn
@@ -380,37 +223,6 @@ and add a log entry to it."
 		       with newname = (format "%s-%d" bufname i)
 		       while (get-buffer newname)
 		       finally return newname)))
-
-
-(when-load-dir (d "mozrepl")
-  (message "Found mozrepl directory: %s" d)
-  (progn
-    ;; http://wiki.github.com/bard/mozrepl/emacs-integration
-    (case 'moz
-      ((moz)
-       (autoload 'moz-minor-mode "moz" "Mozilla Minor and Inferior Mozilla Modes" t)
-
-       (add-hook 'javascript-mode-hook 'javascript-custom-setup)
-       (defun javascript-custom-setup ()
-	 (moz-minor-mode 1)))
-      ((espresso)
-
-       (autoload 'moz-minor-mode "moz" "Mozilla Minor and Inferior Mozilla Modes" t)
-
-       (add-hook 'espresso-mode-hook 'espresso-custom-setup)
-       (defun espresso-custom-setup ()
-	 (moz-minor-mode 1)))
-      )))
-
-
-(progn
-  ;; See Info: (org)Activation.
-  ;; The following lines are always needed.  Choose your own keys.
-  (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
-  (tkb-keys ("\C-ckos" #'org-store-link)
-	    ("\C-ckoa" #'org-agenda))
-  (global-font-lock-mode 1)			; for all buffers
-  (add-hook 'org-mode-hook 'turn-on-font-lock))	; org-mode buffers only
 
 
 (setq longlines-show-hard-newlines t)
@@ -430,7 +242,6 @@ and add a log entry to it."
 		       ("black" "green")
 		       ("black" "wheat")
 		       ("black" "navajowhite1")))
-;;(rplacd (last tkb-color-list) tkb-color-list)
 (defun tkb-toggle-colors ()
   (interactive)
   (let* ((fg (frame-parameter nil 'foreground-color))
@@ -448,6 +259,7 @@ and add a log entry to it."
 
 
 (defun nothing ()
+  ;; Why did I need this???
   (interactive)
   nil)
 
@@ -478,20 +290,7 @@ and add a log entry to it."
     (python-indent-region b e))))
 
 
-(when nil
-  ;; This didn't work. 2008-12-01
-  (defadvice compile (before tkb-compile-ad activate)
-    (message "tkb's compile before")
-    (let ((fullname (buffer-file-name)))
-      (when (string-match ".*/myblog/entries/.*\\.rst$" fullname)
-	(message "tkb's compile before: after string-match")
-	(when (not (local-variable-p 'compile-command))
-
-	  ;; compile does it in the current directory,
-	  ;; so we don't need the full name.
-	  (make-local-variable 'compile-command)
-	  (setq compile-command (concat "blog2html" " "
-					(file-name-nondirectory fullname))))))))(eval-after-load "python"
+(eval-after-load "python"
   '
   (progn
     (tkb-keys :keymap python-mode-map
@@ -583,57 +382,10 @@ and add a log entry to it."
 ;; This is for unison.  Unfortunately, you can't include the .unison.
 (modify-coding-system-alist 'file "\\.prf\\'" 'utf-8-unix)
 
-(autoload 'linum-mode "linum" "display line numbers in fringe")
-;(setq linum-format "%03d")
-;(setq linum-format 'dynamic)
-(when nil
-  (setq linum-format 'tkb-linum-format)
-  (defface tkb-linum '((t (:background "green" :foreground "red"))) "tkb-linum")
-  (defun tkb-linum-format (lineno)
-    ;; This assumes it is called while on the line in question.
-    (let (line-begin line-end width)
-      (save-excursion
-	(forward-line 0)
-	(setq line-begin (point))
-	(end-of-line)		      ;doesn't handle field boundaries
-	(setq line-end (point)))
-      (setq width (- line-end line-begin))
-      (concat (propertize (format "%3d" lineno) 'face 'linum)
-	      (if (<= width 80) "  " (propertize "▶▶" 'face 'tkb-linum))))))
-
 ;; http://www.neverfriday.com/sweetfriday/2008/06/emacs-tip-word-counting-with-a.html
 (defun wc ()
   (interactive)
   (message "Word count: %s" (how-many "\\w+" (point-min) (point-max))))
-
-(when nil
-  ;; http://www.emacswiki.org/cgi-bin/wiki/InteractivelyDoThings
-  (require 'ido)
-  (ido-mode t)
-
-  (setq ido-execute-command-cache nil)
-
-  (defun ido-execute-command ()
-    (interactive)
-    (call-interactively
-     (intern
-      (ido-completing-read
-       "M-x "
-       (progn
-	 (unless ido-execute-command-cache
-	   (mapatoms (lambda (s)
-		       (when (commandp s)
-			 (setq ido-execute-command-cache
-			       (cons (format "%S" s) ido-execute-command-cache))))))
-	 ido-execute-command-cache)))))
-
-  (add-hook 'ido-setup-hook
-	    (lambda ()
-	      (setq ido-enable-flex-matching t)
-	      (global-set-key "\M-x" 'ido-execute-command)))
-  )
-
-
 
 
 (defmacro* eval-after-load* (file varlist &rest body)
@@ -656,23 +408,6 @@ A difference with `eval-after-load' is that BODY doesn't have to be quoted."
 (put 'eval-after-load* 'lisp-indent-function
      (1+ (get 'eval-after-load 'lisp-indent-function)))
 
-(when (file-directory-p "/sw/versions/viewmail/bzr")
-  (setq load-path (remove-if (lambda (e)
-			       (string-match "/vm/*$" e)) load-path))
-  (add-to-list 'load-path
-	       "/sw/versions/viewmail/bzr/share/emacs/site-lisp/vm")
-  (require 'vm-autoloads)
-  (setq vm-mime-text/html-handler 'emacs-w3m)
-  (add-to-list 'Info-default-directory-list
-	       "/sw/versions/viewmail/bzr/share/info"))
-
-(when-directory (d "/sw/versions/wl/snap/info")
-  (add-to-list 'Info-default-directory-list d))
-
-(when nil
-  (loop for e in load-path
-	if (string-match "/vm/*$" e) append e into matches
-	finally return matches))
 
 (defun tkb-goto-info-node (arg)
   "Goto an Info node in normal text, specified as \"Info: (FILE)Node.\"
@@ -748,51 +483,6 @@ where the \"FILE\" is optional and the \".\" can also be a \",\"."
   (make-string (length title) char))
 
 
-(defvar tkb-journal-base-dir (file-name-as-directory "~/tkb/journal"))
-
-(defun tkb-journal (title date &optional no-entry)
-  (interactive (list (read-from-minibuffer "Title: ")
-		     (tkb-get-date-from-user nil t)
-		     current-prefix-arg))
-  (message "no-entry: %S" no-entry)
-  (let* ((journal-directory
-	  (expand-file-name (concat
-			     tkb-journal-base-dir
-			     (format-time-string "%Y/"
-						 date))))
-	 (filename (format-time-string "%m.rst"))
-	 (pathname (concat journal-directory filename))
-	 (exists (file-exists-p pathname))
-	 (today (format-time-string "%Y/%m/%d, %A"))
-	 (today-underline (tkb-rst-section-underline today ?*)))
-    ;; Create the directory for the current year if necessary.
-    (when (not (file-exists-p journal-directory))
-      (make-directory journal-directory t))
-    (find-file pathname)
-    ;; Create the journal file for the current month if necessary.
-    (unless exists
-      ;; Need to add boilerplate.
-      (tkb-insert-rst-section (format-time-string "%Y-%m: %B" date) ?# t)
-      (insert  "\n:Author: \\T. Kurt Bond\n\n"))
-    ;; Create the section for the current day if necessary.
-    (goto-char (point-min))
-    (unless (re-search-forward (concat "^" (regexp-quote today) "\n"
-				       (regexp-quote today-underline) "\n")
-			       nil t)
-      (goto-char (point-max))
-      (insert "\n\n" today "\n" today-underline "\n"))
-    (goto-char (point-max))
-    (unless no-entry
-      (unless (looking-back "\n\\{2,\\}")
-	(insert "\n\n"))
-      (tkb-insert-rst-section (concat (format-time-string "%H:%M:%S" date)
-				      (if (and title (/= 0 (length title)))
-					  (concat " " title) "")) ?=)
-      )))
-
-
-
-
 ;; http://www.unicode.org/Public/UNIDATA/UnicodeData.txt
 ;; describe-char-unicodedata-file
 (let* ((udf-url "http://www.unicode.org/Public/UNIDATA/UnicodeData.txt")
@@ -811,22 +501,13 @@ where the \"FILE\" is optional and the \".\" can also be a \",\"."
 	  (shell-command cmd)
 	  (setq describe-char-unicodedata-file "~/tmp/UnicodeData.txt"))))))
 
-;; http://www.ossh.com/emacs/imap/howto.html
-(defun gnus-browse-imaps-server (server)
-  "Browse a mail server in Gnus via IMAP-SSL."
-  (interactive "sServer name: ")
-  (gnus-group-browse-foreign-server
-   (list 'nnimap server
-	 (list 'nnimap-address server)
-	 '(nnimap-stream ssl)
-	 '(nnimap-list-pattern ("INBOX" "mail/*" "Mail/*" "INBOX.*"))
-	 '(nnimap-expunge-on-close ask))))
 
 (defun fmt-duration (time)
   (flet ((f (duration unit)
 	    (when duration (format (if (floatp duration)
 				       "%f%s"
-				     "%d%s") duration unit))))
+				     "%d%s")
+				   duration unit))))
     (destructuring-bind (hi lo ms) time
       (let ((s (+ hi lo))
 	    (x "")
@@ -936,7 +617,7 @@ appropriate directory structure."
 	 (category (format-time-string "media/viewing/%Y/%m" date-time)))
     (tkb-blog titles tags category date-time "Recent Viewing: ")))
 
-(when t			       ; used by my hooks for rst and asciidoc
+(when t			       ; used by my hooks for rst and formerly asciidoc
   (add-to-list 'load-path (expand-file-name "~/lib/emacs/others/misc"))
   (load-library "unichars")
   (load-library "xmlunicode")
@@ -957,24 +638,6 @@ if it is a unicode character."
       ("-"  . unicode-smart-hyphen)
       ("."  . unicode-smart-period))))
 
-(defun tkb-asciidoc-version-increment ()
-  (interactive)
-  (save-excursion
-    (goto-char (point-min))
-    (when (re-search-forward "^v\\([0-9]+\\)\\.\\([0-9]+\\)\\.\\([0-9]+\\),[ \t]+\\(.+\\)"
-			     nil t)
-      (let* ((part3 (match-string 3))
-	     (date  (match-string 4))
-	     (n     (string-to-number part3))
-	     (new3  (format "%d" (1+ n))))
-	(when (and (not (string-equal date (tkb-timestamp)))
-		   (y-or-n-p (format "Sure replace %s with %s? " part3 new3)))
-	  (replace-match new3 nil t nil 3)
-	  (replace-match (tkb-timestamp) nil t nil 4))
-	nil))))
-
-(defun tkb-doc-mode-hook ()
-  (add-hook 'write-contents-functions #'tkb-asciidoc-version-increment))
 
 (when nil				;retiring doc-mode 2019-11-03
   (autoload 'doc-mode "doc-mode")
@@ -984,6 +647,23 @@ if it is a unicode character."
 		  '("^ERROR:[ \t]*\\([[:alpha:]][-[:alnum:].]+\\):[ \t]*line[ \t]*\\([0-9]+\\):" 1 2)))
   (eval-after-load "doc-mode" '
     (progn
+
+      (defun tkb-asciidoc-version-increment ()
+	(interactive)
+	(save-excursion
+	  (goto-char (point-min))
+	  (when (re-search-forward "^v\\([0-9]+\\)\\.\\([0-9]+\\)\\.\\([0-9]+\\),[ \t]+\\(.+\\)"
+				   nil t)
+	    (let* ((part3 (match-string 3))
+		   (date  (match-string 4))
+		   (n     (string-to-number part3))
+		   (new3  (format "%d" (1+ n))))
+	      (when (and (not (string-equal date (tkb-timestamp)))
+			 (y-or-n-p (format "Sure replace %s with %s? " part3 new3)))
+		(replace-match new3 nil t nil 3)
+		(replace-match (tkb-timestamp) nil t nil 4))
+	      nil))))
+
       (defun bind-doc-mode-keys ()
 	(set-language-environment "utf-8")
 	(define-key doc-mode-map "\"" 'unicode-smart-double-quote)
@@ -995,8 +675,14 @@ if it is a unicode character."
 	  (cons "UniChar" unicode-character-menu-map))
 	;; set input method to "xml" (xmlunicode) when in doc mode
 	(set-input-method 'xml))
+
+      (defun tkb-doc-mode-hook ()
+	(add-hook 'write-contents-functions #'tkb-asciidoc-version-increment))
+
       (add-hook 'doc-mode-hook #'bind-doc-mode-keys)
-      (add-hook 'doc-mode-hook #'tkb-doc-mode-hook))))
+      (add-hook 'doc-mode-hook #'tkb-doc-mode-hook)
+
+      )))
 
 (progn
   ;; Yank from emacs in screen
@@ -1113,6 +799,7 @@ over 40 is morbidly obese."
 (when nil
   (progn
     (setq version-control nil)
+    ;; I think this keeps all your emacs backup files under one directory.
     (or (file-directory-p "~/backup") (make-directory "~/backup" t))
     (let ((backup-dir (expand-file-name "~/backup")))
       (setq backup-directory-alist
@@ -1390,28 +1077,11 @@ Not under a window system, so you can't ispell the selection")))))
 
 
 (when nil
-  (when-load-file "mailcrypt"
-    (load-library "mailcrypt")
-    (mc-setversion "gpg")
-
-    (autoload 'mc-install-write-mode "mailcrypt" nil t)
-    (autoload 'mc-install-read-mode "mailcrypt" nil t)
-					;(add-hook 'mail-mode-hook 'mc-install-write-mode)
-
-    (add-hook 'vm-mode-hook 'mc-install-read-mode)
-    (add-hook 'vm-summary-mode-hook 'mc-install-read-mode)
-    (add-hook 'vm-virtual-mode-hook 'mc-install-read-mode)
-    (add-hook 'vm-mail-mode-hook 'mc-install-write-mode)))
-
-(eval-after-load "rng-loc"
-  '(progn
-     (setq rng-schema-locating-files
-	   (append rng-schema-locating-files
-		   '("~/comp/xsl-website/website-schemas.xml")))))
-
-(when nil
-  (setq mail-user-agent 'mh-e-user-agent)
-  (setq read-mail-command 'mh-rmail))
+  (eval-after-load "rng-loc"
+    '(progn
+       (setq rng-schema-locating-files
+	     (append rng-schema-locating-files
+		     '("~/comp/xsl-website/website-schemas.xml"))))))
 
 (when t
   ;; This requires using message-user-agent for composing mail.
@@ -1460,46 +1130,9 @@ Not under a window system, so you can't ispell the selection")))))
 	  (set-marker end-of-headers nil)))))
   (add-hook 'message-send-hook 'check-attachments-attached)
   (defun tkb-messsage-header-setup-hook ()
+    (goto-char (point-max))
     (insert "BCC: tkurtbond@gmail.com\n"))
   (setq message-header-setup-hook #'tkb-messsage-header-setup-hook))
-
-
-(when nil
-  ;; look at setting slime-lisp-implementations in tkb-lang.el, too
-  ;; using quicklisp to install slime these days
-  (when-directory (d [ ;;"/sw/versions/slime/cvs/slime/" "/sw/src/slime"
-		      ])
-    (add-to-list 'load-path d)
-    (require 'slime)
-    (tkb-keys
-      ("\C-c;" 'slime-insert-balanced-comments)
-      ("\C-c\M-;" 'slime-remove-balanced-comments))
-    (setq slime-lisp-implementations
-	  `(,(when-exec-found (f ["/sw/versions/cygwin/clisp/2.47/bin/clisp.exe"
-				  "c:/PROGRA~1/clisp-2.47/clisp.exe"
-				  "c:/sw/versions/clisp-bin/clisp-2.41/clisp.exe"
-				  "/sw/versions/32bits/clisp/cvs/bin/clisp"
-				  "clisp"])
-	       (list 'clisp (list f)))
-	    ,(when-exec-found (f ["c:/Program Files/Steel Bank Common Lisp/1.0.29/sbcl.exe"
-				  "/sw/versions/m64/sbcl/git/bin/sbcl"
-				  "/sw/versions/m64/sbcl/cvs/bin/sbcl"
-				  "sbcl"])
-	       (setq inferior-lisp-program f)
-	       (list 'sbcl (list f)))
-	    ,(when-exec-found (f ["/sw/src/ccl/scripts/ccl.tkb"])
-	       (list 'ccl (list f)))
-	    ,(when-exec-found (f ["/sw/versions/m64/ecl/cvs/bin/ecl"])
-	       (list 'ecl (list f)))
-	    ,(when-exec-found (f ["/sw/src/abcl/abcl-src-1.1.1/abcl"])
-	       (list 'abcl (list f)))
-	    ,(when-exec-found (f ["lisp"])
-	       (list 'cmucl (list f)))))
-    ;; add '(slime-repl) or '(slime-fancy)
-    (slime-setup)))
-
-
-
 
 (when t
   (defun tkb-zap-to-char (arg char)
@@ -1519,13 +1152,6 @@ Goes backward if ARG is negative; error if CHAR not found."
   (set-terminal-coding-system 'utf-8)
   (set-keyboard-coding-system 'utf-8)
   (set-selection-coding-system 'utf-8))
-(when nil
-  (progn
-    (setq locale-coding-system 'utf-8)
-    (set-terminal-coding-system 'utf-8)
-    (set-keyboard-coding-system 'utf-8)
-    (set-selection-coding-system 'utf-8)
-    (prefer-coding-system 'utf-8)))
 
 (when nil
   ;; http://www.tbray.org/ongoing/When/200x/2003/09/27/UniEmacs
@@ -1661,34 +1287,36 @@ Goes backward if ARG is negative; error if CHAR not found."
 ;; on tiled, tabbing window managers like ion.)
 (setq ediff-window-setup-function 'ediff-setup-windows-plain)
 
-(autoload 'forth-mode "gforth")
-(setq auto-mode-alist (cons '("\\.fs\\'" . forth-mode)
-			    auto-mode-alist))
-(autoload 'forth-block-mode "gforth")
-(setq auto-mode-alist (cons '("\\.fb\\'" . forth-block-mode)
-			    auto-mode-alist))
-(add-hook 'forth-mode-hook (function (lambda ()
-				       ;; customize variables here:
-				       (setq forth-indent-level 4)
-				       (setq forth-minor-indent-level 2)
-				       (setq forth-hilight-level 3)
-;;; ...
-				       )))
+(when nil 
+  ;; We don't have gforth.el installed now.
+
+  (autoload 'forth-mode "gforth")
+  (setq auto-mode-alist (cons '("\\.fs\\'" . forth-mode)
+			      auto-mode-alist))
+  (autoload 'forth-block-mode "gforth")
+  (setq auto-mode-alist (cons '("\\.fb\\'" . forth-block-mode)
+			      auto-mode-alist))
+  (add-hook 'forth-mode-hook (function (lambda ()
+					 ;; customize variables here:
+					 (setq forth-indent-level 4)
+					 (setq forth-minor-indent-level 2)
+					 (setq forth-hilight-level 3)
+					 )))
 
 
-(eval-after-load "gforth"
-  '(progn
-     (defun forth-load-file (file-name)
-       "Load a Forth file FILE-NAME into the inferior Forth process."
-       (interactive (comint-get-source "Load Forth file: " forth-prev-l/c-dir/file
-				       forth-source-modes t)) ; T because LOAD
+  (eval-after-load "gforth"
+    '(progn
+       (defun forth-load-file (file-name)
+	 "Load a Forth file FILE-NAME into the inferior Forth process."
+	 (interactive (comint-get-source "Load Forth file: " forth-prev-l/c-dir/file
+					 forth-source-modes t)) ; T because LOAD
 					; needs an exact name
-       (comint-check-source file-name) ; Check to see if buffer needs saved.
-       (setq forth-prev-l/c-dir/file (cons (file-name-directory    file-name)
-					   (file-name-nondirectory file-name)))
-       (comint-send-string (forth-proc) (concat "include "
-						file-name
-						"\n")))))
+	 (comint-check-source file-name) ; Check to see if buffer needs saved.
+	 (setq forth-prev-l/c-dir/file (cons (file-name-directory    file-name)
+					     (file-name-nondirectory file-name)))
+	 (comint-send-string (forth-proc) (concat "include "
+						  file-name
+						  "\n"))))))
 
 
 (defun tkb-insert-name ()
@@ -1698,8 +1326,6 @@ Goes backward if ARG is negative; error if CHAR not found."
 (defun tkb-insert-e-mail ()
   (interactive)
   (insert user-mail-address))
-
-;;(require 'prcs-hooks) ;; bloody intrusive.
 
 ;; Should I use x-display-pixel-height and x-display-pixel-width to move to
 ;; an entirely emacs-based geometry munging?
@@ -1779,13 +1405,7 @@ Goes backward if ARG is negative; error if CHAR not found."
 		auto-mode-alist))
   (autoload 'rst-repeat-last-character "rst")
   (tkb-keys ("\C-cR" 'rst-repeat-last-character))
-  (when nil			  ; replaced by tkb-smart-unicode-mode
-    (eval-after-load "rst"
-      '(progn
-	 ;;(define-key rst-mode-map "'" #'unicode-smart-single-quote)
-	 (define-key rst-mode-map "-" #'unicode-smart-hyphen)
-	 (define-key rst-mode-map "\"" #'unicode-smart-double-quote))))
-  
+
   (defun tkb-rst-mode-hook ()
     (interactive)
     (setq indent-tabs-mode nil)
@@ -1823,26 +1443,17 @@ Goes backward if ARG is negative; error if CHAR not found."
     (add-hook 'before-save-hook 'time-stamp nil t)))
   (add-hook 'rst-mode-hook 'tkb-rst-mode-hook))
 
-(fset 'tkb-mtnet-spam
-      "zabuse@mountain.net, postmaster@mountain.net, help@mountain.net\C-s[att\C-a\C-o\C-o\C-xi~/tmp/mntnet\C-?\C-?\C-?\C-?\C-?tnet\C-i\C-m")
-
+(progn 
+  (push '("\\.adc$" . adoc-mode)  auto-mode-alist)
+  (push '("\\.adoc$" . adoc-mode)  auto-mode-alist)
+  (defun tkb-adoc-mode-hook ()
+    (tkb-smart-unicode-mode))
+  (add-hook 'adoc-mode-hook #'tkb-adoc-mode-hook))
 
 (setq Info-scroll-prefer-subnodes nil) ;scroll to end before jumping to subnodes
 
-(defun tkb-prcs-add-log-file-name (buffer-file-name)
-  (if (string-match "\\.prg$" buffer-file-name)
-      nil
-    ;; Do the default...
-    (if (string-match
-	 (concat "^" (regexp-quote (file-name-directory
-				    file-name)))
-	 buffer-file-name)
-	(substring buffer-file-name (match-end 0))
-      (file-name-nondirectory buffer-file-name))))
-(setq add-log-file-name-function (function tkb-prcs-add-log-file-name))
-
-
-(when (file-loadable-p "cpb/personal-log")
+(when nil ;; not using this any more
+  (file-loadable-p "cpb/personal-log")
   (setq personal-log-dir "~/current")
 
   (load "cpb/personal-log")
@@ -1861,17 +1472,8 @@ Goes backward if ARG is negative; error if CHAR not found."
   (tkb-keys
     ("\C-cle" 'tkb-eulisp-log)
     ("\C-clh" 'personal-log-here)
-    ("\C-clP" 'tkb-private-log)))
-
-;; Do it in the X resources instead.
-;;(tool-bar-mode -1)
-;;(scroll-bar-mode -1)
-
-
-(defun tkb-vm-visit-file (folder read-only)
-  (interactive "fVM File: \nP")
-  (vm-visit-folder folder read-only))
-(tkb-keys ("\C-cv" 'tkb-vm-visit-file))
+    ("\C-clP" 'tkb-private-log))
+  (global-set-key "\C-clp" 'personal-log))
 
 
 (defun tkb-dec-to-hex (n)
@@ -1880,81 +1482,10 @@ Goes backward if ARG is negative; error if CHAR not found."
 (defun tkb-hex-to-dec (n)
   (interactive "sHex: ")
   (message "%d" (string-to-number n 16)))
-
-(defun int-to-eul-rep (n)
-  (logior (lsh n 2) 1))
-
-(defun eul-rep-to-int (n)
-  (lsh n -2))
-
 (tkb-keys
   ("\C-cH" 'tkb-dec-to-hex)
   ("\C-cD" 'tkb-hex-to-dec))
 
-
-;; tempo templates
-(require 'tempo)
-(tempo-define-template
- "tkb-weblog"
- '(
-   "<!DOCTYPE webpage PUBLIC \"-//Norman Walsh//DTD Website V2.6//EN\"
-  \"http://docbook.sourceforge.net/release/website/2.6/schema/dtd/website.dtd\" [
-<!ENTITY % logentities SYSTEM \"../../../log-entities.genent\">
-%logentities;
-<!ENTITY % myentities SYSTEM \"../../../myentitites.ent\">
-%myentities;
-]>\n\n"
-
-   "<webpage id=\"" (setq tkb-weblog-id (format-time-string "log-%Y-%m-%d" tkb-weblog-time)) "\">
-<config param=\"filename\" value=\"" (setq tkb-weblog-link (format-time-string "log/%Y/%m/%d" tkb-weblog-time)) ".html\"/>
-<config param=\"rcsdate\" value=\"" (setq tkb-weblog-date (tkb-timestamp nil tkb-weblog-time)) "\"/>
-<head>
-<title>" tkb-weblog-date "</title>
-<summary>" (p "Summary: " summary) "</summary>
-</head>
-<para>&" tkb-weblog-id "-next; &" tkb-weblog-id "-prev;</para>
-<para>" p " </para>
-</webpage>
-"))
-
-
-(defun tkb-weblog-old (time)
-  (interactive "P")
-  (let ((tkb-weblog-time (if time (tkb-get-date-from-user) nil)))
-    (let ((weblog-dir (expand-file-name
-		       (format-time-string
-			"~/comp/website/source/log/%Y/%m/"
-			tkb-weblog-time)))
-	  (weblog (expand-file-name
-		   (format-time-string
-		    "~/comp/website/source/log/%Y/%m/%d.xml"
-		    tkb-weblog-time))))
-      (if (not (file-directory-p weblog-dir))
-	  (make-directory weblog-dir 'parents))
-      (if (file-exists-p weblog)
-	  (find-file weblog)
-	(find-file weblog)
-	(tempo-template-tkb-weblog)
-	(save-buffer)))))
-
-(defun tkb-weblog (time)
-  (interactive "P")
-  (let ((tkb-weblog-time (if time (tkb-get-date-from-user) nil)))
-    (let ((weblog-dir (expand-file-name
-		       (format-time-string
-			"~/comp/xsl-website/me/log/%Y/%m/"
-			tkb-weblog-time)))
-	  (weblog (expand-file-name
-		   (format-time-string
-		    "~/comp/xsl-website/me/log/%Y/%m/%d.xml"
-		    tkb-weblog-time))))
-      (if (not (file-directory-p weblog-dir))
-	  (make-directory weblog-dir 'parents))
-      (if (file-exists-p weblog)
-	  (find-file weblog)
-	(find-file weblog)
-	(tempo-template-tkb-weblog)
-	(save-buffer)))))
 
 
 (defun tkb-kill-excess ()
@@ -2024,7 +1555,6 @@ Goes backward if ARG is negative; error if CHAR not found."
 (defun tkb-insert-saved-buffer-name ()
   (interactive)
   (insert tkb-saved-buffer-name))
-
 (tkb-keys ("\C-cs" 'tkb-save-buffer-name))
 (tkb-keys ("\C-cS" 'tkb-insert-saved-buffer-name))
 
@@ -2077,32 +1607,6 @@ Goes backward if ARG is negative; error if CHAR not found."
 (tkb-keys ("\C-\M-y" #'tkb-yank-at-place)
 	  ("\C-c\C-@" #'tkb-mark-yank-place))
 
-(defun tkb-vms-translate-keys ()
-  "remap keys to C-S and C-Q to get around VMS flow
-control nightmare.  Used elsewhere to ease fingermemory context
-switch problems."
-  (interactive)
-  ;;Combat problems with C-s and C-q on VMS
-  (when (eq system-type 'vax-vms)
-    ;; Make emacs understand flow control; note that the versions of Emacs
-    ;; I have on MPLVAX (VAX/VMS 5.5-2, Emacs 18.59?) and COBK (Alpha/VMS 7?,
-    ;; Emacs 19.??) probably expect set-input-mode to take 2 parameters.
-    (set-input-mode nil t nil))
-  ;;Now make a translate table to translate the keyboard entered keys
-  (let ((i 0)
-	(the-table (make-string 128 0)))
-    (while (< i 128)
-      (aset the-table i i)
-      (setq i (1+ i)))
-    ;; Map C-/ to C-S (US); PuTTY thinks this is C-_
-    (aset the-table ?\037 ?\C-s)
-    ;; Map C-^ to C-Q; PuTTY gets this right
-    (aset the-table ?\036 ?\C-q)
-    ;; Map C-4 to C-Q (FS); PuTTY thinks this is C-\
-    (aset the-table ?\034 ?\C-q)
-    (setq keyboard-translate-table the-table)))
-
-
 (defun tkb-quote-for-elisp (beg end)
   (interactive "r")
   (kill-new (format "%S" (buffer-substring-no-properties beg end))))
@@ -2128,29 +1632,25 @@ switch problems."
 	 (fonts (if first-only (car fonts) fonts)))
     (kill-new (format "%S" fonts))))
 
-(defun is-type (obj &rest typesyms)
-  (memq (type-of obj) typesyms))
+(progn 
+  (defun is-type (obj &rest typesyms)
+    (memq (type-of obj) typesyms))
 
-(defun tkb-edit-form (sym)
-  (interactive (list (intern (completing-read "symbol? " obarray))))
-  (let* ((value (eval sym))
-	 (quote-string
-	  (cond ((null value) nil)
-		((is-type value 'integer 'float 'string) nil)
-		((is-type value 'cons) 'quote))))
-    ;; Emacs lisp needs a better pretty printer.
-    (pp `(setq ,sym ,(if quote-string
-			 `(,quote-string ,value)
-		       `,value))
-	(current-buffer))))
+  (defun tkb-edit-form (sym)
+    (interactive (list (intern (completing-read "symbol? " obarray))))
+    (let* ((value (eval sym))
+	   (quote-string
+	    (cond ((null value) nil)
+		  ((is-type value 'integer 'float 'string) nil)
+		  ((is-type value 'cons) 'quote))))
+      ;; Emacs lisp needs a better pretty printer.
+      (pp `(setq ,sym ,(if quote-string
+			   `(,quote-string ,value)
+			 `,value))
+	  (current-buffer)))))
 
 
 (defalias 'λ #'lambda)			;this doesn't work right.
-
-(when nil 				;nxhtml sets debug-on-error too often!!!
-  (when-file (f "~/lib/emacs/others/nxhtml/autostart.el")
-    (unless (version< emacs-version "23.4")
-      (load-file f))))
 
 ;;; ??? Needs finished; see describe-variable and describe-symbol.
 (defun describe-structure (structure)
@@ -2170,8 +1670,6 @@ switch problems."
 				t nil nil
 				(if (symbolp v) (symbol-name v))))
      (list (if (equal val "") v (intern val))))))
-
-(load-file "~/lib/emacs/tkb/tkb-status-reports.el")
 
 (defun t:get-hostname-from-http ()
   (interactive)
@@ -2222,9 +1720,6 @@ switch problems."
 (defun path-append (directories &optional env-variable)
   (path-set (append (path-get env-variable) directories) env-variable))
 
-(when nil 				;not needed now porst has texlive 2012
-  (path-prepend '("/usr/local/texlive/2011/bin/x86_64-darwin"
-		  "/usr/local/texlive/2011/bin/universal-darwin")))
 
 ;;; ¿¿¿Doesn't handle single word links???
 (defun t:extract-targets (start end)
@@ -2277,16 +1772,6 @@ Goes backward if ARG is negative; goes to end of buffer if CHAR not found."
   )
 
 
-
-;; (when nil 
-;;   (unless (version< emacs-version "24.1")
-;;     (require 'package)
-;;     (add-to-list 'package-archives
-;; 		 '("marmalade" . "http://marmalade-repo.org/packages/"))
-;;     (package-initialize)
-
-;;     (when (not (package-installed-p 'clojure-mode))
-;;       (package-install 'clojure-mode))))
 
 (defun d4   () (1+ (random   4)))
 (defun d6   () (1+ (random   6)))
@@ -2379,13 +1864,7 @@ REPEAT is how many times to repeat the roll."
   (setq uniquify-ignore-buffers-re "^\\*") ; don't muck with special buffers
   )
 
-(when nil
-  (require 'yaml-mode)
-  (add-to-list 'auto-mode-alist '("\\.\\(yml\\|yaml\\)\\'" . yaml-mode)))
-
 (when-exec-found (e "chez") (setq geiser-chez-binary e))
-
-;;(setq message-mail-alias-type 'mailabbrev) ; doesn't work? 2019-10-30
 
 (message "End of tkb-experimental.el")
 ;;; end of tkb-experimental.el

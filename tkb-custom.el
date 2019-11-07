@@ -30,8 +30,7 @@
        ("Return-Path" . "<thomas.bond@leo.gov>"))))))
  '(package-selected-packages
    (quote
-    (adoc-mode caml jabber cider clojure-mode racket-mode go-guru go-mode use-package yaml-mode markdown-mode w3m projectile nim-mode geiser fuel f docbook clojure-snippets clojure-quick-repls clojure-mode-extra-font-locking ada-ref-man ada-mode)))
- '(read-file-name-completion-ignore-case t)
+    (adoc-mode caml jabber cider clojure-mode racket-mode go-guru go-mode use-package yaml-mode markdown-mode w3m projectile nim-mode fuel f docbook clojure-snippets clojure-quick-repls clojure-mode-extra-font-locking ada-ref-man ada-mode)))
  '(rst-level-face-max 10)
  '(send-mail-function (quote mailclient-send-it))
  '(w3m-use-cookies t))
@@ -46,6 +45,7 @@
  '(ediff-fine-diff-B ((((class color)) (:background "cyan3" :foreground "red"))))
  '(font-lock-string-face ((((class color) (min-colors 88) (background light)) (:foreground "dark blue"))))
  '(linum ((t (:inherit shadow :background "navy"))))
+ '(markup-meta-face ((t (:stipple nil :foreground "gray65" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 1.25 :width normal :foundry "unknown" :family "Monospace"))))
  '(message-header-name ((((class color) (background dark)) (:foreground "DarkGoldenrod1"))))
  '(minibuffer-prompt ((t (:foreground "darkgreen"))))
  '(org-column ((t (:background "grey90" :strike-through nil :underline nil :slant normal))))

@@ -1,3 +1,7 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; tkb-gui-setup.el -- Setup things that only work under a GUI.
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (setq tkb-fonts
       `(("courier-11pt" ;; w32 says this is 11pt
 	 "-outline-Courier New-normal-r-normal-normal-15-*-*-*-c-*-iso10646-1"
@@ -36,7 +40,7 @@
 	("Go Mono" ,(if (string= (system-name) "moonglum")
 			"-*-Go Mono-normal-normal-normal-*-20-*-*-*-m-0-iso10646-1"
 			"-*-Go Mono-normal-normal-normal-*-17-*-*-*-m-0-iso10646-1")
-	 55)
+	 50)
 	))
 
 (defun tkb-set-frame-font ()
@@ -61,10 +65,7 @@
 	    (otherwise 20)))
     (set-frame-font tkb-default-font)
 
-    (setq tkb-default-left
-	  (if nil (- (display-pixel-width) (frame-pixel-width) 50)
-	    50))
-
+    (setq tkb-default-left 50)
 
     (let* ((dh (display-pixel-height))
 	   (ch (frame-char-height))
@@ -135,3 +136,15 @@
 
   ;;(add-hook 'emacs-startup-hook #'tkb-position-frame)
   (add-hook 'emacs-startup-hook #'tkb-wait-frame))
+
+(setq tkb-is-root (string-equal (user-real-login-name) "root"))
+
+(setq frame-title-format
+      '(multiple-frames
+	("emacs %b: " (tkb-is-root (:eval (concat "root@" (system-name)))  user-mail-address))
+	("emacs " (tkb-is-root (:eval (concat "root@" (system-name))) user-mail-address))))
+
+(setq icon-title-format
+      '(multiple-frames ("emacs %b: " (tkb-is-root "root" user-mail-address))
+			("emacs " (tkb-is-root "root" user-mail-address))))
+;;; end of tkb-gui-setup.el

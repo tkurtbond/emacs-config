@@ -41,6 +41,7 @@ templates")
 
 ;;; Utilities, mostly for working with calendar.el-style dates.
 (defalias 's2n 'string-to-number)
+(require 'calendar)
 (defalias 'c:a2g 'calendar-gregorian-from-absolute)
 (defalias 'c:g2a 'calendar-absolute-from-gregorian)
 

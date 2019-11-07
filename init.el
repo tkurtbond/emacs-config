@@ -6,6 +6,9 @@
 (setq inhibit-startup-screen t)
 (setq message-log-max 10000)
 (setq completion-ignore-case t)
+(setq read-file-name-completion-ignore-case t)
+(setq read-buffer-completion-ignore-case t)
+
 (setq line-move-visual nil)
 
 (add-hook 'dired-load-hook
@@ -39,7 +42,7 @@
 	 "~/lib/emacs/tkb/unix-init.el")))
 
 (when (eq 'darwin system-type)
-  (load "~/lib/emacs/tkb/macosx-init.el"))
+  (load "~/lib/emacs/tkb/macos-init.el"))
 
 (load "~/lib/emacs/tkb/tkb-gnus.el")
 
@@ -115,6 +118,9 @@
 			ada-mode
 			ada-ref-man
 			adoc-mode
+			;; Not using because of markup minimization making
+			;; markup unusable.
+			;;adoc-mode 
 			caml
 			cider
 			clojure-mode
@@ -125,7 +131,7 @@
 			;;elscreen ; Did I ever really use this?
 			f
 			fuel
-			geiser
+			;; geiser ; not working for me
 			markdown-mode
 			;; moz ; Did I every really use this?
 			nim-mode
@@ -148,7 +154,7 @@
 
 (load-file "~/lib/emacs/tkb/tkb-time-expansion.el")
 (load-file "~/lib/emacs/tkb/tkb-time-expansion-keys.el")
-
+(load-file "~/lib/emacs/tkb/tkb-status-reports.el")
 
 
 ;;(setq epg-gpg-program "gpg2") ; on macOS with homebrew it's gpg.

@@ -21,8 +21,7 @@
 (define-key my-menu-map [where-is]
   '("Where is this command" . where-is))
 
-(unless tkb-xemacs-p
-  (define-key global-map [C-S-down-mouse-1] 'help-for-keys))
+(define-key global-map [C-S-down-mouse-1] 'help-for-keys)
 
 
 ;;; Keys
@@ -88,7 +87,6 @@
 	  (indent-to column)
 	  (forward-word 1))))))
 (global-set-key "\C-ca" 'auto-fill-mode)
-(global-set-key "\C-cb" 'tkb-mail-bosses)
 (global-set-key "\C-cC" 'compile)
 (global-set-key "\C-cc" 'center-line)
 
@@ -114,17 +112,14 @@
 (global-set-key "\C-cir" 'indent-relative)
 (global-set-key "\C-cit" 'indent-to)
 (global-set-key "\C-ckD" 'describe-char)
-(tkb-keys ("\C-cKG" #'goto-char))
+;;(tkb-keys ("\C-cKG" #'goto-char))	;M-g c
 (global-set-key "\C-ckn" 'tkb-insert-name)
 (global-set-key "\C-cke" 'tkb-insert-e-mail)
 (tkb-keys ("\C-ckE" #'edebug-defun))
 (tkb-keys ("\C-ckR" #'uncomment-region)
 	  ("\C-ckr" #'comment-region))
-(tkb-keys ("\C-cKU" #'tkb-unicode-character-insert))
-(global-set-key "\C-clp" 'personal-log)
+;;(tkb-keys ("\C-cKU" #'tkb-unicode-character-insert)) ; C-x 8 RET
 (global-set-key "\C-cm" 'compile)
-(global-set-key "\C-cn" 'tkb-mail-self-note)
-(global-set-key "\C-cN" 'tkb-mail-self-note-mpl)
 (global-set-key "\C-co" 'overwrite-mode)
 (global-set-key "\C-cr" 'tkb-count-region)
 (global-set-key "\C-ct" 'tkb-find-next-tag)
@@ -133,18 +128,6 @@
 (global-set-key "\C-cL" 'tkb-insert-login-name)
 (global-set-key "\C-cw" 'what-line)
 (global-set-key "\C-cx" 'tkb-get-clipboard)
-(global-set-key "\C-cz" 'feedmail-run-the-queue)
-
-
-
-;(define-key ctl-x-4-map "l" 'add-logbook-entry-other-window)
-
-;; See /home/tkb/lib/emacs/tkb/cpb/personal-log.el
-
-(eval-after-load "personal-log"
-  '(progn
-     (global-set-key "\C-clm" #'tkb-personal-log-insert-date-marker)
-     (global-set-key "\C-clk" #'tkb-personal-log)))
 
 (eval-after-load "rst"
   '(define-key rst-mode-map "\C-c "

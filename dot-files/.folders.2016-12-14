@@ -1,0 +1,38 @@
+#
+# Folder definition file
+# This file is generated automatically by Wanderlust/2.15.6 (Almost Unreal).
+#
+# If you edit this file by hand, be sure that comment lines
+# will be washed out by wl-fldmgr.
+#
+
++inbox	"Local MH inbox"
+%INBOX	"MPL INBOX via IMAP"
+%INBOX:tkurtbond@imap.gmail.com!
+%INBOX:kbond@mpl.com@imap.gmail.com!
+%INBOX:tbond2@127.0.0.1:49652
+MPL{
+	%/
+}
++/
+%:tkb@tkb.mpl.com!/
+%:tkurtbond@imap.gmail.com!/
+%:tbond2@127.0.0.1:61255/
+./
+&cx85276@pop3.citynet.net	"Citynet POP3"
++draft
++queue
++trash
+-gmane.emacs.orgmode@news.gmane.org	"orgmode mailing list via gmane.org"
+
+# petname definition (access group, folder in access group)
+=	%:tkb@tkb.mpl.com!	"Personal e-mail via IMAP/DOVECOT"
+=	%	"MPL e-mail via IMAP"
+=	.	"Temporary e-mail via Maildir"
+=	+	"Local e-mail via MH"
+=	%:tkurtbond@imap.gmail.com!	"gmail"
+=	%INBOX:tkurtbond@imap.gmail.com!	"gmail INBOX"
+=	%INBOX:kbond@mpl.com@imap.gmail.com!	"mpl gmail INBOX"
+=	%INBOX:tbond2@127.0.0.1:49652		"leo INBOX"
+=	%:tbond2@127.0.0.1:61255/		"leo mail"
+# end of file.
