@@ -115,8 +115,8 @@
 			;; ada-mode.el comes with emacs; so installing
 			;; a newer version only works from the
 			;; list-packages buffer.
-			ada-mode
-			ada-ref-man
+			;; ada-mode ; not currently using
+			;; ada-ref-man ; not currently using
 			adoc-mode
 			;; Not using because of markup minimization making
 			;; markup unusable.
