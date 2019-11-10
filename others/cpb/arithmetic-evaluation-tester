@@ -1,0 +1,10 @@
+#!/bin/bash -x
+
+./arithmetic-evaluation '(1 + 2) * 3'
+./arithmetic-evaluation '1+1+(1+(1+(1+(1+(1+(1+(1+(1+(1+(1+(1+(1+(1+1/15)/14)/13)/12)/11)/10)/9)/8)/7)/6)/5)/4)/3)/2'
+./arithmetic-evaluation '1 + 2 * (3 + (4 * 5 + 6 * 7 * 8) - 9) / 10'
+./arithmetic-evaluation '1 + 2*(3 - 2*(3 - 2)*((2 - 4)*5 - 22/(7 + 2*(3 - 1)) - 1)) + 1'
+
+./arithmetic-evaluation '1 + 2'
+./arithmetic-evaluation '(1 + 2) * 10 / 100'
+./arithmetic-evaluation '(1 + 2 / 2) * (5 + 5)'
