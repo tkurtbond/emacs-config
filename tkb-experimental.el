@@ -1868,7 +1868,7 @@ REPEAT is how many times to repeat the roll."
 (when-exec-found (e "chez") (setq geiser-chez-binary e))
 
 (when-load-file "magit"
-  (global-set-key (kbd "C-x g") 'magit-status))
+  (global-set-key (kbd "C-x M s") 'magit-status))
 
 (message "End of tkb-experimental.el")
 ;;; end of tkb-experimental.el
