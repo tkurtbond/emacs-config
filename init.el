@@ -118,7 +118,6 @@
 			;; list-packages buffer.
 			;; ada-mode ; not currently using
 			;; ada-ref-man ; not currently using
-			adoc-mode
 			;; Not using because of markup minimization making
 			;; markup unusable.
 			;;adoc-mode
