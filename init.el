@@ -8,6 +8,7 @@
 (setq completion-ignore-case t)
 (setq read-file-name-completion-ignore-case t)
 (setq read-buffer-completion-ignore-case t)
+(setq-default indent-tabs-mode nil)
 
 (setq line-move-visual nil)
 
@@ -120,7 +121,8 @@
 			adoc-mode
 			;; Not using because of markup minimization making
 			;; markup unusable.
-			;;adoc-mode 
+			;;adoc-mode
+			auctex
 			caml
 			cider
 			clojure-mode
@@ -132,6 +134,7 @@
 			f
 			fuel
 			;; geiser ; not working for me
+                        magit
 			markdown-mode
 			;; moz ; Did I every really use this?
 			nim-mode

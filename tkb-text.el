@@ -82,6 +82,9 @@ Puts a full-stop before comments on a line by themselves."
           comment-column)))))
 
 ;; ConTeXt
-(push '("\\.ctx\\'" . tex-mode) auto-mode-alist)
+(push '("\\.ctx\\'" . context-mode) auto-mode-alist)
+
+(load "auctex.el" nil t t)
+;;(load "preview-latex.el" nil t t)
 
 ;;; end of tkb-text.el

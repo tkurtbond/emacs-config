@@ -55,6 +55,8 @@
   (when-directory (d "/opt/local/share/doc/lisp/HyperSpec-7-0/HyperSpec/")
     (setq common-lisp-hyperspec-root (concat "file://" d))))
 
+(when-file (fn "~/quicklisp/clhs-use-local.el") (load fn))
+
 (when nil
   (when-directory (d "~/.roswell")
     (load (expand-file-name "~/.roswell/helper.el"))
