@@ -128,9 +128,10 @@
 (global-set-key "\C-cL" 'tkb-insert-login-name)
 (global-set-key "\C-cw" 'what-line)
 (global-set-key "\C-cx" 'tkb-get-clipboard)
-(global-set-key "\C-cWo" 'eww-open-file)
-(global-set-key "\C-cWt" '(lambda () (interactive) ;doesn't work
-                            (eww-open-file (thing-at-point 'file t))))
+(global-set-key "\C-cWo" 'tkb-eww-open-file-at-point)
+(defun tkb-eww-open-file-at-point ()
+  (interactive) ;doesn't work
+  (eww-open-file (thing-at-point 'filename t)))
 
 (eval-after-load "rst"
   '(define-key rst-mode-map "\C-c "
