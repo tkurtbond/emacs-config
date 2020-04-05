@@ -128,6 +128,7 @@
 (global-set-key "\C-cL" 'tkb-insert-login-name)
 (global-set-key "\C-cw" 'what-line)
 (global-set-key "\C-cx" 'tkb-get-clipboard)
+(global-set-key "\C-cWo" 'eww-open-file)
 
 (eval-after-load "rst"
   '(define-key rst-mode-map "\C-c "
