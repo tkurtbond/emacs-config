@@ -39,7 +39,7 @@
 
 	("Go Mono" ,(if (string= (system-name) "moonglum")
 			"-*-Go Mono-normal-normal-normal-*-20-*-*-*-m-0-iso10646-1"
-			"-*-Go Mono-normal-normal-normal-*-17-*-*-*-m-0-iso10646-1")
+			"-*-Go Mono-normal-normal-normal-*-18-*-*-*-m-0-iso10646-1")
 	 50)
 	))
 
