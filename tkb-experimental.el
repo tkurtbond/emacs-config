@@ -1811,6 +1811,8 @@ REPEAT is how many times to repeat the roll."
 			  ("pm" . [?—]) ;M-dash
 			  ("p-" . [?−])	;Minus sign
 			  ("p " . [? ]) ;non-breaking space.
+                          ("pp" . [?′]) ;prime
+                          ("pP" . [?″]) ;double prime
 			  ;; section and pilcrow are in C-x 8: S and P
 			  ("pS" . [?‘])
 			  ("ps" . [?’])	  
@@ -1869,6 +1871,8 @@ REPEAT is how many times to repeat the roll."
 
 (when-load-file "magit"
   (global-set-key (kbd "C-x M s") 'magit-status))
+
+(add-hook 'markdown-mode-hook 'flyspell-mode)
 
 (message "End of tkb-experimental.el")
 ;;; end of tkb-experimental.el
