@@ -1870,7 +1870,11 @@ REPEAT is how many times to repeat the roll."
 (when-exec-found (e "chez") (setq geiser-chez-binary e))
 
 (when-load-file "magit"
-  (global-set-key (kbd "C-x M s") 'magit-status))
+  :load 
+  (global-set-key (kbd "C-x M s") 'magit-status)
+  (global-magit-file-mode)
+  (define-key magit-file-mode-map
+    (kbd "C-x M g") 'magit-file-dispatch))
 
 (add-hook 'markdown-mode-hook 'flyspell-mode)
 
