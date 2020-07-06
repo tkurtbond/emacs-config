@@ -43,10 +43,12 @@
   (modify-syntax-entry ?\{ "(}")
   (modify-syntax-entry ?\} "){"))
 
-(push '("\\.cl\\'" . lisp-mode) auto-mode-alist)
-
 (defadvice lisp-mode (after tkb-lisp-mode-adv first activate)
   (tkb-syn))
+
+(push '("\\.cl\\'" . lisp-mode) auto-mode-alist)
+
+(add-hook 'lisp-mode-hook #'(lambda () (setq indent-tabs-mode nil)))
 
 
 (when-file (fn "~/quicklisp/slime-helper.el") (load fn))

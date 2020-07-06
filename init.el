@@ -49,11 +49,6 @@
 
 ;(load "~/lib/emacs/tkb/tkb-mh-e.el")
 
-;; wanderlust
-(when nil
-  (when (equal (system-name) "tkb.mpl.com")
-    (when-load-dir "wl" (load "~/lib/emacs/tkb/tkb-wl.el"))))
-
 ;; For some reason emacs-w3m ends up under
 ;; c:/emacs/emacs-VER/share/emacs/site-lisp
 (let* ((emacs-dir (file-name-directory (directory-file-name data-directory)))
@@ -127,27 +122,44 @@
 			clojure-mode
 			clojure-quick-repls
 			clojure-snippets
-			projectile 
 			docbook
 			;;elscreen ; Did I ever really use this?
 			f
 			fuel
 			;; geiser ; not working for me
+                        julia-mode
                         magit
 			markdown-mode
 			;; moz ; Did I every really use this?
 			nim-mode
+			projectile 
 			racket-mode
 			;; regex-tool ; not currently using
-			;;w3m - Not currently using.
+                        unicode-fonts
 			use-package ;; too strict?
-			;;wanderlust ;; not using right now.
+			wanderlust ;; apparently using again.
+                        yaml-mode
+                        w3m
 			)))
     (unless (every #'package-installed-p tkb-packages)
       (package-refresh-contents))
     (dolist (p tkb-packages)
       (unless (package-installed-p p)
 	(package-install p)))))
+
+;; wanderlust
+(autoload 'wl-user-agent-compose "wl-draft" nil t)
+(if (boundp 'mail-user-agent)
+    (setq mail-user-agent 'wl-user-agent))
+(if (fboundp 'define-mail-user-agent)
+    (define-mail-user-agent
+      'wl-user-agent
+      'wl-user-agent-compose
+      'wl-draft-send
+      'wl-draft-kill
+      'mail-send-hook))
+
+
 
 (load "~/lib/emacs/tkb/tkb-go.el")
 
@@ -189,9 +201,14 @@
     (message "Converting %s from %o to %o" filename old-modes new-modes)
     (chmod filename new-modes)))
 
+(require 'unicode-fonts)
+(unicode-fonts-setup)
+
 ;;(require 'mercurial)
 
 (setq abbrev-file-name "~/lib/emacs/tkb/abbrev_defs")
+
+(setq auth-sources '((:source "~/.authinfo.gpg")))
 
 (load "~/lib/emacs/tkb/tkb-last.el")
 ;; end of init.el

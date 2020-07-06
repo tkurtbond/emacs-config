@@ -50,7 +50,7 @@ and return the encoded time."
   ;; Warning: doesn't validate date!
   (let* ((default-time (if default-time default-time (current-time)))
 	 (date  (read-from-minibuffer
-		"Date: " (format-time-string (if use-time "%Y-%m-%d %H:%M" "%Y-%m-%d") default-time))))
+		"Date: " (format-time-string (if use-time "%Y-%m-%d %H:%M:%S" "%Y-%m-%d") default-time))))
     (tkb-parse-iso-date date)))
 
 (defun tkb-parse-usa-date (d)
@@ -100,6 +100,18 @@ and return the encoded time."
 (defun date ()
   (interactive)
   (message "Date: %s" (tkb-timestamp)))
+
+(defun tkb-insert-fancy-date (prefix)
+  "Inserts a fancy date like this: 
+Saturday, 4 July 2020, 01:47:15 AM (2020-07-04 01:47:15)."
+  (interactive "P")
+  (let ((time (if (null prefix)
+                  (current-time)
+                (tkb-get-date-from-user nil t))))
+  (insert (format-time-string 
+           "%A, %-d %B %Y, %I:%M:%S %p (%Y-%m-%d %H:%M:%S %Z)"))))
+
+(global-set-key (kbd "C-c d f") #'tkb-insert-fancy-date)
 
 (defun tkb-insert-iso-date (prefix)
   "Insert an ISO format date.

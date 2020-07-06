@@ -12,29 +12,31 @@
 (defun tkb-unhex-region ()
   (interactive)
   (let* ((s (buffer-substring (point) (mark)))
-	 (s* (url-unhex-string s t)))
+         (s* (url-unhex-string s t)))
     (kill-region (point) (mark))
     (insert s*)))
 
 (defun tkb-rst-print-subheads ()
+  "Print the recommend underlines with levels for the underline characters 
+recommended by the ReST quickref: http://tinyurl.com/47lkhk"
   (interactive)
   (with-work-buffer " *ReST heads"
       (loop for c
-	    ;; recommended list from the rst quickref: http://tinyurl.com/47lkhk
-	    across "=-`:'\"~^_*+#<>"
-	    for i from 1
-	    do (let* ((s (format "Depth %d" i))
-		      (u (make-string (length s) c)))
-		 (insert (format "%s\n%s\n\n" s u))))))
+            ;; recommended list from the rst quickref: http://tinyurl.com/47lkhk
+            across "=-`:'\"~^_*+#<>"
+            for i from 1
+            do (let* ((s (format "Depth %d" i))
+                      (u (make-string (length s) c)))
+                 (insert (format "%s\n%s\n\n" s u))))))
 
 (defun tkb-select-frame ()
   (interactive)
   (let* ((frames (loop for frame in (frame-list)
-		       collect (cons (frame-parameter frame 'name)
-				     frame)
-		       into frames finally return frames))
-	 (frame-name (completing-read "Frame? " frames))
-	 (frame (cdr (assoc-string frame-name frames))))
+                       collect (cons (frame-parameter frame 'name)
+                                     frame)
+                       into frames finally return frames))
+         (frame-name (completing-read "Frame? " frames))
+         (frame (cdr (assoc-string frame-name frames))))
     (raise-frame frame)
     (select-frame frame)))
 (tkb-keys ((kbd "C-c A") #'tkb-select-frame))
@@ -44,7 +46,7 @@
   (interactive)
   (load-file (buffer-file-name)))
 (tkb-keys :keymap emacs-lisp-mode-map
-	  ("\C-xL" #'tkb-load-file))
+          ("\C-xL" #'tkb-load-file))
 
 (defun tkb-locate-file (filename)
   (interactive "M")
@@ -53,42 +55,45 @@
 (when t					; Using org-capture now.
   (tkb-keys ("\C-ckoc" #'org-capture))
   (setq org-capture-templates
-	'(("j" "Journal" entry
-	   (file+headline "/Users/tkb/current/org/journal.org" "Journal")
-	   "* %^{Title} %U\n  %i\n  %?\n")
-	  ("c" "Contacts Log" entry
-	   (file+headline "/Users/tkb/current/org/contacts.org" "Contacts")
-	   "* %^{Title} %U\n  %i\n  %?\n")
-	  ("h" "Health" entry
-	   (file+headline "/Users/tkb/current/org/health.org" "Health")
-	   "* %^{Title} %U\n  %i\n  %?\n")
-	  ("n" "Notes" entry
-	   (file+headline "/Users/tkb/current/org/notes.org" "Notes")
-	   "\n\n* %^{Title} %U\n  %i\n  %?\n  %a\n\n")
-	  ("r" "RPG" entry
-	   (file+headline "/Users/tkb/current/org/rpg.org" "RPG")
-	   "\n\n* %^{Title} %U\n  %i\n  %?\n  %a\n\n")
-	  ("t" "Tasks" entry
-	   (file+headline "/Users/tkb/current/org/tasks.org" "Tasks")
-	   "* TODO %^{Title} %U\n  %i\n  %?\n  %a\n")
-	  ("v" "Video" entry
-	   (file+headline "/Users/tkb/current/org/video.org" "Video")
-	   "* TODO %^{Title} %U\n  %^C%i%?\n")
-	  ("J" "MPL Journal" entry
-	   (file+headline "/Users/tkb/job/MPL/Org/journal.org" "MPL Journal")
-	   "* %^{Title} %U\n  %i\n  %?\n")
-	  ("M" "MHST Journal" entry
-	   (file+headline "/Users/tkb/job/MPL/Org/mhst-journal.org" "MHST Journal")
-	   "* %^{Title} %U\n  %i\n  %?\n")
-	  ("C" "MPL Contacts Log" entry
-	   (file+headline "/Users/tkb/job/MPL/Org/contacts.org" "MPL Contacts")
-	   "* %^{Title} %U\n  %i\n  %?\n")
-	  ("N" "MPL Notes" entry
-	   (file+headline "/Users/tkb/job/MPL/Org/notes.org" "MPL Notes")
-	   "\n\n* %^{Title} %U\n  %i\n  %?\n  %a\n\n")
-	  ("T" "MPL Tasks" entry
-	   (file+headline "/Users/tkb/job/MPL/Org/tasks.org" "MPL Tasks")
-	   "* TODO %^{Title} %U\n  %i\n  %?\n  %a\n")))
+        '(("X" "EXPERIMENT" entry
+           (file+olp+datetree "/Users/tkb/current/org/loud-experiment.org")
+           "*** %^{Title} %U\n  %i\n  %?\n")
+          ("j" "Journal" entry
+           (file+headline "/Users/tkb/current/org/journal.org" "Journal")
+           "* %^{Title} %U\n  %i\n  %?\n")
+          ("c" "Contacts Log" entry
+           (file+headline "/Users/tkb/current/org/contacts.org" "Contacts")
+           "* %^{Title} %U\n  %i\n  %?\n")
+          ("h" "Health" entry
+           (file+headline "/Users/tkb/current/org/health.org" "Health")
+           "* %^{Title} %U\n  %i\n  %?\n")
+          ("n" "Notes" entry
+           (file+headline "/Users/tkb/current/org/notes.org" "Notes")
+           "\n\n* %^{Title} %U\n  %i\n  %?\n  %a\n\n")
+          ("r" "RPG" entry
+           (file+headline "/Users/tkb/current/org/rpg.org" "RPG")
+           "\n\n* %^{Title} %U\n  %i\n  %?\n  %a\n\n")
+          ("t" "Tasks" entry
+           (file+headline "/Users/tkb/current/org/tasks.org" "Tasks")
+           "* TODO %^{Title} %U\n  %i\n  %?\n  %a\n")
+          ("v" "Video" entry
+           (file+headline "/Users/tkb/current/org/video.org" "Video")
+           "* TODO %^{Title} %U\n  %^C%i%?\n")
+          ("J" "MPL Journal" entry
+           (file+headline "/Users/tkb/job/MPL/Org/journal.org" "MPL Journal")
+           "* %^{Title} %U\n  %i\n  %?\n")
+          ("M" "MHST Journal" entry
+           (file+headline "/Users/tkb/job/MPL/Org/mhst-journal.org" "MHST Journal")
+           "* %^{Title} %U\n  %i\n  %?\n")
+          ("C" "MPL Contacts Log" entry
+           (file+headline "/Users/tkb/job/MPL/Org/contacts.org" "MPL Contacts")
+           "* %^{Title} %U\n  %i\n  %?\n")
+          ("N" "MPL Notes" entry
+           (file+headline "/Users/tkb/job/MPL/Org/notes.org" "MPL Notes")
+           "\n\n* %^{Title} %U\n  %i\n  %?\n  %a\n\n")
+          ("T" "MPL Tasks" entry
+           (file+headline "/Users/tkb/job/MPL/Org/tasks.org" "MPL Tasks")
+           "* TODO %^{Title} %U\n  %i\n  %?\n  %a\n")))
   (tkb-keys ("\C-cko\C-c" #'org-ctrl-c-ctrl-c))
   (tkb-check-bindings '("\C-cko\C-c"))
 
@@ -99,13 +104,13 @@ and return it."
     ;; call to error when testing.
     (interactive)
     (let ((default-directory default-directory)
-	  (original-directory default-directory)
-	  log-files)
+          (original-directory default-directory)
+          log-files)
       (while (not (setq log-files (file-expand-wildcards "*-log.org" t)))
-	(cd "..")
-	(when (string-equal default-directory "/")
-	  (error "unable to find *-log.org starting at %s"
-		 original-directory)))
+        (cd "..")
+        (when (string-equal default-directory "/")
+          (error "unable to find *-log.org starting at %s"
+                 original-directory)))
       (car log-files)))
 
   (defun tkb-find-file-org-log ()
@@ -115,16 +120,16 @@ and switch to a buffer visiting it."
     (let* ((org-file (tkb-find-org-log-file)))
       (find-file org-file)))
   (tkb-keys ("\C-ckof" #'tkb-find-file-org-log))
-  ;; (defalias 'x #'tkb-find-file-org-log) 
+  ;; (defalias 'x #'tkb-find-file-org-log)
 
   (defun tkb-add-org-log ()
     "Look in the current directory or its parents for a file named *-log.org
 and add a log entry to it."
     (interactive)
     (let* ((org-file (tkb-find-org-log-file))
-	   (org-capture-templates 
-	    `(("l" "Log" entry (file+headline ,org-file "Log")
-	       "* %^{Title} %U\n  %i\n  %?\n"))))
+           (org-capture-templates
+            `(("l" "Log" entry (file+headline ,org-file "Log")
+               "* %^{Title} %U\n  %i\n  %?\n"))))
       (org-capture)))
   (tkb-keys ("\C-ckol" #'tkb-add-org-log)))
 
@@ -133,7 +138,7 @@ and add a log entry to it."
   ;; The following lines are always needed.  Choose your own keys.
   (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
   (tkb-keys ("\C-ckos" #'org-store-link)
-	    ("\C-ckoa" #'org-agenda))
+            ("\C-ckoa" #'org-agenda))
   (add-hook 'org-mode-hook 'turn-on-font-lock))	; org-mode buffers only
 
 
@@ -145,60 +150,60 @@ and add a log entry to it."
 (defun increment-filename (prefix &optional suffix always start)
   "Generate a unique filename using PREFIX and optionally SUFFIX"
   (let* ((suffix (if suffix suffix ""))
-	 (start (if start start 0))
-	 (sep1   "_")
-	 (sep2   "_")
-	 (fileprefix (concat prefix)))
+         (start (if start start 0))
+         (sep1   "_")
+         (sep2   "_")
+         (fileprefix (concat prefix)))
     (loop for i from start
-	  ;; The zeroth filename doesn't have the number.
-	  for testname = (if always
-			     (format "%s%s%d%s" fileprefix sep2 i suffix)
-			   (format "%s%s" fileprefix suffix))
-	  then (format "%s%s%d%s" fileprefix sep2 i suffix)
-	  until (not (file-exists-p testname))
-	  finally return testname)))
+          ;; The zeroth filename doesn't have the number.
+          for testname = (if always
+                             (format "%s%s%d%s" fileprefix sep2 i suffix)
+                           (format "%s%s" fileprefix suffix))
+          then (format "%s%s%d%s" fileprefix sep2 i suffix)
+          until (not (file-exists-p testname))
+          finally return testname)))
 
 (defun increment-filename-date (prefix &optional suffix always date)
   "Generate a unique filename using PREFIX and optionally SUFFIX"
   (let* ((suffix (if suffix suffix ""))
-	 (sep1   "_")
-	 (sep2   "_")
-	 (date   (if date
-		     (if (listp date)
-			 (format-time-string "%F" date)
-		       date)
-		   (format-time-string "%F")))
-	 (fileprefix (concat prefix sep1 date)))
+         (sep1   "_")
+         (sep2   "_")
+         (date   (if date
+                     (if (listp date)
+                         (format-time-string "%F" date)
+                       date)
+                   (format-time-string "%F")))
+         (fileprefix (concat prefix sep1 date)))
     (loop for i from 0
-	  ;; The zeroth filename doesn't have the number.
-	  for testname = (if always
-			     (format "%s%s%d%s" fileprefix sep2 i suffix)
-			   (format "%s%s" fileprefix suffix))
-	  then (format "%s%s%d%s" fileprefix sep2 i suffix)
-	  until (not (file-exists-p testname))
-	  finally return testname)))
+          ;; The zeroth filename doesn't have the number.
+          for testname = (if always
+                             (format "%s%s%d%s" fileprefix sep2 i suffix)
+                           (format "%s%s" fileprefix suffix))
+          then (format "%s%s%d%s" fileprefix sep2 i suffix)
+          until (not (file-exists-p testname))
+          finally return testname)))
 
 (defun increment-filename-date-prefix (prefix &optional suffix always date)
   "Generate a unique filename using PREFIX and optionally SUFFIX"
   (let* ((suffix (if suffix suffix ""))
-	 (sep1   "_")
-	 (sep2   "_")
-	 (date   (if date
-		     (if (listp date)
-			 (format-time-string "%F" date)
-		       date)
-		   (format-time-string "%F")))
-	 (dirname (file-name-directory prefix))
-	 (filename (file-name-nondirectory prefix))
-	 (fileprefix (concat dirname date sep1 filename)))
+         (sep1   "_")
+         (sep2   "_")
+         (date   (if date
+                     (if (listp date)
+                         (format-time-string "%F" date)
+                       date)
+                   (format-time-string "%F")))
+         (dirname (file-name-directory prefix))
+         (filename (file-name-nondirectory prefix))
+         (fileprefix (concat dirname date sep1 filename)))
     (loop for i from 0
-	  ;; The zeroth filename doesn't have the number, unless ALWAYS
-	  for testname = (if always
-			     (format "%s%s%d%s" fileprefix sep2 i suffix)
-			     (format "%s%s" fileprefix suffix))
-	  then (format "%s%s%d%s" fileprefix sep2 i suffix)
-	  until (not (file-exists-p testname))
-	  finally return testname)))
+          ;; The zeroth filename doesn't have the number, unless ALWAYS
+          for testname = (if always
+                             (format "%s%s%d%s" fileprefix sep2 i suffix)
+                             (format "%s%s" fileprefix suffix))
+          then (format "%s%s%d%s" fileprefix sep2 i suffix)
+          until (not (file-exists-p testname))
+          finally return testname)))
 
 
 (defun rename-buffer-uniquely ()
@@ -209,20 +214,20 @@ and add a log entry to it."
   ;; greps running at once.
   (interactive)
   (rename-buffer (loop with bufname =
-		       (progn
-			 (if (string-match (rx (and
-					    string-start
-					    (group (+ anything))
-					    (group
-					     (? "[0-9]+"))
-					    string-end))
-				       (buffer-name))
-			     (match-string 1)
-			     (buffer-name)))
-		       for i from 1
-		       with newname = (format "%s-%d" bufname i)
-		       while (get-buffer newname)
-		       finally return newname)))
+                       (progn
+                         (if (string-match (rx (and
+                                            string-start
+                                            (group (+ anything))
+                                            (group
+                                             (? "[0-9]+"))
+                                            string-end))
+                                       (buffer-name))
+                             (match-string 1)
+                             (buffer-name)))
+                       for i from 1
+                       with newname = (format "%s-%d" bufname i)
+                       while (get-buffer newname)
+                       finally return newname)))
 
 
 (setq longlines-show-hard-newlines t)
@@ -237,24 +242,24 @@ and add a log entry to it."
 
 
 (setq tkb-color-list '(("black" "white")
-		       ("white" "black")
-		       ("green" "black")
-		       ("black" "green")
-		       ("black" "wheat")
-		       ("black" "navajowhite1")))
+                       ("white" "black")
+                       ("green" "black")
+                       ("black" "green")
+                       ("black" "wheat")
+                       ("black" "navajowhite1")))
 (defun tkb-toggle-colors ()
   (interactive)
   (let* ((fg (frame-parameter nil 'foreground-color))
-	 (bg (frame-parameter nil 'background-color))
-	 (colors (list fg bg))
-	 (x (cadr (member colors tkb-color-list))))
+         (bg (frame-parameter nil 'background-color))
+         (colors (list fg bg))
+         (x (cadr (member colors tkb-color-list))))
     (if x
-	(destructuring-bind (nfg nbg) x
-	  (set-frame-parameter nil 'foreground-color nfg)
-	  (set-frame-parameter nil 'background-color nbg))
+        (destructuring-bind (nfg nbg) x
+          (set-frame-parameter nil 'foreground-color nfg)
+          (set-frame-parameter nil 'background-color nbg))
       (destructuring-bind (nfg nbg) (car tkb-color-list)
-	 (set-frame-parameter nil 'foreground-color nfg)
-	 (set-frame-parameter nil 'background-color nbg)))))
+         (set-frame-parameter nil 'foreground-color nfg)
+         (set-frame-parameter nil 'background-color nbg)))))
 
 
 
@@ -272,10 +277,10 @@ and add a log entry to it."
     (let ((buf (get-buffer-create "*lambda**")))
       (pp rest buf)
       (let ((e (cl-transform-lambda rest nil)))
-	(pp e buf)
-	(let ((l `(lambda ,@(cdr e))))
-	  (pp l buf)
-	  (eval l)))))
+        (pp e buf)
+        (let ((l `(lambda ,@(cdr e))))
+          (pp l buf)
+          (eval l)))))
   (funcall (lambda* (&optional &key a &key (b 2)) (list a b)) :a 1)
   ((lambda* (&optional &key a &key (b 2)) (list a b))))
 
@@ -294,7 +299,7 @@ and add a log entry to it."
   '
   (progn
     (tkb-keys :keymap python-mode-map
-	      ([(control meta ?q)] #'tkb-python-indent-statement))
+              ([(control meta ?q)] #'tkb-python-indent-statement))
     ))
 
 ;; This isn't working
@@ -308,15 +313,15 @@ and add a log entry to it."
       ["c:/Python26/python.exe" "c:/Python25/python.exe" "python"])
 (when-file (p potential-pythons)
   (setq python-command p
-	python-python-command p))
+        python-python-command p))
 (defun tkb-toggle-pythons ()
   (interactive)
   (let ((old python-command))
     (if (not (string-equal python-command "python"))
-	(setq python-command "python")
+        (setq python-command "python")
       (setq python-command
-	    (find-if #'file-executable-p
-		     potential-pythons)))
+            (find-if #'file-executable-p
+                     potential-pythons)))
     (message "Switching pythons from %s to %s" old python-command)))
 
 
@@ -335,11 +340,11 @@ and add a log entry to it."
       (setq n (prefix-numeric-value n))
     (setq n 79))
   (let ((start-char (save-excursion (beginning-of-line)
-				    (buffer-substring (point) (1+ (point))))))
+                                    (buffer-substring (point) (1+ (point))))))
     (save-excursion
       (end-of-line)
       (while (< (current-column) 80)
-	(insert start-char)))))
+        (insert start-char)))))
 (tkb-keys ("\C-ckc" #'tkb-continue-line))
 
 (when-directory (d (expand-file-name "~/lib/data/fortunes"))
@@ -354,13 +359,14 @@ and add a log entry to it."
   (interactive
    (list
     (if current-prefix-arg
-	(fortune-ask-file)
-      fortune-file)))
+        (fortune-ask-file)
+      fortune-dir)))                    ;was fortune-file
   (save-excursion
     (fortune-in-buffer t file)
     (set-buffer fortune-buffer-name)
     (let* ((fortune (buffer-string)))
-      (substitute ?\ ?\n fortune))))
+      ;;(substitute ?\ ?\n fortune)
+      fortune)))
 
 
 (defconst tkb-random-me
@@ -400,11 +406,11 @@ value of VALUEFORM in the environment of the `eval-after-load' expression.
 A difference with `eval-after-load' is that BODY doesn't have to be quoted."
   `(eval-after-load ,file
      '(let ,(loop for v in varlist
-		  collect (if (symbolp v)
-			      `(,v ,(eval v))
-			    `(,(car v) ,(eval (cadr v))))
-		  into new-varlist
-		  finally return new-varlist) ,@body)))
+                  collect (if (symbolp v)
+                              `(,v ,(eval v))
+                            `(,(car v) ,(eval (cadr v))))
+                  into new-varlist
+                  finally return new-varlist) ,@body)))
 (put 'eval-after-load* 'lisp-indent-function
      (1+ (get 'eval-after-load 'lisp-indent-function)))
 
@@ -417,8 +423,8 @@ where the \"FILE\" is optional and the \".\" can also be a \",\"."
   (save-excursion
     (when (re-search-forward "Info: \\(\\((.*)\\)*[^.,]*\\)" nil t)
       (let ((s (match-string 1)))
-	(when (y-or-n-p (concat "Goto Info node " s " ? "))
-	  (Info-goto-node s arg))))))
+        (when (y-or-n-p (concat "Goto Info node " s " ? "))
+          (Info-goto-node s arg))))))
 (tkb-keys ("\C-cki" #'tkb-goto-info-node))
 ;; Info: (info)Go to node
 
@@ -440,38 +446,38 @@ where the \"FILE\" is optional and the \".\" can also be a \",\"."
 (defun tkb-move-frame-left ()
   (interactive)
   (let* ((left (frame-parameter nil 'left))
-	 (width (frame-pixel-width)))
+         (width (frame-pixel-width)))
     (set-frame-parameter nil 'left (- left width 20))))
 (tkb-keys ("\C-ckl" #'tkb-move-frame-left))
 
 (defadvice browse-url (before tkb-advise-browse-url activate)
   (let ((all-args (ad-get-args 0))
-	(rest-args (ad-get-args 1)))
+        (rest-args (ad-get-args 1)))
     (when (and (not rest-args)
-	       (boundp 'fork)
-	       (symbol-value 'fork))
+               (boundp 'fork)
+               (symbol-value 'fork))
       (ad-set-args 1 (symbol-value 'fork)))
     (message "tkb-advise-browse-url: bound: %S args: %S" (boundp 'fork) args)))
 
 
 (defun tkb-cleanup-title (title)
   (let ((s
-	 (substitute ?- 32
-		     (remove-if-not #'(lambda (c) (or (memq c '(?- 32 ?.))
-						      (and (<= ?a c)
-							   (<= c ?z))
-						      (and (<= ?0 c)
-							   (<= c ?9))))
-				    (downcase title)))))
+         (substitute ?- 32
+                     (remove-if-not #'(lambda (c) (or (memq c '(?- 32 ?.))
+                                                      (and (<= ?a c)
+                                                           (<= c ?z))
+                                                      (and (<= ?0 c)
+                                                           (<= c ?9))))
+                                    (downcase title)))))
     (while (string-match "\\([^[:alnum:]]\\)\\1+" s)
       (let ((c (match-string 1 s))
-	    (b (match-beginning 0))
-	    (e (match-end 0)))
-	(setq s (concat (substring s 0 (1+ b)) (substring s e)))))
+            (b (match-beginning 0))
+            (e (match-end 0)))
+        (setq s (concat (substring s 0 (1+ b)) (substring s e)))))
     (while (string-match "\\.-" s)
       (setq s (concat (substring s 0 (match-beginning 0))
-		      "-"
-		      (substring s (match-end 0)))))
+                      "-"
+                      (substring s (match-end 0)))))
     s))
 
 (defun tkb-insert-rst-section (title char &optional above)
@@ -492,129 +498,129 @@ where the \"FILE\" is optional and the \".\" can also be a \",\"."
       (setq describe-char-unicodedata-file udf-dest)
     (eval-after-load* "tkb-last" (udf-dest udf-url udf-dir)
       (when (y-or-n-p (format "You need to download %s ! Do it? " udf-url))
-	;; Really weird: wget -O 'file' complains that file doesn't exist!
-	(unless (file-directory-p udf-dir)
-	  (make-directory udf-dir t))
-	(let ((cmd (format "cd ~/tmp/ && wget -O %s --progress=dot '%s' &"
-			   udf-dest udf-url)))
-	  (message "cmd: %s" cmd)
-	  (shell-command cmd)
-	  (setq describe-char-unicodedata-file "~/tmp/UnicodeData.txt"))))))
+        ;; Really weird: wget -O 'file' complains that file doesn't exist!
+        (unless (file-directory-p udf-dir)
+          (make-directory udf-dir t))
+        (let ((cmd (format "cd ~/tmp/ && wget -O %s --progress=dot '%s' &"
+                           udf-dest udf-url)))
+          (message "cmd: %s" cmd)
+          (shell-command cmd)
+          (setq describe-char-unicodedata-file "~/tmp/UnicodeData.txt"))))))
 
 
 (defun fmt-duration (time)
   (flet ((f (duration unit)
-	    (when duration (format (if (floatp duration)
-				       "%f%s"
-				     "%d%s")
-				   duration unit))))
+            (when duration (format (if (floatp duration)
+                                       "%f%s"
+                                     "%d%s")
+                                   duration unit))))
     (destructuring-bind (hi lo ms) time
       (let ((s (+ hi lo))
-	    (x "")
-	    (d nil)
-	    (h nil)
-	    (m nil))
-	(when (>= s 86400)
-	  (setq d (/ s 86400)
-		s (% s 86400)))
-	(when (>= s 3600)
-	  (setq h (/ s 3600)
-		s (% s 3600)))
-	(when (>= s 60)
-	  (setq m (/ s 60)
-		s (% s 60)))
-	(unless (zerop ms)
-	  (setq s (+ s (/ ms 1000000.0))))
-	(mapconcat 'identity
-		   (remove-if #'null
-			      (list (f d "d") (f h "h") (f m "m") (f s "s")))
-		   " ")))))
+            (x "")
+            (d nil)
+            (h nil)
+            (m nil))
+        (when (>= s 86400)
+          (setq d (/ s 86400)
+                s (% s 86400)))
+        (when (>= s 3600)
+          (setq h (/ s 3600)
+                s (% s 3600)))
+        (when (>= s 60)
+          (setq m (/ s 60)
+                s (% s 60)))
+        (unless (zerop ms)
+          (setq s (+ s (/ ms 1000000.0))))
+        (mapconcat 'identity
+                   (remove-if #'null
+                              (list (f d "d") (f h "h") (f m "m") (f s "s")))
+                   " ")))))
 
 
 (defmacro time (&rest body)
   `(let ((start (current-time)))
      (unwind-protect
-	 (progn ,@body)
+         (progn ,@body)
        (let* ((end (current-time))
-	      (delta (time-subtract end start))
-	      (timebuf (get-buffer-create " *timing*")))
-	 (display-buffer timebuf)
-	 (princ (format "%s\n" (fmt-duration delta)) timebuf)))))
+              (delta (time-subtract end start))
+              (timebuf (get-buffer-create " *timing*")))
+         (display-buffer timebuf)
+         (princ (format "%s\n" (fmt-duration delta)) timebuf)))))
 
 (defun tkb-blog (title tags category date &optional title-prefix no-increment)
   "Create a blog entry, prompting for various values and creating the
 appropriate directory structure."
   ;;(interactive "sTitle: \nsTags: \nDCategory: \nsDate: ")
   (interactive (list
-		(read-string "Title: ")
-		(read-string "Tags: ")
-		(read-directory-name "Category: " "~/myblog/entries/")
-		(read-string "Date: ")))
+                (read-string "Title: ")
+                (read-string "Tags: ")
+                (read-directory-name "Category: " "~/myblog/entries/")
+                (read-string "Date: ")))
   (let* ((date-time (if (listp date)
-			date
-		      (if (empty-string-p date)
-			  nil
-			(tkb-parse-iso-date date))))
-	 (no-spaces (tkb-cleanup-title title))
-	 (filename (funcall
-		    (if no-increment
-			#'(lambda (&rest args)
-			    (apply #'concatenate `(string ,@args)))
-		      #'increment-filename)
-		    (concat (file-name-as-directory
-			     (expand-file-name category "~/myblog/entries/"))
-			    no-spaces)
-		    ".rst" nil))
-	 (dirname (file-name-directory filename))
-	 (published (format-time-string "#published %Y-%m-%d %H:%M:%S"
-					date-time)))
+                        date
+                      (if (empty-string-p date)
+                          nil
+                        (tkb-parse-iso-date date))))
+         (no-spaces (tkb-cleanup-title title))
+         (filename (funcall
+                    (if no-increment
+                        #'(lambda (&rest args)
+                            (apply #'concatenate `(string ,@args)))
+                      #'increment-filename)
+                    (concat (file-name-as-directory
+                             (expand-file-name category "~/myblog/entries/"))
+                            no-spaces)
+                    ".rst" nil))
+         (dirname (file-name-directory filename))
+         (published (format-time-string "#published %Y-%m-%d %H:%M:%S"
+                                        date-time)))
     (if (not (file-directory-p dirname))
-	(make-directory dirname 'and-parents))
+        (make-directory dirname 'and-parents))
     ;; FIXME: warn about existing files, ask to increment???
     (find-file filename)
     (unless (file-exists-p filename)
       (if title-prefix
-	  (insert title-prefix))
+          (insert title-prefix))
       (insert title)
       (insert "\n")
       (insert published)
       (insert "\n")
       (unless (zerop (length tags))
-	(insert (concat "#tags " tags))
-	(insert "\n")))))
+        (insert (concat "#tags " tags))
+        (insert "\n")))))
 
 (defun tkb-reading-monthly (date)
   (interactive "sDate: ")
   (let* ((date-time (if (empty-string-p date)
-			(current-time)
-		      (tkb-parse-iso-date date)))
-	 (tags "recent reading")
-	 (category (format-time-string "books/read/%Y/%m" date-time)))
+                        (current-time)
+                      (tkb-parse-iso-date date)))
+         (tags "recent reading")
+         (category (format-time-string "books/read/%Y/%m" date-time)))
     (tkb-blog (format-time-string "Recent Reading: %B %Y" date-time)
-	      tags category date-time nil t)))
+              tags category date-time nil t)))
 
 (defun tkb-reading (authors tags date)
   "Create a blog entry about my recent reading"
   (interactive "sAuthors: \nsTags: \nsDate: ")
   (let* ((date-time (if (empty-string-p date)
-			(current-time)
-		      (tkb-parse-iso-date date)))
-	 (tags (concat "recent reading" (if (empty-string-p tags)
-					    ""
-					  (concat "," tags))))
-	 (category (format-time-string "books/read/%Y/%m" date-time)))
+                        (current-time)
+                      (tkb-parse-iso-date date)))
+         (tags (concat "recent reading" (if (empty-string-p tags)
+                                            ""
+                                          (concat "," tags))))
+         (category (format-time-string "books/read/%Y/%m" date-time)))
     (tkb-blog authors tags category date-time "Recent Reading: ")))
 
 (defun tkb-viewing (titles tags date)
   "Create a blog entry about my recent viewing"
   (interactive "sTitles: \nsTags: \nsDate: ")
   (let* ((date-time (if (empty-string-p date)
-			(current-time)
-		      (tkb-parse-iso-date date)))
-	 (tags (concat "recent viewing" (if (empty-string-p tags)
-					    ""
-					  (concat "," tags))))
-	 (category (format-time-string "media/viewing/%Y/%m" date-time)))
+                        (current-time)
+                      (tkb-parse-iso-date date)))
+         (tags (concat "recent viewing" (if (empty-string-p tags)
+                                            ""
+                                          (concat "," tags))))
+         (category (format-time-string "media/viewing/%Y/%m" date-time)))
     (tkb-blog titles tags category date-time "Recent Viewing: ")))
 
 (when t			       ; used by my hooks for rst and formerly asciidoc
@@ -628,7 +634,7 @@ if it is a unicode character."
     (interactive "P")
     (let ((char (if after (char-after) (char-before))))
       (message "%S" (assoc (encode-char char 'ucs)
-			   unicode-character-list))))
+                           unicode-character-list))))
   (tkb-keys ("\C-ckd" #'tkb-describe-character))
 
   (define-minor-mode tkb-smart-unicode-mode
@@ -644,40 +650,40 @@ if it is a unicode character."
   (add-to-list 'auto-mode-alist '("\\.adc$" . doc-mode))
   (eval-after-load "compile"
     '(add-to-list 'compilation-error-regexp-alist
-		  '("^ERROR:[ \t]*\\([[:alpha:]][-[:alnum:].]+\\):[ \t]*line[ \t]*\\([0-9]+\\):" 1 2)))
+                  '("^ERROR:[ \t]*\\([[:alpha:]][-[:alnum:].]+\\):[ \t]*line[ \t]*\\([0-9]+\\):" 1 2)))
   (eval-after-load "doc-mode" '
     (progn
 
       (defun tkb-asciidoc-version-increment ()
-	(interactive)
-	(save-excursion
-	  (goto-char (point-min))
-	  (when (re-search-forward "^v\\([0-9]+\\)\\.\\([0-9]+\\)\\.\\([0-9]+\\),[ \t]+\\(.+\\)"
-				   nil t)
-	    (let* ((part3 (match-string 3))
-		   (date  (match-string 4))
-		   (n     (string-to-number part3))
-		   (new3  (format "%d" (1+ n))))
-	      (when (and (not (string-equal date (tkb-timestamp)))
-			 (y-or-n-p (format "Sure replace %s with %s? " part3 new3)))
-		(replace-match new3 nil t nil 3)
-		(replace-match (tkb-timestamp) nil t nil 4))
-	      nil))))
+        (interactive)
+        (save-excursion
+          (goto-char (point-min))
+          (when (re-search-forward "^v\\([0-9]+\\)\\.\\([0-9]+\\)\\.\\([0-9]+\\),[ \t]+\\(.+\\)"
+                                   nil t)
+            (let* ((part3 (match-string 3))
+                   (date  (match-string 4))
+                   (n     (string-to-number part3))
+                   (new3  (format "%d" (1+ n))))
+              (when (and (not (string-equal date (tkb-timestamp)))
+                         (y-or-n-p (format "Sure replace %s with %s? " part3 new3)))
+                (replace-match new3 nil t nil 3)
+                (replace-match (tkb-timestamp) nil t nil 4))
+              nil))))
 
       (defun bind-doc-mode-keys ()
-	(set-language-environment "utf-8")
-	(define-key doc-mode-map "\"" 'unicode-smart-double-quote)
-	(define-key doc-mode-map "'" 'unicode-smart-single-quote)
-	(define-key doc-mode-map "-" 'unicode-smart-hyphen)
-	(define-key doc-mode-map "." 'unicode-smart-period)
-	;; display UniChar menu when in doc mode
-	(define-key doc-mode-map [menu-bar unichar]
-	  (cons "UniChar" unicode-character-menu-map))
-	;; set input method to "xml" (xmlunicode) when in doc mode
-	(set-input-method 'xml))
+        (set-language-environment "utf-8")
+        (define-key doc-mode-map "\"" 'unicode-smart-double-quote)
+        (define-key doc-mode-map "'" 'unicode-smart-single-quote)
+        (define-key doc-mode-map "-" 'unicode-smart-hyphen)
+        (define-key doc-mode-map "." 'unicode-smart-period)
+        ;; display UniChar menu when in doc mode
+        (define-key doc-mode-map [menu-bar unichar]
+          (cons "UniChar" unicode-character-menu-map))
+        ;; set input method to "xml" (xmlunicode) when in doc mode
+        (set-input-method 'xml))
 
       (defun tkb-doc-mode-hook ()
-	(add-hook 'write-contents-functions #'tkb-asciidoc-version-increment))
+        (add-hook 'write-contents-functions #'tkb-asciidoc-version-increment))
 
       (add-hook 'doc-mode-hook #'bind-doc-mode-keys)
       (add-hook 'doc-mode-hook #'tkb-doc-mode-hook)
@@ -690,21 +696,21 @@ if it is a unicode character."
     (interactive)
     (let ((text (current-kill 0)))
       (when (string-match "^\\(.*\\)\\\\\n[ \t]*\\(.*\\)$" text)
-	(insert (match-string 1 text))
-	(insert (match-string 2 text)))))
+        (insert (match-string 1 text))
+        (insert (match-string 2 text)))))
   ;; This doesn't handle multiple lines properly
   (defun tkb-cleanup-yank-from-screened-emacs ()
     (interactive)
     (let ((text (current-kill 0)))
       (while (string-match "\\`\\(.*\\)\\\\\n\\([[:ascii:][:nonascii:]]*\\)\\'" text)
-	(setq text (concat (match-string 1 text) (match-string 2 text))))
+        (setq text (concat (match-string 1 text) (match-string 2 text))))
       (kill-new text))))
 
 (defun t:kill-host-from-url ()
   (interactive)
   (require 'url-parse)
   (let* ((url (current-kill 0))
-	 (host (url-host (url-generic-parse-url url))))
+         (host (url-host (url-generic-parse-url url))))
     (kill-new host)
     (message "Killed %s\nto %s" url host)))
 
@@ -715,15 +721,15 @@ if it is a unicode character."
     (interactive)
     (save-excursion
       (let ((paragraph-start "\f\\|[	]*$\\|\\(?:[*\f]+\\)")
-	    (paragraph-separate "[	\f]*$\\|\\(?:[*\f]+\\)"))
-	(message "Buffer local variables: \n****\n%S\n****\n" (buffer-local-variables))
-	(sit-for 1)
-	(message "start: %S sep: %S" paragraph-start paragraph-separate)
-	(sit-for 1)
-	(mark-paragraph)
-	(narrow-to-region (point) (mark))
-	(sit-for 1)
-	(fill-paragraph nil))))
+            (paragraph-separate "[	\f]*$\\|\\(?:[*\f]+\\)"))
+        (message "Buffer local variables: \n****\n%S\n****\n" (buffer-local-variables))
+        (sit-for 1)
+        (message "start: %S sep: %S" paragraph-start paragraph-separate)
+        (sit-for 1)
+        (mark-paragraph)
+        (narrow-to-region (point) (mark))
+        (sit-for 1)
+        (fill-paragraph nil))))
   (tkb-keys ("\C-ckf" 'tkb-fill-list)))
 
 ;; Gimme some register compatibility binding love!
@@ -741,26 +747,26 @@ if it is a unicode character."
     (interactive)
     (let ((file-name (buffer-file-name)))
       (unless file-name
-	(error "Buffer %s is not visiting a file" (buffer-name)))
+        (error "Buffer %s is not visiting a file" (buffer-name)))
 
       (let ((args (list (read-from-minibuffer "Shell command: "
-					      (cons (concat " " file-name)
-						    1)
-					      nil
-					      nil
-					      'shell-command-history)
-			current-prefix-arg
-			shell-command-default-error-buffer)))
-	(apply 'shell-command args))))
+                                              (cons (concat " " file-name)
+                                                    1)
+                                              nil
+                                              nil
+                                              'shell-command-history)
+                        current-prefix-arg
+                        shell-command-default-error-buffer)))
+        (apply 'shell-command args))))
   (tkb-keys ("\C-ck!" 'tkb-shell-command-on-this-file)))
 
 
 (fset 'tkb-nxml-end-of-element "\C-[\C-u\C-[\C-f")
 
 (when-load-file "rng-auto" :load
-		(setq auto-mode-alist
-		      (cons '("\\.\\(xml\\|xsl\\|rng\\|xhtml\\)\\'" . nxml-mode)
-			    auto-mode-alist)))
+                (setq auto-mode-alist
+                      (cons '("\\.\\(xml\\|xsl\\|rng\\|xhtml\\)\\'" . nxml-mode)
+                            auto-mode-alist)))
 
 (eval-after-load "nxml-mode"
   '(progn
@@ -776,12 +782,12 @@ to 25 may be optimal weight, BMI >25 may be overweight, BMI >30 is obese,
 over 40 is morbidly obese."
   (interactive "nHeight in inches: \nnWeight in pounds: ")
   (let* ((bmi (* 703 (/ (float weight) (expt height 2))))
-	 (characterization
-	  (cond ((<  bmi 18.5) "underweight")
-		((<= bmi 25.0) "optimal")
-		((<  bmi 30.0) "overweight")
-		((<  bmi 40.0) "obese")
-		(t             "morbidly obese"))))
+         (characterization
+          (cond ((<  bmi 18.5) "underweight")
+                ((<= bmi 25.0) "optimal")
+                ((<  bmi 30.0) "overweight")
+                ((<  bmi 40.0) "obese")
+                (t             "morbidly obese"))))
     (message "bmi: %06.3f; %s" bmi characterization)))
 
 
@@ -789,9 +795,9 @@ over 40 is morbidly obese."
   (eval-after-load "font-lock"
     '(progn
        (mapc #'(lambda (face)
-		 (when (facep face)
-		   (set-face-foreground face "cyan")))
-	     '(font-lock-comment-face sgml-doctype-face))
+                 (when (facep face)
+                   (set-face-foreground face "cyan")))
+             '(font-lock-comment-face sgml-doctype-face))
        ;;(set-face-foreground 'font-lock-comment-face "cyan")
        ;;'sgml-doctype-face "cyan")
        (message "!!!cyan rules!!!"))))
@@ -803,9 +809,9 @@ over 40 is morbidly obese."
     (or (file-directory-p "~/backup") (make-directory "~/backup" t))
     (let ((backup-dir (expand-file-name "~/backup")))
       (setq backup-directory-alist
-	    `((".*" . ,backup-dir)))
+            `((".*" . ,backup-dir)))
       (setq auto-save-file-name-transforms
-	    `((".*" ,backup-dir t))))))
+            `((".*" ,backup-dir t))))))
 (progn
   (setq backup-directory-alist '(("." . ".~"))))
 
@@ -836,19 +842,19 @@ over 40 is morbidly obese."
   (defun tkb-copy-and-kill-for-common-lisp (beg end)
     (interactive "r")
     (let ((s (buffer-substring beg end))
-	  (buf (get-buffer-create " *crazy-yank-for-common-lisp*")))
+          (buf (get-buffer-create " *crazy-yank-for-common-lisp*")))
       (save-excursion
-	(set-buffer buf)
-	(delete-region (point-min) (point-max))
-	(princ s buf)
-	(goto-char 0)
-	(while (search-forward "\"" nil t)
-	  (backward-char)
-	  (insert ?\\)
-	  (forward-char 1))
-	(kill-region (point-min) (point-max))
-	;;(kill-buffer buf)
-	)))
+        (set-buffer buf)
+        (delete-region (point-min) (point-max))
+        (princ s buf)
+        (goto-char 0)
+        (while (search-forward "\"" nil t)
+          (backward-char)
+          (insert ?\\)
+          (forward-char 1))
+        (kill-region (point-min) (point-max))
+        ;;(kill-buffer buf)
+        )))
   (tkb-keys ("\C-ckL" 'tkb-copy-and-kill-for-common-lisp)))
 
 (progn
@@ -858,10 +864,10 @@ over 40 is morbidly obese."
     (interactive)
     (backward-kill-sexp)
     (condition-case nil
-	(prin1 (eval (read (current-kill 0)))
-	       (current-buffer))
+        (prin1 (eval (read (current-kill 0)))
+               (current-buffer))
       (error (message "Invalid expression")
-	     (insert (current-kill 0)))))
+             (insert (current-kill 0)))))
   (tkb-keys ("\C-cE" #'fc-eval-and-replace)))
 
 ;;; FIXME: C-u C-x C-e aka eval-last-sexp does this, without the
@@ -871,8 +877,8 @@ over 40 is morbidly obese."
   "Insert value of the preceding sexp."
   (interactive "P")
   (let (b
-	e
-	(output-format (if stringifyp "%s" "%S")))
+        e
+        (output-format (if stringifyp "%s" "%S")))
     (save-excursion
       (backward-sexp)
       (setq b (point))
@@ -880,28 +886,28 @@ over 40 is morbidly obese."
       (setq e (point)))
     (let ((xs (buffer-substring-no-properties b e)))
       (condition-case nil
-	  (let* ((x (read xs))
-		 (result (eval x)))
-	    (when (y-or-n-p
-		   (format (concat "Result: %S; Insert as "
-				   output-format "? ") result result))
-	      (insert (format output-format result))))
-	(error (message "Invalid expression: %s" xs))))))
+          (let* ((x (read xs))
+                 (result (eval x)))
+            (when (y-or-n-p
+                   (format (concat "Result: %S; Insert as "
+                                   output-format "? ") result result))
+              (insert (format output-format result))))
+        (error (message "Invalid expression: %s" xs))))))
 
 (defun tkb-eval-prompted-and-insert (stringifyp x)
   (interactive "P\nXLisp Expression: ")
   (let ((output-format (if stringifyp "%s" "%S")))
     (when (y-or-n-p
-	   (format (concat "Result: %S; insert as " output-format "? ")
-		   x x))
+           (format (concat "Result: %S; insert as " output-format "? ")
+                   x x))
       (insert (format output-format x)))))
 
 (defun tkb-eval-backward-and-insert-in-comment (stringifyp)
   "Insert value of the preceding sexp."
   (interactive "P")
   (let (b
-	e
-	(output-format (if stringifyp ";;=> %s" ";;=> %S")))
+        e
+        (output-format (if stringifyp ";;=> %s" ";;=> %S")))
     (save-excursion
       (backward-sexp)
       (setq b (point))
@@ -909,13 +915,13 @@ over 40 is morbidly obese."
       (setq e (point)))
     (let ((xs (buffer-substring-no-properties b e)))
       (condition-case nil
-	  (let* ((tkb-ebaiicx (read xs))
-		 (result (eval tkb-ebaiicx)))
-	    (when (y-or-n-p
-		   (format (concat "Result: %S; Insert as "
-				   output-format "? ") result result))
-	      (insert (format output-format result))))
-	(error (message "Invalid expression: %s" xs))))))
+          (let* ((tkb-ebaiicx (read xs))
+                 (result (eval tkb-ebaiicx)))
+            (when (y-or-n-p
+                   (format (concat "Result: %S; Insert as "
+                                   output-format "? ") result result))
+              (insert (format output-format result))))
+        (error (message "Invalid expression: %s" xs))))))
 
 (when nil
   ;; http://emacsredux.com/blog/2013/06/21/eval-and-replace/
@@ -925,10 +931,10 @@ over 40 is morbidly obese."
     (interactive)
     (backward-kill-sexp)
     (condition-case nil
-	(prin1 (eval (read (current-kill 0)))
-	       (current-buffer))
+        (prin1 (eval (read (current-kill 0)))
+               (current-buffer))
       (error (message "Invalid expression")
-	     (insert (current-kill 0))))))
+             (insert (current-kill 0))))))
 
 
 (defun tkb-trim-buffer ()
@@ -943,10 +949,10 @@ over 40 is morbidly obese."
   (interactive)
   (save-excursion
     (let ((start (min (point) (mark)))
-	  (end (max (point) (mark))))
+          (end (max (point) (mark))))
       (goto-char start)
       (while (re-search-forward "[ \t]+$" end t)
-	(replace-match "" nil nil)))))
+        (replace-match "" nil nil)))))
 
 (progn
   (defun tkb-replace-with-calc (start end)
@@ -954,16 +960,16 @@ over 40 is morbidly obese."
     (let ((o (make-overlay start end)))
       (overlay-put o 'face 'highlight)
       (unwind-protect
-	  (let* ((n (string-to-number (buffer-substring start end)))
-		 (x (read-from-minibuffer (format "Expression with n = %s: " n)
-					  nil read-expression-map t
-					  'read-expression-history
-					  )))
-	    (kill-region start end)
-	    (let ((r (number-to-string (eval x))))
-	      (message "Result: %s" r)
-	      (insert r)))
-	(delete-overlay o))))
+          (let* ((n (string-to-number (buffer-substring start end)))
+                 (x (read-from-minibuffer (format "Expression with n = %s: " n)
+                                          nil read-expression-map t
+                                          'read-expression-history
+                                          )))
+            (kill-region start end)
+            (let ((r (number-to-string (eval x))))
+              (message "Result: %s" r)
+              (insert r)))
+        (delete-overlay o))))
   (when nil (tkb-keys ("\C-ce" #'tkb-replace-with-calc))))
 
 (progn
@@ -978,8 +984,8 @@ over 40 is morbidly obese."
 (defun tkb-oracle-sysdba ()
   (interactive)
   (let ((sql-user "sys")
-					;(sql-database "nspcp")
-	(sql-oracle-options (list "as sysdba")))
+                                        ;(sql-database "nspcp")
+        (sql-oracle-options (list "as sysdba")))
     (sql-oracle)))
 
 (progn
@@ -1001,7 +1007,7 @@ over 40 is morbidly obese."
     (interactive "P")
     (message "whole: %s numeric: %d" whole (prefix-numeric-value whole))
     (let* ((fn (buffer-file-name))
-	   (fn (if whole fn (file-name-nondirectory fn))))
+           (fn (if whole fn (file-name-nondirectory fn))))
       (kill-new (downcase fn))))
   (tkb-keys ("\C-cY" #'tkb-copy-downcase-buffer-file-name))
 
@@ -1022,15 +1028,15 @@ over 40 is morbidly obese."
     "Copy lines (as many as prefix argument) in the kill ring"
     (interactive "p")
     (kill-ring-save (line-beginning-position)
-		    (line-beginning-position (+ 1 arg)))
+                    (line-beginning-position (+ 1 arg)))
     (message "%d line%s copied" arg (if (= 1 arg) "" "s")))
 
 
   (defadvice yank (after indent-region activate)
     (if (member major-mode '(emacs-lisp-mode scheme-mode lisp-mode
-					     c-mode c++-mode objc-mode
-					     LaTeX-mode TeX-mode))
-	(indent-region (region-beginning) (region-end) nil)))
+                                             c-mode c++-mode objc-mode
+                                             LaTeX-mode TeX-mode))
+        (indent-region (region-beginning) (region-end) nil)))
   (tkb-keys ("\C-cy" 'jao-copy-line))
   )
 
@@ -1041,17 +1047,17 @@ over 40 is morbidly obese."
   (interactive)
   (let ((word (x-get-selection-value)))
     (if word
-	(let ((buf (get-buffer-create "Spell Selection")))
-	  (switch-to-buffer buf)
-	  (delete-region (point-min) (point-max))
-	  (insert word)
-	  (ispell-word))
+        (let ((buf (get-buffer-create "Spell Selection")))
+          (switch-to-buffer buf)
+          (delete-region (point-min) (point-max))
+          (insert word)
+          (ispell-word))
       (message "no selection"))))
 
 (tkb-keys ("\C-c$" (if (fboundp 'x-get-selection-value)
-		       #'tkb-ispell-selection
-		     #'(lambda () (interactive)
-			 (message "\
+                       #'tkb-ispell-selection
+                     #'(lambda () (interactive)
+                         (message "\
 Not under a window system, so you can't ispell the selection")))))
 
 
@@ -1063,15 +1069,15 @@ Not under a window system, so you can't ispell the selection")))))
     "Launch google on the Word at Point"
     (interactive
      (list (let* ((word (thing-at-point 'symbol))
-		  (input
-		   (read-string (format "Google%s: "
-					(if (not word)
-					    ""
-					  (format " (default %s)" word))))))
-	     (if (string= input "")
-		 (if (not word)
-					;sinon input
-		     (error "No keyword to search given") word) input))))
+                  (input
+                   (read-string (format "Google%s: "
+                                        (if (not word)
+                                            ""
+                                          (format " (default %s)" word))))))
+             (if (string= input "")
+                 (if (not word)
+                                        ;sinon input
+                     (error "No keyword to search given") word) input))))
     (browse-url (format "http:/www.google.com/search?q=%s" w)))
   (tkb-keys ("\C-cj" #'my-search-google)))
 
@@ -1080,8 +1086,8 @@ Not under a window system, so you can't ispell the selection")))))
   (eval-after-load "rng-loc"
     '(progn
        (setq rng-schema-locating-files
-	     (append rng-schema-locating-files
-		     '("~/comp/xsl-website/website-schemas.xml"))))))
+             (append rng-schema-locating-files
+                     '("~/comp/xsl-website/website-schemas.xml"))))))
 
 (when t
   ;; This requires using message-user-agent for composing mail.
@@ -1090,44 +1096,44 @@ Not under a window system, so you can't ispell the selection")))))
   (require 'smtpmail)
   (setq smtpmail-debug-info t)
   (setq message-send-mail-function 'smtpmail-send-it
-	smtpmail-stream-type 'starttls
-	smtpmail-default-smtp-server "smtp.gmail.com"
-	smtpmail-smtp-server "smtp.gmail.com"
-	smtpmail-smtp-service 587)
+        smtpmail-stream-type 'starttls
+        smtpmail-default-smtp-server "smtp.gmail.com"
+        smtpmail-smtp-server "smtp.gmail.com"
+        smtpmail-smtp-service 587)
   (setq message-mail-alias-type 'ecomplete)
   (defun check-attachments-attached ()
     (interactive)
     (save-excursion
       (goto-char (point-min))
       (let* (
-	     ;; Nil when message came from outside (eg calling emacs as editor)
-	     ;; Non-nil marker of end of headers.
-	     (internal-messagep
-	      (re-search-forward
-	       (concat "^" (regexp-quote mail-header-separator) "$") nil t))
-	     (end-of-headers		; Start of body.
-	      (copy-marker
-	       (or internal-messagep
-		   (re-search-forward "^$" nil t)
-		   (point-min))))
-	     (limit
-	      (or (re-search-forward "^-- $" nil t)
-		  (point-max)))
-	     (old-case-fold-search case-fold-search))
-	(unwind-protect
-	    (progn
-	      (goto-char end-of-headers)
-	      (when (search-forward "attach" limit t)
-		(goto-char end-of-headers)
-		;; the word 'attach' has been used, can we find an
-		;; attachment?
-		(unless
-		    (or (re-search-forward "^<#/" limit t)
-			(y-or-n-p
-			 "Found the word `attach' but no MIME attachment: send anyway?"
-			 )
-			(error "Aborted send")))))
-	  (set-marker end-of-headers nil)))))
+             ;; Nil when message came from outside (eg calling emacs as editor)
+             ;; Non-nil marker of end of headers.
+             (internal-messagep
+              (re-search-forward
+               (concat "^" (regexp-quote mail-header-separator) "$") nil t))
+             (end-of-headers		; Start of body.
+              (copy-marker
+               (or internal-messagep
+                   (re-search-forward "^$" nil t)
+                   (point-min))))
+             (limit
+              (or (re-search-forward "^-- $" nil t)
+                  (point-max)))
+             (old-case-fold-search case-fold-search))
+        (unwind-protect
+            (progn
+              (goto-char end-of-headers)
+              (when (search-forward "attach" limit t)
+                (goto-char end-of-headers)
+                ;; the word 'attach' has been used, can we find an
+                ;; attachment?
+                (unless
+                    (or (re-search-forward "^<#/" limit t)
+                        (y-or-n-p
+                         "Found the word `attach' but no MIME attachment: send anyway?"
+                         )
+                        (error "Aborted send")))))
+          (set-marker end-of-headers nil)))))
   (add-hook 'message-send-hook 'check-attachments-attached)
   (defun tkb-messsage-header-setup-hook ()
     (goto-char (point-max))
@@ -1141,9 +1147,9 @@ Case is ignored if `case-fold-search' is non-nil in the current buffer.
 Goes backward if ARG is negative; error if CHAR not found."
     (interactive "p\ncZap to char: ")
     (kill-region (point) (progn
-			   (search-forward (char-to-string char) nil nil arg)
-			   (goto-char (if (> arg 0) (1- (point)) (1+ (point))))
-			   (point))))
+                           (search-forward (char-to-string char) nil nil arg)
+                           (goto-char (if (> arg 0) (1- (point)) (1+ (point))))
+                           (point))))
   (tkb-keys ("\C-cZ" 'tkb-zap-to-char)))
 
 
@@ -1158,36 +1164,36 @@ Goes backward if ARG is negative; error if CHAR not found."
   (progn
     (defvar ongoing-char-choice
       '("Special characters"
-	(""
-	 ("ccedil"    #xe7)
-	 ("copyright" #xa9)
-	 ("degree"    #xb0)
-	 ("dot"       #xb7)
-	 ("eacute"    #xe9)
-	 ("half"      "&#xbd;")
-	 ("omacr"     "&#x14d;")
-	 ("oouml"     #xe4)
-	 ("uuml"      #xfc)
-	 ("euro"      #x20ac)
-	 ("cents"     #xa2)
-	 ("egrave"    #xe8)
-	 ("lsquo"     #x2018)
-	 ("rsquo"     #x2019)
-	 ("ldquo"     #x201c)
-	 ("rdquo"     #x201d)
-	 ("mdash"     #x2014))))
+        (""
+         ("ccedil"    #xe7)
+         ("copyright" #xa9)
+         ("degree"    #xb0)
+         ("dot"       #xb7)
+         ("eacute"    #xe9)
+         ("half"      "&#xbd;")
+         ("omacr"     "&#x14d;")
+         ("oouml"     #xe4)
+         ("uuml"      #xfc)
+         ("euro"      #x20ac)
+         ("cents"     #xa2)
+         ("egrave"    #xe8)
+         ("lsquo"     #x2018)
+         ("rsquo"     #x2019)
+         ("ldquo"     #x201c)
+         ("rdquo"     #x201d)
+         ("mdash"     #x2014))))
 
     (defun ong-special-chars-menu ()
       "Insert a special character from a menu"
       (interactive)
       (let ((value
-	     (car (x-popup-menu
-		   (list '(10 10) (selected-window))
-		   ongoing-char-choice))))
-	(cond
-	 ((integerp value) (ucs-insert value))
-	 ((stringp  value) (insert value))
-	 ('t )))) ;; so you can hit escape and make the menu go away
+             (car (x-popup-menu
+                   (list '(10 10) (selected-window))
+                   ongoing-char-choice))))
+        (cond
+         ((integerp value) (ucs-insert value))
+         ((stringp  value) (insert value))
+         ('t )))) ;; so you can hit escape and make the menu go away
 
 
     (defun one-quote () "" (interactive) (insert ?'))
@@ -1206,32 +1212,32 @@ Goes backward if ARG is negative; error if CHAR not found."
       (interactive "c" "'")
       (cond
        ((= c ?s)
-	(if sq-state
-	    (progn
-	      (ucs-insert #x2019)
-	      (setq sq-state 'nil))
-	  (ucs-insert #x2018)
-	  (setq sq-state 't)))
+        (if sq-state
+            (progn
+              (ucs-insert #x2019)
+              (setq sq-state 'nil))
+          (ucs-insert #x2018)
+          (setq sq-state 't)))
        ((= c ?d)
-	(if dq-state
-	    (progn
-	      (ucs-insert #x201d)
-	      (setq dq-state 'nil))
-	  (ucs-insert #x201c)
-	  (setq dq-state 't)))
+        (if dq-state
+            (progn
+              (ucs-insert #x201d)
+              (setq dq-state 'nil))
+          (ucs-insert #x201c)
+          (setq dq-state 't)))
        ((= c ?') (ucs-insert #x2019))
        ((= c ?a)
-	(progn
-	  (if (> (current-column) 0) (newline-and-indent))
-	  (insert "<a href=\"\">")
-	  (backward-char 2)
-	  ))
+        (progn
+          (if (> (current-column) 0) (newline-and-indent))
+          (insert "<a href=\"\">")
+          (backward-char 2)
+          ))
        ((= c ?i)
-	(progn
-	  (if (> (current-column) 0) (newline-and-indent))
-	  (insert "<img src=\"\" alt=\"\" />")
-	  (backward-char 11)
-	  ))
+        (progn
+          (if (> (current-column) 0) (newline-and-indent))
+          (insert "<img src=\"\" alt=\"\" />")
+          (backward-char 11)
+          ))
        ((= c ?&) (insert "&amp;"))
        ((= c ?<) (insert "&lt;"))
        ((= c ?-) (ucs-insert #x2014))
@@ -1246,34 +1252,34 @@ Goes backward if ARG is negative; error if CHAR not found."
     (save-excursion
       (goto-char (point-min))
       (let* (
-	     ;; Nil when message came from outside (eg calling emacs as editor)
-	     ;; Non-nil marker of end of headers.
-	     (internal-messagep
-	      (re-search-forward
-	       (concat "^" (regexp-quote mail-header-separator) "$") nil t))
-	     (end-of-headers		; Start of body.
-	      (copy-marker
-	       (or internal-messagep
-		   (re-search-forward "^$" nil t)
-		   (point-min))))
-	     (limit
-	      (or (re-search-forward "^-- $" nil t)
-		  (point-max)))
-	     (old-case-fold-search case-fold-search))
-	(unwind-protect
-	    (progn
-	      (goto-char end-of-headers)
-	      (when (search-forward "attach" limit t)
-		(goto-char end-of-headers)
-		;; the word 'attach' has been used, can we find an
-		;; attachment?
-		(unless
-		    (or (re-search-forward "^<#/" limit t)
-			(y-or-n-p
-			 "Found the word `attach' but no MIME attachment: send anyway?"
-			 )
-			(error "Aborted send")))))
-	  (set-marker end-of-headers nil)))))
+             ;; Nil when message came from outside (eg calling emacs as editor)
+             ;; Non-nil marker of end of headers.
+             (internal-messagep
+              (re-search-forward
+               (concat "^" (regexp-quote mail-header-separator) "$") nil t))
+             (end-of-headers		; Start of body.
+              (copy-marker
+               (or internal-messagep
+                   (re-search-forward "^$" nil t)
+                   (point-min))))
+             (limit
+              (or (re-search-forward "^-- $" nil t)
+                  (point-max)))
+             (old-case-fold-search case-fold-search))
+        (unwind-protect
+            (progn
+              (goto-char end-of-headers)
+              (when (search-forward "attach" limit t)
+                (goto-char end-of-headers)
+                ;; the word 'attach' has been used, can we find an
+                ;; attachment?
+                (unless
+                    (or (re-search-forward "^<#/" limit t)
+                        (y-or-n-p
+                         "Found the word `attach' but no MIME attachment: send anyway?"
+                         )
+                        (error "Aborted send")))))
+          (set-marker end-of-headers nil)))))
 
   (add-hook 'message-send-hook 'check-attachments-attached))
 
@@ -1287,36 +1293,36 @@ Goes backward if ARG is negative; error if CHAR not found."
 ;; on tiled, tabbing window managers like ion.)
 (setq ediff-window-setup-function 'ediff-setup-windows-plain)
 
-(when nil 
+(when nil
   ;; We don't have gforth.el installed now.
 
   (autoload 'forth-mode "gforth")
   (setq auto-mode-alist (cons '("\\.fs\\'" . forth-mode)
-			      auto-mode-alist))
+                              auto-mode-alist))
   (autoload 'forth-block-mode "gforth")
   (setq auto-mode-alist (cons '("\\.fb\\'" . forth-block-mode)
-			      auto-mode-alist))
+                              auto-mode-alist))
   (add-hook 'forth-mode-hook (function (lambda ()
-					 ;; customize variables here:
-					 (setq forth-indent-level 4)
-					 (setq forth-minor-indent-level 2)
-					 (setq forth-hilight-level 3)
-					 )))
+                                         ;; customize variables here:
+                                         (setq forth-indent-level 4)
+                                         (setq forth-minor-indent-level 2)
+                                         (setq forth-hilight-level 3)
+                                         )))
 
 
   (eval-after-load "gforth"
     '(progn
        (defun forth-load-file (file-name)
-	 "Load a Forth file FILE-NAME into the inferior Forth process."
-	 (interactive (comint-get-source "Load Forth file: " forth-prev-l/c-dir/file
-					 forth-source-modes t)) ; T because LOAD
-					; needs an exact name
-	 (comint-check-source file-name) ; Check to see if buffer needs saved.
-	 (setq forth-prev-l/c-dir/file (cons (file-name-directory    file-name)
-					     (file-name-nondirectory file-name)))
-	 (comint-send-string (forth-proc) (concat "include "
-						  file-name
-						  "\n"))))))
+         "Load a Forth file FILE-NAME into the inferior Forth process."
+         (interactive (comint-get-source "Load Forth file: " forth-prev-l/c-dir/file
+                                         forth-source-modes t)) ; T because LOAD
+                                        ; needs an exact name
+         (comint-check-source file-name) ; Check to see if buffer needs saved.
+         (setq forth-prev-l/c-dir/file (cons (file-name-directory    file-name)
+                                             (file-name-nondirectory file-name)))
+         (comint-send-string (forth-proc) (concat "include "
+                                                  file-name
+                                                  "\n"))))))
 
 
 (defun tkb-insert-name ()
@@ -1335,10 +1341,10 @@ Goes backward if ARG is negative; error if CHAR not found."
   ;; This is especially useful with focus-follows-pointer mode
   ;; and scrolling desktops.
   (let* ((params (frame-parameters))
-	 (top (assq 'top params))
-	 (left (assq 'left params))
-	 (height (assq 'height params))
-	 (width (assq 'width params)))
+         (top (assq 'top params))
+         (left (assq 'left params))
+         (height (assq 'height params))
+         (width (assq 'width params)))
     (message "%s %s %s %s" top left height width)
     ;; Setting these seems only to work well with twm and close derivatives;
     ;; other window managers seem to offset the new windows from the old.
@@ -1349,28 +1355,28 @@ Goes backward if ARG is negative; error if CHAR not found."
     (push '(user-position . t) default-frame-alist)))
  (nil
   (let* ((height (assq 'height (frame-parameters)))
-	 (new-geometry `((top . 30)
-			 (left . -75)
-			 (width . 80)
-			 ,height)))
+         (new-geometry `((top . 30)
+                         (left . -75)
+                         (width . 80)
+                         ,height)))
     ;; Shouldn't I be replacing any matching items in the assoc?
     (cond (nil
-	   (setq initial-frame-alist new-geometry)
-	   (setq default-frame-alist (copy-list new-geometry)))
-	  (t
-	   (mapcar (lambda (item)
-		     (push item initial-frame-alist)
-		     (push item default-frame-alist))
-		   new-geometry))))
+           (setq initial-frame-alist new-geometry)
+           (setq default-frame-alist (copy-list new-geometry)))
+          (t
+           (mapcar (lambda (item)
+                     (push item initial-frame-alist)
+                     (push item default-frame-alist))
+                   new-geometry))))
   (tkb-position)))
 
 (defun tkb-position-frame (&optional new-left)
   (interactive "P")
   (let* ((new-left (if new-left (prefix-numeric-value new-left) -50))
-	 (dw (display-pixel-width))
-	 (fw (frame-pixel-width))
-	 (nl (- dw fw 50))
-	 (top (frame-parameter nil 'top)))
+         (dw (display-pixel-width))
+         (fw (frame-pixel-width))
+         (nl (- dw fw 50))
+         (top (frame-parameter nil 'top)))
     ;;(set-frame-position (selected-frame) nl top)
     ;;(set-frame-parameter nil 'left nl)
     ;;(frame-notice-user-settings)
@@ -1386,7 +1392,7 @@ Goes backward if ARG is negative; error if CHAR not found."
 (defun livejorunal-rss-url (name)
   (interactive "MName:")
   (kill-new (concat  "http://www.livejournal.com/users/"
-		     name  "/data/rss")))
+                     name  "/data/rss")))
 
 (when (file-loadable-p "table")
   (autoload 'table-insert "table" nil t)
@@ -1397,12 +1403,12 @@ Goes backward if ARG is negative; error if CHAR not found."
   (autoload 'rst-mode "rst"
     "mode for editing reStructuredText documents" t)
   (setq auto-mode-alist
-	(append '(("\\.rst$" . rst-mode)
-		  ("\\.rsti$" . rst-mode) ; include files.
-		  ("\\.rest$" . rst-mode)
-		  ("\\.rst-pending$" . rst-mode) ;for my blog.
-		  )
-		auto-mode-alist))
+        (append '(("\\.rst$" . rst-mode)
+                  ("\\.rsti$" . rst-mode) ; include files.
+                  ("\\.rest$" . rst-mode)
+                  ("\\.rst-pending$" . rst-mode) ;for my blog.
+                  )
+                auto-mode-alist))
   (autoload 'rst-repeat-last-character "rst")
   (tkb-keys ("\C-cR" 'rst-repeat-last-character))
 
@@ -1414,7 +1420,7 @@ Goes backward if ARG is negative; error if CHAR not found."
       (make-local-variable 'rst-mode-lazy)
       (make-local-variable 'font-lock-support-mode)
       (setq rst-mode-lazy nil
-	    font-lock-support-mode nil)
+            font-lock-support-mode nil)
       (make-local-variable 'font-lock-mode)
       (font-lock-mode -1))
     ;;(message "tkb-rst-mode-hook ran; font-lock-mode: %S" font-lock-mode)
@@ -1428,22 +1434,22 @@ Goes backward if ARG is negative; error if CHAR not found."
      ((string-match ".*/myblog/entries/.*\\.\\(rst\\|rsti\\)\\(-pending\\)?$" buffer-file-name)
       (message "tkb-rst-mode-hook: matched myblog")
       (set (make-local-variable 'compile-command)
-	   (concat "pybloxrst "
-		   (file-name-nondirectory buffer-file-name)
-		   " >~/tmp/x.rst && rst -o -h ~/tmp/x.rst")))
+           (concat "pybloxrst "
+                   (file-name-nondirectory buffer-file-name)
+                   " >~/tmp/x.rst && rst -o -h ~/tmp/x.rst")))
      (t
       (message "didn't match myblog")
       (let* ((rst-name (file-name-nondirectory buffer-file-name))
-	     (ltx-name (concat (file-name-sans-extension rst-name) ".ltx"))
-	     (pdf-name (concat (file-name-sans-extension rst-name) ".pdf")))
-	(set (make-local-variable 'compile-command)
-	     (if (file-exists-p "rststyle.tex")
-		 (format "make %s && open %s" pdf-name pdf-name)
-	       (concat "rst -o -p " rst-name)))))
+             (ltx-name (concat (file-name-sans-extension rst-name) ".ltx"))
+             (pdf-name (concat (file-name-sans-extension rst-name) ".pdf")))
+        (set (make-local-variable 'compile-command)
+             (if (file-exists-p "rststyle.tex")
+                 (format "make %s && open %s" pdf-name pdf-name)
+               (concat "rst -o -p " rst-name)))))
     (add-hook 'before-save-hook 'time-stamp nil t)))
   (add-hook 'rst-mode-hook 'tkb-rst-mode-hook))
 
-(progn 
+(progn
   (push '("\\.adc$" . adoc-mode)  auto-mode-alist)
   (push '("\\.adoc$" . adoc-mode)  auto-mode-alist)
   (defun tkb-adoc-mode-hook ()
@@ -1460,14 +1466,14 @@ Goes backward if ARG is negative; error if CHAR not found."
   (defun tkb-eulisp-log (read)
     (interactive "P")
     (let ((personal-log-file (expand-file-name "working-notes.text"
-					       "~/comp/eulisp")))
+                                               "~/comp/eulisp")))
       (personal-log read)))
 
   (defun tkb-private-log (read)
     (interactive "P")
     (let ((personal-log-dir "~/tkb/"))
       (let ((personal-log-file (personal-log-calc-file)))
-	(personal-log read))))
+        (personal-log read))))
 
   (tkb-keys
     ("\C-cle" 'tkb-eulisp-log)
@@ -1493,36 +1499,36 @@ Goes backward if ARG is negative; error if CHAR not found."
   (beginning-of-line)
   (while (not (eobp))
     (if (not (looking-at "^\\(.*\\)\\.zip"))
-	(kill-line 1)
+        (kill-line 1)
       (forward-line))))
 
 (defun tkb-insert-rpg-net-post-url (post-id)
   (interactive "sPost Id: ")
   (insert (format "http://forum.rpg.net/showthread.php?s=&postid=%s#post%s"
-		  post-id post-id)))
+                  post-id post-id)))
 
 (defun tkb-get-x-selection ()
   (let (text)
     (when x-select-enable-clipboard
       (if (null text)
-	  (condition-case c
-	      (setq text (x-get-selection 'CLIPBOARD 'COMPOUND_TEXT))
-	    (error nil)))
+          (condition-case c
+              (setq text (x-get-selection 'CLIPBOARD 'COMPOUND_TEXT))
+            (error nil)))
       (if (null text)
-	  (condition-case c
-	      (setq text (x-get-selection 'CLIPBOARD 'STRING))
-	    (error nil)))
+          (condition-case c
+              (setq text (x-get-selection 'CLIPBOARD 'STRING))
+            (error nil)))
       (if (string= text "") (setq text nil)))
 
     ;; Don't die if x-get-selection signals an error.
     (if (null text)
-	(condition-case c
-	    (setq text (x-get-selection 'PRIMARY 'COMPOUND_TEXT))
-	  (error nil)))
+        (condition-case c
+            (setq text (x-get-selection 'PRIMARY 'COMPOUND_TEXT))
+          (error nil)))
     (if (null text)
-	(condition-case c
-	    (setq text (x-get-selection 'PRIMARY 'STRING))
-	  (error nil)))
+        (condition-case c
+            (setq text (x-get-selection 'PRIMARY 'STRING))
+          (error nil)))
     (if (string= text "") (setq text nil))
 
     (or text (setq text (x-get-cut-buffer 0)))
@@ -1544,7 +1550,7 @@ Goes backward if ARG is negative; error if CHAR not found."
 (defun tkb-substitute-url-quoted ()
   (interactive)
   (let* ((cs (buffer-substring-no-properties (point) (+ (point) 1)))
-	 (c (aref cs 0)))
+         (c (aref cs 0)))
     (kill-region (point) (+ (point) 1))
     (tkb-insert-url-quoted c)))
 
@@ -1566,8 +1572,8 @@ Goes backward if ARG is negative; error if CHAR not found."
       (insert s)
       (goto-char (point-min))
       (while (search-forward-regexp "%\\([0-9a-f][0-9a-f]\\)" nil t)
-	(let ((v (match-string 1)))
-	  (replace-match (char-to-string (string-to-number v 16)))))
+        (let ((v (match-string 1)))
+          (replace-match (char-to-string (string-to-number v 16)))))
       (copy-region-as-kill (point-min) (point-max)))))
 
 
@@ -1605,7 +1611,7 @@ Goes backward if ARG is negative; error if CHAR not found."
     (yank)))
 
 (tkb-keys ("\C-\M-y" #'tkb-yank-at-place)
-	  ("\C-c\C-@" #'tkb-mark-yank-place))
+          ("\C-c\C-@" #'tkb-mark-yank-place))
 
 (defun tkb-quote-for-elisp (beg end)
   (interactive "r")
@@ -1616,38 +1622,38 @@ Goes backward if ARG is negative; error if CHAR not found."
   ;; hacked from w32-win.el:(mouse-set-font &rest fonts)
   (if w32-use-w32-font-dialog
       (let ((chosen-font (w32-select-font (selected-frame)
-					  w32-list-proportional-fonts)))
-	(and chosen-font (list chosen-font)))
+                                          w32-list-proportional-fonts)))
+        (and chosen-font (list chosen-font)))
     (x-popup-menu
      last-nonmenu-event
      ;; Append list of fontsets currently defined.
      ;; Conditional on new-fontset so bootstrapping works on non-GUI compiles
      (if (fboundp 'new-fontset)
-	 (append w32-fixed-font-alist (list (generate-fontset-menu)))))))
+         (append w32-fixed-font-alist (list (generate-fontset-menu)))))))
 
 (defun tkb-w32-copy-select-font (first-only)
   (interactive "P")
   (message "%S" first-only)
   (let* ((fonts (tkb-w32-select-font))
-	 (fonts (if first-only (car fonts) fonts)))
+         (fonts (if first-only (car fonts) fonts)))
     (kill-new (format "%S" fonts))))
 
-(progn 
+(progn
   (defun is-type (obj &rest typesyms)
     (memq (type-of obj) typesyms))
 
   (defun tkb-edit-form (sym)
     (interactive (list (intern (completing-read "symbol? " obarray))))
     (let* ((value (eval sym))
-	   (quote-string
-	    (cond ((null value) nil)
-		  ((is-type value 'integer 'float 'string) nil)
-		  ((is-type value 'cons) 'quote))))
+           (quote-string
+            (cond ((null value) nil)
+                  ((is-type value 'integer 'float 'string) nil)
+                  ((is-type value 'cons) 'quote))))
       ;; Emacs lisp needs a better pretty printer.
       (pp `(setq ,sym ,(if quote-string
-			   `(,quote-string ,value)
-			 `,value))
-	  (current-buffer)))))
+                           `(,quote-string ,value)
+                         `,value))
+          (current-buffer)))))
 
 
 (defalias 'λ #'lambda)			;this doesn't work right.
@@ -1657,26 +1663,26 @@ Goes backward if ARG is negative; error if CHAR not found."
   "Display the full documentation of STRUCTURE (a symbol)."
   (interactive
    (let ((v (variable-at-point))
-	 (enable-recursive-minibuffers t)
-	 val)
+         (enable-recursive-minibuffers t)
+         val)
      (setq val (completing-read (if (symbolp v)
-				    (format
-				     "Describe structure (default %s): " v)
-				  "Describe variable: ")
-				obarray
-				(lambda (vv)
+                                    (format
+                                     "Describe structure (default %s): " v)
+                                  "Describe variable: ")
+                                obarray
+                                (lambda (vv)
                                   (or (get vv 'structure-documentation)
                                       (and (boundp vv) (not (keywordp vv)))))
-				t nil nil
-				(if (symbolp v) (symbol-name v))))
+                                t nil nil
+                                (if (symbolp v) (symbol-name v))))
      (list (if (equal val "") v (intern val))))))
 
 (defun t:get-hostname-from-http ()
   (interactive)
   (let* ((s (x-get-selection))
-	 (s* (progn
-	       (string-match "\\(https?://\\|file:///\\)\\([^/]+\\)" s)
-	       (match-string 2 s))))
+         (s* (progn
+               (string-match "\\(https?://\\|file:///\\)\\([^/]+\\)" s)
+               (match-string 2 s))))
     (kill-new s*)))
 (tkb-keys ("\C-ckC" #'t:get-hostname-from-http))
 
@@ -1684,13 +1690,13 @@ Goes backward if ARG is negative; error if CHAR not found."
   "Hmmm.  a (non)work(ing) in progress."
   (interactive)
   (let* ((s (x-get-selection))
-	 (s1 (progn
-	       (string-match "\\(https?://\\|file:///\\)\\(.+\\)$" s)
-	       (match-string 2 s)))
-	 (s2 (substitute ?- ?/ s1))
-	 (s3 (replace-regexp-in-string "--?" "-" s2))
-	 (s4 (replace-regexp-in-string "-$" ""
-				       (replace-regexp-in-string "^-" "" s3)))) 
+         (s1 (progn
+               (string-match "\\(https?://\\|file:///\\)\\(.+\\)$" s)
+               (match-string 2 s)))
+         (s2 (substitute ?- ?/ s1))
+         (s3 (replace-regexp-in-string "--?" "-" s2))
+         (s4 (replace-regexp-in-string "-$" ""
+                                       (replace-regexp-in-string "^-" "" s3))))
     s3))
 
 (when-exec-found (gls "gls")
@@ -1707,18 +1713,30 @@ Goes backward if ARG is negative; error if CHAR not found."
 (defun path-prepend (directories &optional env-variable)
   (let ((path (path-get env-variable)))
     (loop for dir in (reverse directories)
-	  do (unless (member* dir path :test #'string-equal)
-	       (push dir path)))
+          do (unless (member* dir path :test #'string-equal)
+               (push dir path)))
     (path-set path env-variable)))
 
 (defun path-delete (directories &optional env-variable)
   (let ((path (path-get env-variable)))
     (loop for dir in directories
-	  do (setq path (delete* dir path :test #'string-equal)))
+          do (setq path (delete* dir path :test #'string-equal)))
     (path-set path env-variable)))
 
 (defun path-append (directories &optional env-variable)
   (path-set (append (path-get env-variable) directories) env-variable))
+
+(defun tkb-prepend-to-path (directory)
+  (interactive "DDirectory to add to PATH at start? ")
+  (setq directory (expand-file-name directory))
+  (message "Directory: %s" directory)
+  (path-prepend (list directory)))
+
+(defun tkb-append-to-path (directory)
+  (interactive "DDirectory to add to PATH at end? ")
+  (setq directory (expand-file-name directory))
+  (message "Directory: %s" directory)
+  (path-append (list directory)))
 
 
 ;;; ¿¿¿Doesn't handle single word links???
@@ -1728,13 +1746,13 @@ Goes backward if ARG is negative; error if CHAR not found."
     (let (refs)
       (goto-char start)
       (save-restriction
-	(narrow-to-region start end)
-	;; (flet ((noprop (s) (set-text-properties 0 (length s) nil s))))???
-	(while (re-search-forward "\\(`[^`]+`\\)\\(_+\\)" nil t)
-	  (message "point is %d" (point))
-	  (let ((name  (match-string 1))
-		(under (match-string 2)))
-	    (push (format "\n.. %s %s: " under name) refs))))
+        (narrow-to-region start end)
+        ;; (flet ((noprop (s) (set-text-properties 0 (length s) nil s))))???
+        (while (re-search-forward "\\(`[^`]+`\\)\\(_+\\)" nil t)
+          (message "point is %d" (point))
+          (let ((name  (match-string 1))
+                (under (match-string 2)))
+            (push (format "\n.. %s %s: " under name) refs))))
       (goto-char end)
       (insert "\n\n" (apply #'concat refs)))))
 
@@ -1746,28 +1764,28 @@ Goes backward if ARG is negative; goes to end of buffer if CHAR not found."
   (kill-region (point) (if (search-forward (char-to-string char) nil t arg)
                            (progn (goto-char (if (> arg 0) (1- (point)) (1+ (point))))
                                   (point))
-			 (if (> arg 0) (point-max) (point-min)))))
+                         (if (> arg 0) (point-max) (point-min)))))
 (tkb-keys ("\C-ckz" #'zap-upto-char))
 
 (defun tkb-vms-tape-blocks/hour (start-block start-time end-block end-time)
   (interactive "nStart block? \nnEnd block? \nsStart Time? \nsEnd Time? ")
   (let* ((hours    (t:time-diff start-time end-time))
-	 (blocks   (- end-block start-block))
-	 ;; BACKUP$DATA:[BACKUP]8MM_BACKUP.COM has /BLOCK=32528, but 
-	 ;; BACKUP Ctrl-T reports 32768 byte blocks
-	 (bytes    (* blocks 32768))
-	 (meg      (/ bytes 1024.0 1024.0))
-	 (meg/hr   (/ meg hours))
-	 (seconds  (* hours 60 60))
-	 (bytes/s  (/ bytes seconds))
-	 (bytes/s* (/ (* meg/hr 1024 1024) 60 60))
-	 (ans    `(hours
-		   ,hours blocks ,blocks bytes ,bytes meg ,meg meg/hr ,meg/hr
-		   bytes/s ,bytes/s bytes/s* ,bytes/s*)))
+         (blocks   (- end-block start-block))
+         ;; BACKUP$DATA:[BACKUP]8MM_BACKUP.COM has /BLOCK=32528, but
+         ;; BACKUP Ctrl-T reports 32768 byte blocks
+         (bytes    (* blocks 32768))
+         (meg      (/ bytes 1024.0 1024.0))
+         (meg/hr   (/ meg hours))
+         (seconds  (* hours 60 60))
+         (bytes/s  (/ bytes seconds))
+         (bytes/s* (/ (* meg/hr 1024 1024) 60 60))
+         (ans    `(hours
+                   ,hours blocks ,blocks bytes ,bytes meg ,meg meg/hr ,meg/hr
+                   bytes/s ,bytes/s bytes/s* ,bytes/s*)))
     (message "%S" ans)
     ans))
 
-(when nil 
+(when nil
   (tkb-vms-tape-blocks/hour 6 "12:50p" 31901 "14:20p")
   )
 
@@ -1794,35 +1812,35 @@ REPEAT is how many times to repeat the roll."
 (defun d (sides number mod repeat)
   (interactive "nSides: \nnNumber: \nnMod: \nnRepeat: ")
   (loop repeat repeat
-	collect (loop repeat number
-		      sum (1+ (random sides)) into roll
-		      finally return (+ roll mod))
-	into rolls
-	finally (insert (mapconcat #'int-to-string rolls ", "))))
+        collect (loop repeat number
+                      sum (1+ (random sides)) into roll
+                      finally return (+ roll mod))
+        into rolls
+        finally (insert (mapconcat #'int-to-string rolls ", "))))
 
 (load-library "iso-transl.el")
 ;; This sticks keys in iso-transl-ctl-x-8-map.
 (iso-transl-define-keys '(("gl" . [?λ])   ; greek lowercase lambda
-			  ("gL" . [?Λ])   ; greek uppercase lambda
-			  ("pb" . [?•])
-			  ("pe" . [?…])
+                          ("gL" . [?Λ])   ; greek uppercase lambda
+                          ("pb" . [?•])
+                          ("pe" . [?…])
                           ("ph" . [?­]) ;soft hyphen
-			  ("pn" . [?–])	;N-dash
-			  ("pm" . [?—]) ;M-dash
-			  ("p-" . [?−])	;Minus sign
-			  ("p " . [? ]) ;non-breaking space.
+                          ("pn" . [?–])	;N-dash
+                          ("pm" . [?—]) ;M-dash
+                          ("p-" . [?−])	;Minus sign
+                          ("p " . [? ]) ;non-breaking space.
                           ("pp" . [?′]) ;prime
                           ("pP" . [?″]) ;double prime
-			  ;; section and pilcrow are in C-x 8: S and P
-			  ("pS" . [?‘])
-			  ("ps" . [?’])	  
-			  ("pq" . [?”])
-			  ("pQ" . [?“])
-			  ("p*" . [?×])
-			  ("p/" . [?÷])
-			  ))
+                          ;; section and pilcrow are in C-x 8: S and P
+                          ("pS" . [?‘])
+                          ("ps" . [?’])
+                          ("pq" . [?”])
+                          ("pQ" . [?“])
+                          ("p*" . [?×])
+                          ("p/" . [?÷])
+                          ))
 
-  
+
 
 
 (when-file (f "/sw/src/go/go/misc/emacs/go-mode-load.el")
@@ -1833,9 +1851,9 @@ REPEAT is how many times to repeat the roll."
 
 
 (eval-after-load "tkb-keys-menus.el"
-  '(progn 
+  '(progn
      (fset 'mung-recent-reading
-	   [?\C-k ?R ?e ?c ?e ?n ?t ?  ?R ?e ?a ?d ?i ?n ?g ?\C-n ?\C-n ?, ?R ?e ?c ?e ?n ?t ?  ?R ?e ?a ?d ?i ?n ?g ?r backspace ?\C-f ?\C-k ?\C-k ?\C-k ?\C-k ?\C-k ?\C-k ?\C-k ?\C-k ?\C-k ?\C-k ?\C-k ?\C-k ?\C-x ?\C-s])
+           [?\C-k ?R ?e ?c ?e ?n ?t ?  ?R ?e ?a ?d ?i ?n ?g ?\C-n ?\C-n ?, ?R ?e ?c ?e ?n ?t ?  ?R ?e ?a ?d ?i ?n ?g ?r backspace ?\C-f ?\C-k ?\C-k ?\C-k ?\C-k ?\C-k ?\C-k ?\C-k ?\C-k ?\C-k ?\C-k ?\C-k ?\C-k ?\C-x ?\C-s])
 
      (define-key tkb-map "M" 'mung-recent-reading)))
 
@@ -1843,19 +1861,19 @@ REPEAT is how many times to repeat the roll."
 (when nil
   ;; https://www.reddit.com/r/emacs/comments/31xezm/common_byte_units_in_calc/
   (setq math-additional-units '(
-				(GiB "1024 * MiB" "Giga Byte")
-				(MiB "1024 * KiB" "Mega Byte")
-				(KiB "1024 * B" "Kilo Byte")
-				(B nil "Byte")
-				(Gib "1024 * Mib" "Giga Bit")
-				(Mib "1024 * Kib" "Mega Bit")
-				(Kib "1024 * b" "Kilo Bit")
-				(b "B / 8" "Bit")))
+                                (GiB "1024 * MiB" "Giga Byte")
+                                (MiB "1024 * KiB" "Mega Byte")
+                                (KiB "1024 * B" "Kilo Byte")
+                                (B nil "Byte")
+                                (Gib "1024 * Mib" "Giga Bit")
+                                (Mib "1024 * Kib" "Mega Bit")
+                                (Kib "1024 * b" "Kilo Bit")
+                                (b "B / 8" "Bit")))
 
   ;; This resets calc's cache
   (setq math-units-table nil))
 
-(progn 
+(progn
   ;; http://pragmaticemacs.com/emacs/uniquify-your-buffer-names/
   ;; meaningful names for buffers with the same name
   ;; from prelude
@@ -1870,13 +1888,53 @@ REPEAT is how many times to repeat the roll."
 (when-exec-found (e "chez") (setq geiser-chez-binary e))
 
 (when-load-file "magit"
-  :load 
+  :load
   (global-set-key (kbd "C-x M s") 'magit-status)
   (global-magit-file-mode)
   (define-key magit-file-mode-map
     (kbd "C-x M g") 'magit-file-dispatch))
 
 (add-hook 'markdown-mode-hook 'flyspell-mode)
+
+(defun t:insert-alphabet ()
+  (interactive)
+  (loop for x from ?A to ?Z
+        for y from ?a to ?z
+        do (insert (format "%c%c" x y))))
+
+(defun t:insert-lined-file (filename)
+  (interactive "fFile to insert between lines: ")
+  (let ((just-filename (file-name-nondirectory filename)))
+    (insert "===== " just-filename " "
+            (make-string (- 60 (length just-filename) 1 6) ?=) "\n")
+    (insert (make-string 60 ?=) "\n")
+    (push-mark)
+    (forward-line -1)
+    (insert-file-contents filename nil)))
+(global-set-key (kbd "C-c F l") 't:insert-lined-file)
+
+(load-file "~/lib/emacs/tkb/arrows/arrows.el")
+
+(defun tkb-sanitize-for-filename (string)
+  "Clean up characters in STRING that aren't good for filenames."
+  (->> string
+       (replace-regexp-in-string "[^-.a-z0-9]+" "-")
+       (replace-regexp-in-string "-+" "-")
+       (replace-regexp-in-string "-\\." ".")
+       (replace-regexp-in-string "\\.-" ".")
+       (replace-regexp-in-string "\\.+" ".")
+       (replace-regexp-in-string "^-+" "")
+       (replace-regexp-in-string "-+$" "")))
+
+(defun tkb-sanitize-kill-for-filename (string)
+  "Clean up characters that aren't good for filenames in the top of the kill
+ring and put the result on the top of the kill ring."
+  ;; gets the kill or the system clipboard if it is new.
+  (interactive (list (current-kill 0 t)))
+  (let ((new-string (tkb-sanitize-for-filename string)))
+    (message "Old string: %s\nNew String: %s" string new-string)
+    (kill-new new-string)))
+(global-set-key (kbd "C-c k S") 'tkb-sanitize-kill-for-filename)
 
 (message "End of tkb-experimental.el")
 ;;; end of tkb-experimental.el

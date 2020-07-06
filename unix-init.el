@@ -143,6 +143,7 @@
 (cond (tkb-xemacs-p
        (gnuserv-start))
       (t
-       (server-start)))
+       (unless (getenv "EMACS_NO_SERVER")
+	 (server-start))))
 
 ;;;; End of unix-init.el

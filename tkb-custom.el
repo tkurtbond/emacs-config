@@ -30,7 +30,7 @@
        ("Return-Path" . "<thomas.bond@leo.gov>"))))))
  '(package-selected-packages
    (quote
-    (magit auctex adoc-mode caml jabber cider clojure-mode racket-mode go-guru go-mode use-package yaml-mode markdown-mode w3m projectile nim-mode fuel f docbook clojure-snippets clojure-quick-repls clojure-mode-extra-font-locking)))
+    (cargo rust-mode julia-mode lua-mode mew unicode-fonts define-word wanderlust magit auctex adoc-mode caml jabber cider clojure-mode racket-mode go-guru go-mode use-package yaml-mode markdown-mode w3m projectile nim-mode fuel f docbook clojure-snippets clojure-quick-repls clojure-mode-extra-font-locking)))
  '(rst-level-face-max 10)
  '(send-mail-function (quote mailclient-send-it))
  '(w3m-use-cookies t))

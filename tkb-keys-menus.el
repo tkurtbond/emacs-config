@@ -119,6 +119,7 @@
 (tkb-keys ("\C-ckR" #'uncomment-region)
 	  ("\C-ckr" #'comment-region))
 ;;(tkb-keys ("\C-cKU" #'tkb-unicode-character-insert)) ; C-x 8 RET
+(global-set-key "\C-ckw" 'whitespace-cleanup)
 (global-set-key "\C-cm" 'compile)
 (global-set-key "\C-co" 'overwrite-mode)
 (global-set-key "\C-cr" 'tkb-count-region)

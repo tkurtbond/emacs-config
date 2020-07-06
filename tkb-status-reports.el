@@ -80,10 +80,13 @@ to emacs time (as from `current-time')"
       filename)))
 
 (defun tkb-status-report-find-file (time)
+  "Prompt for an ISO date (YYYY-MM-DD) and find the status report for that date."
   (interactive (list (tkb-parse-iso-date (read-string "ISO Date: "))))
   (find-file (tkb-status-report-filename time)))
 
 (defun tkb-status-report-today (prefix)
+  "Create a status report using today's date.  If called with a prefix, 
+prompt for a date."
   (interactive "P")
   (let* ((now (cond ((consp prefix) (tkb-get-date-from-user))
 		    (t (current-time)))))
