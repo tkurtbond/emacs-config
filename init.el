@@ -33,6 +33,7 @@
 (load custom-file)
 
 (add-hook 'write-file-hooks 'time-stamp)
+(setq time-stamp-line-limit 20)
 
 (load (case system-type
 	((ms-dos windows-nt)

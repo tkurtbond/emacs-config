@@ -628,11 +628,11 @@ appropriate directory structure."
   (load-library "unichars")
   (load-library "xmlunicode")
 
-  (defun tkb-describe-character (after)
-    "Describe the character before point (after if a prefix was specified)
+  (defun tkb-describe-character (before)
+    "Describe the character after point (before if a prefix was specified)
 if it is a unicode character."
     (interactive "P")
-    (let ((char (if after (char-after) (char-before))))
+    (let ((char (if before (char-before) (char-after))))
       (message "%S" (assoc (encode-char char 'ucs)
                            unicode-character-list))))
   (tkb-keys ("\C-ckd" #'tkb-describe-character))
@@ -779,7 +779,7 @@ if it is a unicode character."
 (defun bmi (height weight)
   "Calculate BMI, body mass index.  BMI <18.5 may be underweight, BMI of 18.5
 to 25 may be optimal weight, BMI >25 may be overweight, BMI >30 is obese,
-over 40 is morbidly obese."
+over 40 is morbidly obese, over 50 is super morbidly obese."
   (interactive "nHeight in inches: \nnWeight in pounds: ")
   (let* ((bmi (* 703 (/ (float weight) (expt height 2))))
          (characterization
@@ -787,7 +787,8 @@ over 40 is morbidly obese."
                 ((<= bmi 25.0) "optimal")
                 ((<  bmi 30.0) "overweight")
                 ((<  bmi 40.0) "obese")
-                (t             "morbidly obese"))))
+                ((<  bmi 50.0) "morbidly obese")
+                (t "super morbidly obese"))))
     (message "bmi: %06.3f; %s" bmi characterization)))
 
 
@@ -1935,6 +1936,17 @@ ring and put the result on the top of the kill ring."
     (message "Old string: %s\nNew String: %s" string new-string)
     (kill-new new-string)))
 (global-set-key (kbd "C-c k S") 'tkb-sanitize-kill-for-filename)
+
+(defun tkb-insert-post-fragment ()
+  (interactive)
+  (let ((filename (expand-file-name
+                   (read-file-name
+                    "Post Fragment? "
+                    "~/nikola/newblog/fragments/" nil nil
+                    "post.rst"))))
+    (insert-file-contents filename)))
+(global-set-key (kbd "C-c k p") 'tkb-insert-post-fragment)
+
 
 (message "End of tkb-experimental.el")
 ;;; end of tkb-experimental.el
