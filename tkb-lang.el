@@ -57,6 +57,17 @@
   (when-directory (d "/opt/local/share/doc/lisp/HyperSpec-7-0/HyperSpec/")
     (setq common-lisp-hyperspec-root (concat "file://" d))))
 
+(when-directory (["/usr/local/share/doc/hyperspec/HyperSpec/"
+                  "/home/linuxbrew/.linuxbrew/share/doc/hyperspec/HyperSpec/"])
+  (eval-after-load "slime"
+    '(progn
+       (setq common-lisp-hyperspec-root
+             "/usr/local/share/doc/hyperspec/HyperSpec/")
+       (setq common-lisp-hyperspec-symbol-table
+             (concat common-lisp-hyperspec-root "Data/Map_Sym.txt"))
+       (setq common-lisp-hyperspec-issuex-table
+             (concat common-lisp-hyperspec-root "Data/Map_IssX.txt")))))
+
 (when-file (fn "~/quicklisp/clhs-use-local.el") (load fn))
 
 (when nil
