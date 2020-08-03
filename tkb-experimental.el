@@ -1938,6 +1938,8 @@ ring and put the result on the top of the kill ring."
 (global-set-key (kbd "C-c k S") 'tkb-sanitize-kill-for-filename)
 
 (defun tkb-insert-post-fragment ()
+  "Insert a fragment into the current, defaulting to 
+~/nikola/newblog/fragments/post.rst."
   (interactive)
   (let ((filename (expand-file-name
                    (read-file-name
@@ -1945,8 +1947,18 @@ ring and put the result on the top of the kill ring."
                     "~/nikola/newblog/fragments/" nil nil
                     "post.rst"))))
     (insert-file-contents filename)))
-(global-set-key (kbd "C-c k p") 'tkb-insert-post-fragment)
+(global-set-key (kbd "C-c i p") 'tkb-insert-post-fragment)
 
+(defun tkb-insert-fragment ()
+  "Insert a fragment into the the current buffer, defaulting to the directory
+~/current/fragments/."
+  (interactive)
+  (let ((filename (expand-file-name
+                   (read-file-name
+                    "Post Fragment? "
+                    "~/currentfragments/" nil nil))))
+    (insert-file-contents filename)))
+(global-set-key (kbd "C-c i f") 'tkb-insert-post-fragment)
 
 (message "End of tkb-experimental.el")
 ;;; end of tkb-experimental.el

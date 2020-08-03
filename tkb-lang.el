@@ -242,5 +242,6 @@
   ((karl-landstrom)
    (autoload 'javascript-mode "javascript" nil t)
    (add-to-list 'auto-mode-alist '("\\.js\\'" . javascript-mode))))
-     
+
+(add-to-list 'auto-mode-alist '("\\.md$" . markdown-mode))
 ;;; end of tkb-lang.el
