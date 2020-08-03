@@ -1956,9 +1956,9 @@ ring and put the result on the top of the kill ring."
   (let ((filename (expand-file-name
                    (read-file-name
                     "Post Fragment? "
-                    "~/currentfragments/" nil nil))))
+                    "~/current/fragments/" nil nil))))
     (insert-file-contents filename)))
-(global-set-key (kbd "C-c i f") 'tkb-insert-post-fragment)
+(global-set-key (kbd "C-c i f") 'tkb-insert-fragment)
 
 (message "End of tkb-experimental.el")
 ;;; end of tkb-experimental.el
