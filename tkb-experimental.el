@@ -1704,12 +1704,12 @@ Goes backward if ARG is negative; error if CHAR not found."
   (setq insert-directory-program gls))
 
 (defun path-get (&optional env-variable)
-  (unless env-variable (setq env-variable "PATH"))
-  (split-string (getenv "PATH") ":"))
+  (let ((env-variable (if env-variable env-variable "PATH")))
+    (split-string (getenv env-variable) ":")))
 
 (defun path-set (path-elements &optional env-variable)
-  (unless env-variable (setq env-variable "PATH"))
-  (setenv "PATH" (mapconcat #'identity path-elements ":")))
+  (let ((env-variable (if env-variable env-variable "PATH")))
+    (setenv env-variable (mapconcat #'identity path-elements ":"))))
 
 (defun path-prepend (directories &optional env-variable)
   (let ((path (path-get env-variable)))
@@ -1728,16 +1728,27 @@ Goes backward if ARG is negative; error if CHAR not found."
   (path-set (append (path-get env-variable) directories) env-variable))
 
 (defun tkb-prepend-to-path (directory)
-  (interactive "DDirectory to add to PATH at start? ")
-  (setq directory (expand-file-name directory))
-  (message "Directory: %s" directory)
-  (path-prepend (list directory)))
+  "Read a directory into DIRECTORY and if prefix arg in ENV-VARIABLE is 
+present read a string into ENV-VARIABLE and if not default ENV-VARIABLE to PATH,
+then prepend DIRECTORY to the path in the environment ENV-VARIABLE."  (interactive "DDirectory to add to PATH at start? ")
+  (let ((directory (expand-file-name directory))
+        (env-variable 
+         (if env-variable (read-string "Environment Variable? ") "PATH")))
+    (message "Directory: %s" directory)
+    (path-prepend (list directory))
+    (message "%s=%s" env-variable (getenv env-variable))))
 
-(defun tkb-append-to-path (directory)
-  (interactive "DDirectory to add to PATH at end? ")
-  (setq directory (expand-file-name directory))
-  (message "Directory: %s" directory)
-  (path-append (list directory)))
+(defun tkb-append-to-path (directory env-variable)
+  "Read a directory into DIRECTORY and if prefix arg in ENV-VARIABLE is 
+present read a string into ENV-VARIABLE and if not default ENV-VARIABLE to PATH,
+then append DIRECTORY to the path in the environment ENV-VARIABLE."
+  (interactive "DDirectory to add to PATH at end? \nP")
+  (let ((directory (expand-file-name directory))
+        (env-variable 
+         (if env-variable (read-string "Environment Variable? ") "PATH")))
+    (message "Directory: %s" directory)
+    (path-append (list directory) env-variable)
+    (message "%s=%s" env-variable (getenv env-variable))))
 
 
 ;;; ¿¿¿Doesn't handle single word links???
