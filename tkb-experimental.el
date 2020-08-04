@@ -1727,22 +1727,23 @@ Goes backward if ARG is negative; error if CHAR not found."
 (defun path-append (directories &optional env-variable)
   (path-set (append (path-get env-variable) directories) env-variable))
 
-(defun tkb-prepend-to-path (directory)
+(defun tkb-prepend-to-path (directory env-variable)
   "Read a directory into DIRECTORY and if prefix arg in ENV-VARIABLE is 
 present read a string into ENV-VARIABLE and if not default ENV-VARIABLE to PATH,
-then prepend DIRECTORY to the path in the environment ENV-VARIABLE."  (interactive "DDirectory to add to PATH at start? ")
+then prepend DIRECTORY to the path in the environment ENV-VARIABLE."
+  (interactive "DDirectory to add to environment variable at start? \nP")
   (let ((directory (expand-file-name directory))
         (env-variable 
          (if env-variable (read-string "Environment Variable? ") "PATH")))
     (message "Directory: %s" directory)
-    (path-prepend (list directory))
+    (path-prepend (list directory) env-variable)
     (message "%s=%s" env-variable (getenv env-variable))))
 
 (defun tkb-append-to-path (directory env-variable)
   "Read a directory into DIRECTORY and if prefix arg in ENV-VARIABLE is 
 present read a string into ENV-VARIABLE and if not default ENV-VARIABLE to PATH,
 then append DIRECTORY to the path in the environment ENV-VARIABLE."
-  (interactive "DDirectory to add to PATH at end? \nP")
+  (interactive "DDirectory to add to environment variable at end? \nP")
   (let ((directory (expand-file-name directory))
         (env-variable 
          (if env-variable (read-string "Environment Variable? ") "PATH")))
