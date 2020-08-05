@@ -11,7 +11,7 @@
     ()
   (setq dbx-minibuffer-local-map (copy-keymap minibuffer-local-map))
   (define-key
-    dbx-minibuffer-local-map "\C-i" 'comint-dynamic-complete-filename))
+    dbx-minibuffer-local-map (kbd "C-i") 'comint-dynamic-complete-filename))
 
 
 (defadvice dbx (before with-completion first activate)
@@ -81,8 +81,8 @@
   ;; see also the code in tkb-experimental that would set 
   ;; slime-lisp-implementations if it wasn't commented out.
   (tkb-keys
-    ("\C-c;" 'slime-insert-balanced-comments)
-    ("\C-c\M-;" 'slime-remove-balanced-comments))
+    ((kbd "C-c ;") 'slime-insert-balanced-comments)
+    ((kbd "C-c M-;") 'slime-remove-balanced-comments))
 
   ;; Set slime-lisp-implementations and use `C-u - M-x slime' to get slime
   ;; to prompt you for one of the found implemenations by name!

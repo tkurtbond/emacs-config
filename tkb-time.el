@@ -110,8 +110,8 @@ Saturday, 4 July 2020, 01:47:15 AM (2020-07-04 01:47:15)."
                 (tkb-get-date-from-user nil t))))
   (insert (format-time-string 
            "%A, %-d %B %Y, %I:%M:%S %p (%Y-%m-%d %H:%M:%S %Z)"))))
-
-(global-set-key (kbd "C-c d f") #'tkb-insert-fancy-date)
+(global-set-key (kbd "C-c d f") 'tkb-insert-fancy-date)
+(tkb-key-is-bound-to (kbd "C-c d f") 'tkb-insert-fancy-date)
 
 (defun tkb-insert-iso-date (prefix)
   "Insert an ISO format date.
@@ -147,8 +147,7 @@ Saturday, 4 July 2020, 01:47:15 AM (2020-07-04 01:47:15)."
 'C-u' prompts for date.
 'C-u -' gets YYYY-MM-DD Weekday
 'C-u NUM' adds or subtracts NUM from the date.
-'C-u - C-u' adds the time.
-"
+'C-u - C-u' adds the time."
   (interactive "P")
   (let* ((time (cond
 		((null prefix)		;No prefix specified

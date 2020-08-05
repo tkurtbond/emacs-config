@@ -39,21 +39,21 @@ recommended by the ReST quickref: http://tinyurl.com/47lkhk"
          (frame (cdr (assoc-string frame-name frames))))
     (raise-frame frame)
     (select-frame frame)))
-(tkb-keys ((kbd "C-c A") #'tkb-select-frame))
+(tkb-keys ((kbd "C-c A") 'tkb-select-frame))
 
 (defun tkb-load-file ()
   "Load the current file into emacs lisp"
   (interactive)
   (load-file (buffer-file-name)))
 (tkb-keys :keymap emacs-lisp-mode-map
-          ("\C-xL" #'tkb-load-file))
+          ((kbd "C-x L") #'tkb-load-file))
 
 (defun tkb-locate-file (filename)
   (interactive "M")
   (message "file: %s" (locate-file filename load-path (get-load-suffixes))))
 
 (when t					; Using org-capture now.
-  (tkb-keys ("\C-ckoc" #'org-capture))
+  (tkb-keys ((kbd "C-c k o c") #'org-capture))
   (setq org-capture-templates
         '(("X" "EXPERIMENT" entry
            (file+olp+datetree "/Users/tkb/current/org/loud-experiment.org")
@@ -94,8 +94,8 @@ recommended by the ReST quickref: http://tinyurl.com/47lkhk"
           ("T" "MPL Tasks" entry
            (file+headline "/Users/tkb/job/MPL/Org/tasks.org" "MPL Tasks")
            "* TODO %^{Title} %U\n  %i\n  %?\n  %a\n")))
-  (tkb-keys ("\C-cko\C-c" #'org-ctrl-c-ctrl-c))
-  (tkb-check-bindings '("\C-cko\C-c"))
+  (tkb-keys ((kbd "C-c k o C-c") #'org-ctrl-c-ctrl-c))
+  (tkb-check-bindings (list (kbd "C-c k o C-c")))
 
   (defun tkb-find-org-log-file ()
     "Look in the current directory or its parents for a file named *-log.org
@@ -119,7 +119,7 @@ and switch to a buffer visiting it."
     (interactive)
     (let* ((org-file (tkb-find-org-log-file)))
       (find-file org-file)))
-  (tkb-keys ("\C-ckof" #'tkb-find-file-org-log))
+  (tkb-keys ((kbd "C-c k o f") #'tkb-find-file-org-log))
   ;; (defalias 'x #'tkb-find-file-org-log)
 
   (defun tkb-add-org-log ()
@@ -131,14 +131,14 @@ and add a log entry to it."
             `(("l" "Log" entry (file+headline ,org-file "Log")
                "* %^{Title} %U\n  %i\n  %?\n"))))
       (org-capture)))
-  (tkb-keys ("\C-ckol" #'tkb-add-org-log)))
+  (tkb-keys ((kbd "C-c k o l") #'tkb-add-org-log)))
 
 (progn
   ;; See Info: (org)Activation.
   ;; The following lines are always needed.  Choose your own keys.
   (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
-  (tkb-keys ("\C-ckos" #'org-store-link)
-            ("\C-ckoa" #'org-agenda))
+  (tkb-keys ((kbd "C-c k o s") #'org-store-link)
+            ((kbd "C-c k o a") #'org-agenda))
   (add-hook 'org-mode-hook 'turn-on-font-lock))	; org-mode buffers only
 
 
@@ -345,13 +345,13 @@ and add a log entry to it."
       (end-of-line)
       (while (< (current-column) 80)
         (insert start-char)))))
-(tkb-keys ("\C-ckc" #'tkb-continue-line))
+(tkb-keys ((kbd "C-c k c") #'tkb-continue-line))
 
 (when-directory (d (expand-file-name "~/lib/data/fortunes"))
   (setq fortune-dir d))
 (setq fortune-file "~/lib/data/fortunes")
 
-(tkb-keys ("\C-ckh" #'hyperspec-lookup))
+(tkb-keys ((kbd "C-c k h") #'hyperspec-lookup))
 
 
 (autoload 'fortune-in-buffer "fortune")
@@ -425,7 +425,7 @@ where the \"FILE\" is optional and the \".\" can also be a \",\"."
       (let ((s (match-string 1)))
         (when (y-or-n-p (concat "Goto Info node " s " ? "))
           (Info-goto-node s arg))))))
-(tkb-keys ("\C-cki" #'tkb-goto-info-node))
+(tkb-keys ((kbd "C-c k i") #'tkb-goto-info-node))
 ;; Info: (info)Go to node
 
 
@@ -448,7 +448,7 @@ where the \"FILE\" is optional and the \".\" can also be a \",\"."
   (let* ((left (frame-parameter nil 'left))
          (width (frame-pixel-width)))
     (set-frame-parameter nil 'left (- left width 20))))
-(tkb-keys ("\C-ckl" #'tkb-move-frame-left))
+(tkb-keys ((kbd "C-c k l") #'tkb-move-frame-left))
 
 (defadvice browse-url (before tkb-advise-browse-url activate)
   (let ((all-args (ad-get-args 0))
@@ -635,7 +635,7 @@ if it is a unicode character."
     (let ((char (if before (char-before) (char-after))))
       (message "%S" (assoc (encode-char char 'ucs)
                            unicode-character-list))))
-  (tkb-keys ("\C-ckd" #'tkb-describe-character))
+  (tkb-keys ((kbd "C-c k d") #'tkb-describe-character))
 
   (define-minor-mode tkb-smart-unicode-mode
     "Toggle smart unicode punctuation" nil " ♻⚔☣☥☸◉⅙✽☮" ; "✘▧▧⚅☑☢☹☺♠♥♦♣♨"
@@ -714,7 +714,7 @@ if it is a unicode character."
     (kill-new host)
     (message "Killed %s\nto %s" url host)))
 
-(tkb-keys ("\C-ckuh" #'t:kill-host-from-url))
+(tkb-keys ((kbd "C-c k u h") #'t:kill-host-from-url))
 
 (progn
   (defun tkb-fill-list ()
@@ -730,14 +730,14 @@ if it is a unicode character."
         (narrow-to-region (point) (mark))
         (sit-for 1)
         (fill-paragraph nil))))
-  (tkb-keys ("\C-ckf" 'tkb-fill-list)))
+  (tkb-keys ((kbd "C-c k f") 'tkb-fill-list)))
 
 ;; Gimme some register compatibility binding love!
 (tkb-keys
-  ("\C-x/" 'point-to-register)		; C-x / became C-x r SPC
-  ("\C-xj" 'jump-to-register)		; C-x j became C-x r j
-  ("\C-xx" 'copy-to-register)		; C-x x became C-x r s
-  ("\C-xg" 'insert-register)		; C-x g became C-x r i
+  ((kbd "C-x /") 'point-to-register)		; C-x / became C-x r SPC
+  ((kbd "C-x j") 'jump-to-register)		; C-x j became C-x r j
+  ((kbd "C-x x") 'copy-to-register)		; C-x x became C-x r s
+  ((kbd "C-x g") 'insert-register)		; C-x g became C-x r i
   )
 
 (setq list-faces-sample-text
@@ -758,7 +758,7 @@ if it is a unicode character."
                         current-prefix-arg
                         shell-command-default-error-buffer)))
         (apply 'shell-command args))))
-  (tkb-keys ("\C-ck!" 'tkb-shell-command-on-this-file)))
+  (tkb-keys ((kbd "C-c k !") 'tkb-shell-command-on-this-file)))
 
 
 (fset 'tkb-nxml-end-of-element "\C-[\C-u\C-[\C-f")
@@ -770,7 +770,7 @@ if it is a unicode character."
 
 (eval-after-load "nxml-mode"
   '(progn
-     (define-key nxml-mode-map "\C-c\C-j" 'tkb-nxml-end-of-element)
+     (define-key nxml-mode-map (kbd "C-c C-j") 'tkb-nxml-end-of-element)
      (setq nxml-sexp-element-flag t)))
 
 (setq default-indicate-buffer-boundaries 'left) ;??? Too distracting???
@@ -820,13 +820,13 @@ over 40 is morbidly obese, over 50 is super morbidly obese."
   (interactive)
   (while (not (looking-at "^[ \t]*$"))
     (forward-line)))
-(tkb-keys ("\C-c\C-n" 'tkb-next-blank-line))
+(tkb-keys ((kbd "C-c C-n") 'tkb-next-blank-line))
 
 (defun tkb-previous-blank-line ()
   (interactive)
   (while (not (looking-at "^[ \t]*$"))
     (forward-line -1)))
-(tkb-keys ("\C-c\C-p" 'tkb-next-blank-line))
+(tkb-keys ((kbd "C-c C-p") 'tkb-next-blank-line))
 
 (progn
   (defun tkb-yank-dired-filename ()
@@ -856,7 +856,7 @@ over 40 is morbidly obese, over 50 is super morbidly obese."
         (kill-region (point-min) (point-max))
         ;;(kill-buffer buf)
         )))
-  (tkb-keys ("\C-ckL" 'tkb-copy-and-kill-for-common-lisp)))
+  (tkb-keys ((kbd "C-c k L") 'tkb-copy-and-kill-for-common-lisp)))
 
 (progn
   ;; FIXME: This should probably prompt for replacing???
@@ -869,7 +869,7 @@ over 40 is morbidly obese, over 50 is super morbidly obese."
                (current-buffer))
       (error (message "Invalid expression")
              (insert (current-kill 0)))))
-  (tkb-keys ("\C-cE" #'fc-eval-and-replace)))
+  (tkb-keys ((kbd "C-c E") #'fc-eval-and-replace)))
 
 ;;; FIXME: C-u C-x C-e aka eval-last-sexp does this, without the
 ;;; prompt to see if you want to insert.  I should look at its
@@ -944,7 +944,7 @@ over 40 is morbidly obese, over 50 is super morbidly obese."
   (save-excursion
     (while (re-search-forward "[ \t]+$" nil t)
       (replace-match "" nil nil))))
-;;(tkb-keys ("\C-cT" 'tkb-trim-buffer))
+;;(tkb-keys ((kbd "C-c T") 'tkb-trim-buffer))
 
 (defun tkb-trim-region ()
   (interactive)
@@ -971,7 +971,7 @@ over 40 is morbidly obese, over 50 is super morbidly obese."
               (message "Result: %s" r)
               (insert r)))
         (delete-overlay o))))
-  (when nil (tkb-keys ("\C-ce" #'tkb-replace-with-calc))))
+  (when nil (tkb-keys ((kbd "C-c e") #'tkb-replace-with-calc))))
 
 (progn
   ;; http://emacs.wordpress.com/2007/01/20/record-play-re-play/
@@ -994,7 +994,7 @@ over 40 is morbidly obese, over 50 is super morbidly obese."
     (interactive)
     (backward-up-list -1))
 
-  (tkb-keys ("\C-c)" 'tkb-next-sexp)))
+  (tkb-keys ((kbd "C-c )") 'tkb-next-sexp)))
 
 
 (progn
@@ -1003,23 +1003,23 @@ over 40 is morbidly obese, over 50 is super morbidly obese."
     (message "whole: %s numeric: %d" whole (prefix-numeric-value whole))
     (let ((fn (buffer-file-name)))
       (kill-new (if whole fn (file-name-nondirectory fn)))))
-  (tkb-keys ("\C-cP" #'tkb-copy-buffer-file-name))
+  (tkb-keys ((kbd "C-c P") #'tkb-copy-buffer-file-name))
   (defun tkb-copy-downcase-buffer-file-name (whole)
     (interactive "P")
     (message "whole: %s numeric: %d" whole (prefix-numeric-value whole))
     (let* ((fn (buffer-file-name))
            (fn (if whole fn (file-name-nondirectory fn))))
       (kill-new (downcase fn))))
-  (tkb-keys ("\C-cY" #'tkb-copy-downcase-buffer-file-name))
+  (tkb-keys ((kbd "C-c Y") #'tkb-copy-downcase-buffer-file-name))
 
   (defun tkb-copy-buffer-name ()
     (interactive)
     (kill-new (buffer-name)))
-  (tkb-keys ("\C-cB" #'tkb-copy-buffer-name))
+  (tkb-keys ((kbd "C-c B") #'tkb-copy-buffer-name))
   (defun tkb-lower-to-register (register start end)
     (interactive "cLowercase to register: \nr")
     (set-register register (downcase (buffer-substring start end))))
-  (tkb-keys ("\C-c*" 'tkb-lower-to-register))
+  (tkb-keys ((kbd "C-c *") 'tkb-lower-to-register))
   )
 
 (progn
@@ -1038,7 +1038,7 @@ over 40 is morbidly obese, over 50 is super morbidly obese."
                                              c-mode c++-mode objc-mode
                                              LaTeX-mode TeX-mode))
         (indent-region (region-beginning) (region-end) nil)))
-  (tkb-keys ("\C-cy" 'jao-copy-line))
+  (tkb-keys ((kbd "C-c y") 'jao-copy-line))
   )
 
 
@@ -1055,10 +1055,10 @@ over 40 is morbidly obese, over 50 is super morbidly obese."
           (ispell-word))
       (message "no selection"))))
 
-(tkb-keys ("\C-c$" (if (fboundp 'x-get-selection-value)
-                       #'tkb-ispell-selection
-                     #'(lambda () (interactive)
-                         (message "\
+(tkb-keys ((kbd "C-c $") (if (fboundp 'x-get-selection-value)
+                             #'tkb-ispell-selection
+                           #'(lambda () (interactive)
+                               (message "\
 Not under a window system, so you can't ispell the selection")))))
 
 
@@ -1080,7 +1080,7 @@ Not under a window system, so you can't ispell the selection")))))
                                         ;sinon input
                      (error "No keyword to search given") word) input))))
     (browse-url (format "http:/www.google.com/search?q=%s" w)))
-  (tkb-keys ("\C-cj" #'my-search-google)))
+  (tkb-keys ((kbd "C-c j") #'my-search-google)))
 
 
 (when nil
@@ -1151,7 +1151,7 @@ Goes backward if ARG is negative; error if CHAR not found."
                            (search-forward (char-to-string char) nil nil arg)
                            (goto-char (if (> arg 0) (1- (point)) (1+ (point))))
                            (point))))
-  (tkb-keys ("\C-cZ" 'tkb-zap-to-char)))
+  (tkb-keys ((kbd "C-c Z") 'tkb-zap-to-char)))
 
 
 (when (eq locale-coding-system 'utf-8)
@@ -1284,12 +1284,6 @@ Goes backward if ARG is negative; error if CHAR not found."
 
   (add-hook 'message-send-hook 'check-attachments-attached))
 
-
-
-(fset 'tkb-add-recent-reading
-      "\C-s<itemizedlist>\C-a\C-@\C-[\C-f\C-m\C-c\C-rsection\C-m\C-[\C-a\C-m\C-c\C-etit\C-i\C-mRecent Reading\C-x\C-s")
-
-
 ;; Never use separate frames for ediff.  (Separate frames are totally useless
 ;; on tiled, tabbing window managers like ion.)
 (setq ediff-window-setup-function 'ediff-setup-windows-plain)
@@ -1411,7 +1405,7 @@ Goes backward if ARG is negative; error if CHAR not found."
                   )
                 auto-mode-alist))
   (autoload 'rst-repeat-last-character "rst")
-  (tkb-keys ("\C-cR" 'rst-repeat-last-character))
+  (tkb-keys ((kbd "C-c R") 'rst-repeat-last-character))
 
   (defun tkb-rst-mode-hook ()
     (interactive)
@@ -1477,10 +1471,10 @@ Goes backward if ARG is negative; error if CHAR not found."
         (personal-log read))))
 
   (tkb-keys
-    ("\C-cle" 'tkb-eulisp-log)
-    ("\C-clh" 'personal-log-here)
-    ("\C-clP" 'tkb-private-log))
-  (global-set-key "\C-clp" 'personal-log))
+    ((kbd "C-c l e") 'tkb-eulisp-log)
+    ((kbd "C-c l h") 'personal-log-here)
+    ((kbd "C-c l P") 'tkb-private-log))
+  (global-set-key (kbd "C-c l p") 'personal-log))
 
 
 (defun tkb-dec-to-hex (n)
@@ -1490,8 +1484,8 @@ Goes backward if ARG is negative; error if CHAR not found."
   (interactive "sHex: ")
   (message "%d" (string-to-number n 16)))
 (tkb-keys
-  ("\C-cH" 'tkb-dec-to-hex)
-  ("\C-cD" 'tkb-hex-to-dec))
+  ((kbd "C-c H") 'tkb-dec-to-hex)
+  ((kbd "C-c D") 'tkb-hex-to-dec))
 
 
 
@@ -1562,8 +1556,8 @@ Goes backward if ARG is negative; error if CHAR not found."
 (defun tkb-insert-saved-buffer-name ()
   (interactive)
   (insert tkb-saved-buffer-name))
-(tkb-keys ("\C-cs" 'tkb-save-buffer-name))
-(tkb-keys ("\C-cS" 'tkb-insert-saved-buffer-name))
+(tkb-keys ((kbd "C-c s") 'tkb-save-buffer-name))
+(tkb-keys ((kbd "C-c S") 'tkb-insert-saved-buffer-name))
 
 (defun tkb-unwebify-region (p m)
   (interactive "r")
@@ -1611,8 +1605,8 @@ Goes backward if ARG is negative; error if CHAR not found."
     (goto-char tkb-yank-place)
     (yank)))
 
-(tkb-keys ("\C-\M-y" #'tkb-yank-at-place)
-          ("\C-c\C-@" #'tkb-mark-yank-place))
+(tkb-keys ((kbd "C-M-y") #'tkb-yank-at-place)
+          ((kbd "C-c C-@") #'tkb-mark-yank-place))
 
 (defun tkb-quote-for-elisp (beg end)
   (interactive "r")
@@ -1685,7 +1679,7 @@ Goes backward if ARG is negative; error if CHAR not found."
                (string-match "\\(https?://\\|file:///\\)\\([^/]+\\)" s)
                (match-string 2 s))))
     (kill-new s*)))
-(tkb-keys ("\C-ckC" #'t:get-hostname-from-http))
+(tkb-keys ((kbd "C-c k C") #'t:get-hostname-from-http))
 
 (defun t:get-directory-for-download-from-http ()
   "Hmmm.  a (non)work(ing) in progress."
@@ -1778,7 +1772,7 @@ Goes backward if ARG is negative; goes to end of buffer if CHAR not found."
                            (progn (goto-char (if (> arg 0) (1- (point)) (1+ (point))))
                                   (point))
                          (if (> arg 0) (point-max) (point-min)))))
-(tkb-keys ("\C-ckz" #'zap-upto-char))
+(tkb-keys ((kbd "C-c k z") #'zap-upto-char))
 
 (defun tkb-vms-tape-blocks/hour (start-block start-time end-block end-time)
   (interactive "nStart block? \nnEnd block? \nsStart Time? \nsEnd Time? ")
@@ -1863,14 +1857,6 @@ REPEAT is how many times to repeat the roll."
 
 
 
-(eval-after-load "tkb-keys-menus.el"
-  '(progn
-     (fset 'mung-recent-reading
-           [?\C-k ?R ?e ?c ?e ?n ?t ?  ?R ?e ?a ?d ?i ?n ?g ?\C-n ?\C-n ?, ?R ?e ?c ?e ?n ?t ?  ?R ?e ?a ?d ?i ?n ?g ?r backspace ?\C-f ?\C-k ?\C-k ?\C-k ?\C-k ?\C-k ?\C-k ?\C-k ?\C-k ?\C-k ?\C-k ?\C-k ?\C-k ?\C-x ?\C-s])
-
-     (define-key tkb-map "M" 'mung-recent-reading)))
-
-
 (when nil
   ;; https://www.reddit.com/r/emacs/comments/31xezm/common_byte_units_in_calc/
   (setq math-additional-units '(
@@ -1947,7 +1933,7 @@ ring and put the result on the top of the kill ring."
   (let ((new-string (tkb-sanitize-for-filename string)))
     (message "Old string: %s\nNew String: %s" string new-string)
     (kill-new new-string)))
-(global-set-key (kbd "C-c k S") 'tkb-sanitize-kill-for-filename)
+(tkb-keys ((kbd "C-c k S") 'tkb-sanitize-kill-for-filename))
 
 (defun tkb-insert-post-fragment ()
   "Insert a fragment into the current, defaulting to 
@@ -1960,7 +1946,8 @@ ring and put the result on the top of the kill ring."
                     "post.rst"))))
     (insert-file-contents filename)))
 (global-set-key (kbd "C-c i p") 'tkb-insert-post-fragment)
-
+(tkb-key-is-bound-to (kbd "C-c i p") 'tkb-insert-post-fragment)
+(tkb-key-is-bound-to (kbd "C-c i p") 'tkb-insert-post-fragment)
 (defun tkb-insert-fragment ()
   "Insert a fragment into the the current buffer, defaulting to the directory
 ~/current/fragments/."
@@ -1971,6 +1958,6 @@ ring and put the result on the top of the kill ring."
                     "~/current/fragments/" nil nil))))
     (insert-file-contents filename)))
 (global-set-key (kbd "C-c i f") 'tkb-insert-fragment)
-
+(tkb-key-is-bound-to (kbd "C-c i f") 'tkb-insert-fragment)
 (message "End of tkb-experimental.el")
 ;;; end of tkb-experimental.el

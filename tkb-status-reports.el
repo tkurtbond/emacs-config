@@ -150,9 +150,9 @@ form (MONTH DAY YEAR)."
   (tkb-status-report-find-file (tkb-status-report-find-previous-date n)))
 
 
-(tkb-keys ("\C-cksf" #'tkb-status-report-find-file)
-	  ("\C-ckst" #'tkb-status-report-today)
-	  ("\C-cksp" #'tkb-status-report-previous)
-	  ("\C-cksn" (lambda () (interactive) (tkb-status-report-previous -1))))
+(tkb-keys ((kbd "C-c k s f") #'tkb-status-report-find-file)
+	  ((kbd "C-c k s t") #'tkb-status-report-today)
+	  ((kbd "C-c k s p") #'tkb-status-report-previous)
+	  ((kbd "C-c k s n") (lambda () (interactive) (tkb-status-report-previous -1))))
 
 ;;; end of tkb-status-reports.el

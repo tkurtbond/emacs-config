@@ -14,7 +14,8 @@
 (if basic-mode-map
     ()
   (setq basic-mode-map (make-sparse-keymap))
-  (define-key basic-mode-map "\e\C-a" 'beginning-of-basic-defun)
+  ;; GNU Emacs on VMS 5.5-2 is probably too old for the kbd function.
+  (define-key basic-mode-map "\e\C-a" 'beginning-of-basic-defun) 
   (define-key basic-mode-map "\e\C-e" 'end-of-basic-defun)
   (define-key basic-mode-map "\C-cs" 'basic-back-to-label)
 

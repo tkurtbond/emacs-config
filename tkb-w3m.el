@@ -12,8 +12,8 @@
     (eval-after-load "w3m"
       '(progn
 	 (define-key w3m-mode-map "T" 'w3m-view-this-url-new-session)
-	 (tkb-keys ("\C-ckG" 'w3m-goto-url-new-session)
-		   ("\C-ckg" 'w3m-goto-url)))))
+	 (tkb-keys ((kbd "C-c k G") 'w3m-goto-url-new-session)
+		   ((kbd "C-c k g") 'w3m-goto-url)))))
 
   (when-load-file "w3m-load"
     (require 'w3m-load)
@@ -24,8 +24,8 @@
 ;; For MH-E problems with w3m.
 (setq w3m-imitate-widget-button t)
 (tkb-keys
-  ("\C-ckb" #'browse-url-at-point)
-  ("\C-ckw" #'widget-forward)
+  ((kbd "C-c k b") #'browse-url-at-point)
+  ((kbd "C-c k w") #'widget-forward)
   ([f5] #'browse-url)
   ([f6] #'browse-url-at-point)
   ([f12] #'widget-forward))

@@ -85,7 +85,7 @@ or the filename part without an extension)."
   (interactive "P")
   (insert (cond (up (upcase (buffer-name)))
 		(t (buffer-name)))))
-(tkb-keys ("\C-ckB" #'tkb-ibn))
+(tkb-keys ((kbd "C-c k B") #'tkb-ibn))
 
 (defun tkb-stretch-string (s)
   (interactive "sString: ")
@@ -131,12 +131,12 @@ or the filename part without an extension)."
 				    (eq self '-)))))
       (compose-mail to)
       (mail-subject))))
-(global-set-key "\C-cn" 'tkb-mail-self-note)
+(global-set-key (kbd "C-c n") 'tkb-mail-self-note)
 
 (defun tkb-mail-self-note-mpl ()
   (interactive)
   (tkb-mail-self-note "kbond+note@mpl.com"))
-(global-set-key "\C-cN" 'tkb-mail-self-note-mpl)
+(global-set-key (kbd "C-c N") 'tkb-mail-self-note-mpl)
 
 (defun tkb-mail-bosses ()
   (interactive)
@@ -151,7 +151,7 @@ or the filename part without an extension)."
     (message "To: %S" to)
     (compose-mail (mapconcat (function (lambda (n) n)) to ", "))
     (mail-subject)))
-(global-set-key "\C-cb" 'tkb-mail-bosses)    
+(global-set-key (kbd "C-c b") 'tkb-mail-bosses)    
 
 (defun tkb-edit-incoming-links ()
   (interactive)
@@ -205,11 +205,22 @@ BINDINGS-LIST optionally contains the new bindings (functions)."
 	into msgs
 	finally return (values bindings (apply #'concat msgs))))
 
+(cl-defun tkb-key-is-bound-to (key expected-fun &optional (keymap global-map))
+  "Check if the key sequence in KEY is bound to EXPECTED-FUN."
+  (let ((fun (lookup-key keymap key)))
+    (cond
+     ((equal fun expected-fun)
+      (message "Key sequence '%s' is '%s' as expected" (key-description key)
+               expected-fun))
+     (t
+      (error "Key sequence '%s' is '%s' not '%s'" (key-description key)
+             fun expected-fun)))))
+
 (when nil
-  (tkb-check-bindings '("\C-ckR"))
-  (tkb-check-bindings '("\C-ckr"))
-  (tkb-keys ("\C-ckP" #'ding))
-  (tkb-check-bindings '("\C-ckp"))
+  (tkb-check-bindings (list (kbd "C-c k R")))
+  (tkb-check-bindings (list (kbd "C-c k r")))
+  (tkb-keys ((kbd "C-c k P") #'ding))
+  (tkb-check-bindings (list (kbd "C-c k p")))
   )
 
 (defun tkb-rfc822-date-time (&optional time)
@@ -242,7 +253,7 @@ Goes backward if ARG is negative; error if CHAR not found."
 			 (search-forward (char-to-string char) nil nil arg)
 			 (goto-char (if (> arg 0) (1- (point)) (1+ (point))))
 			 (point))))
-(tkb-keys ("\M-Z" #'t:zap-to-char))
+(tkb-keys ((kbd "M-Z") #'t:zap-to-char))
 
 (defun tkb-push-env-var (var newval &optional first)
   (let ((val (getenv var)))

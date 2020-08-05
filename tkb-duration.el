@@ -209,7 +209,7 @@ line."
 		(setq p (point))
 		(insert formatted-duration))))
 	  (when p (goto-char p)))))))
-(tkb-keys ("\C-cj" 'tkb-insert-duration))
+(tkb-keys ((kbd "C-c j") 'tkb-insert-duration))
   
 
 ;; Test the regular expression matching.
