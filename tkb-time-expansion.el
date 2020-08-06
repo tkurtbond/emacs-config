@@ -282,4 +282,5 @@ time, to get the time to be finished."
 	 (desc  (read-string "Description? ")))
     (insert (format "(%-10S %-10S %-12S %S)\n    "
 		    start end code desc))))
+(tkb-keys ((kbd "C-c k s i") 't:insert-interval))
 		     
