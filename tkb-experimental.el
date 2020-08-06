@@ -1826,7 +1826,8 @@ REPEAT is how many times to repeat the roll."
         finally (insert (mapconcat #'int-to-string rolls ", "))))
 
 (load-library "iso-transl.el")
-;; This sticks keys in iso-transl-ctl-x-8-map.
+;; This sticks keys in iso-transl-ctl-x-8-map, which makes them available under
+;; the "C-x 8" key prefix.
 (iso-transl-define-keys '(("gl" . [?λ])   ; greek lowercase lambda
                           ("gL" . [?Λ])   ; greek uppercase lambda
                           ("pb" . [?•])
@@ -1845,6 +1846,8 @@ REPEAT is how many times to repeat the roll."
                           ("pQ" . [?“])
                           ("p*" . [?×])
                           ("p/" . [?÷])
+                          ("gm" . [?♂])
+                          ("gf" . [?♀])
                           ))
 
 
