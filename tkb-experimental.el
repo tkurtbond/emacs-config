@@ -1422,26 +1422,27 @@ Goes backward if ARG is negative; error if CHAR not found."
     (tkb-smart-unicode-mode)
     ;;FIXME: makes all emacs hang???
     (when t (flyspell-mode 1))
-    (cond
-     ((string-match "status-.+\\.rst$" buffer-file-name)
-      ;; Don't set compile-command.
-      nil)
-     ((string-match ".*/myblog/entries/.*\\.\\(rst\\|rsti\\)\\(-pending\\)?$" buffer-file-name)
-      (message "tkb-rst-mode-hook: matched myblog")
-      (set (make-local-variable 'compile-command)
-           (concat "pybloxrst "
-                   (file-name-nondirectory buffer-file-name)
-                   " >~/tmp/x.rst && rst -o -h ~/tmp/x.rst")))
-     (t
-      (message "didn't match myblog")
-      (let* ((rst-name (file-name-nondirectory buffer-file-name))
-             (ltx-name (concat (file-name-sans-extension rst-name) ".ltx"))
-             (pdf-name (concat (file-name-sans-extension rst-name) ".pdf")))
+    (when nil ;; Don't use this, since I mostly use pandoc now.
+      (cond
+       ((string-match "status-.+\\.rst$" buffer-file-name)
+        ;; Don't set compile-command.
+        nil)
+       ((string-match ".*/myblog/entries/.*\\.\\(rst\\|rsti\\)\\(-pending\\)?$" buffer-file-name)
+        (message "tkb-rst-mode-hook: matched myblog")
         (set (make-local-variable 'compile-command)
-             (if (file-exists-p "rststyle.tex")
-                 (format "make %s && open %s" pdf-name pdf-name)
-               (concat "rst -o -p " rst-name)))))
-    (add-hook 'before-save-hook 'time-stamp nil t)))
+             (concat "pybloxrst "
+                     (file-name-nondirectory buffer-file-name)
+                     " >~/tmp/x.rst && rst -o -h ~/tmp/x.rst")))
+       (t
+        (message "didn't match myblog")
+        (let* ((rst-name (file-name-nondirectory buffer-file-name))
+               (ltx-name (concat (file-name-sans-extension rst-name) ".ltx"))
+               (pdf-name (concat (file-name-sans-extension rst-name) ".pdf")))
+          (set (make-local-variable 'compile-command)
+               (if (file-exists-p "rststyle.tex")
+                   (format "make %s && open %s" pdf-name pdf-name)
+                 (concat "rst -o -p " rst-name)))))
+       (add-hook 'before-save-hook 'time-stamp nil t))))
   (add-hook 'rst-mode-hook 'tkb-rst-mode-hook))
 
 (progn
