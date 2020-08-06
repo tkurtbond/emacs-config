@@ -1,6 +1,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; tkb-gui-setup.el -- Setup things that only work under a GUI.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(message "Starting tkb-gui-setup.el")
 
 (setq tkb-fonts
       `(("courier-11pt" ;; w32 says this is 11pt
@@ -37,7 +38,7 @@
 	("consolas" "-outline-Consolas-normal-r-normal-normal-17-127-96-96-c-*-iso8859-1" 55)
 	("inconsolata" "-outline-Inconsolata-medium-r-normal-normal-17-127-96-96-c-*-iso8859-1" 55)
 
-	("Go Mono" ,(if (string= (system-name) "moonglum")
+	("Go Mono" ,(if (member (system-name) '("moonglum" "oona"))
 			"-*-Go Mono-normal-normal-normal-*-20-*-*-*-m-0-iso10646-1"
 			"-*-Go Mono-normal-normal-normal-*-18-*-*-*-m-0-iso10646-1")
 	 50)
@@ -62,6 +63,7 @@
     (setq tkb-default-top
 	  (case system-type
 	    ((darwin) 30)
+            ((gnu/linux) 50)
 	    (otherwise 20)))
     (set-frame-font tkb-default-font)
 
@@ -147,4 +149,5 @@
 (setq icon-title-format
       '(multiple-frames ("emacs %b: " (tkb-is-root "root" user-mail-address))
 			("emacs " (tkb-is-root "root" user-mail-address))))
+(message "Ending tkb-gui-setup.el")
 ;;; end of tkb-gui-setup.el
