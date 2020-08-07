@@ -1474,8 +1474,8 @@ Goes backward if ARG is negative; error if CHAR not found."
   (tkb-keys
     ((kbd "C-c l e") 'tkb-eulisp-log)
     ((kbd "C-c l h") 'personal-log-here)
-    ((kbd "C-c l P") 'tkb-private-log))
-  (global-set-key (kbd "C-c l p") 'personal-log))
+    ((kbd "C-c l P") 'tkb-private-log)
+    ((kbd "C-c l p") 'personal-log)))
 
 
 (defun tkb-dec-to-hex (n)
@@ -1832,6 +1832,7 @@ REPEAT is how many times to repeat the roll."
 (iso-transl-define-keys '(("gl" . [?λ])   ; greek lowercase lambda
                           ("gL" . [?Λ])   ; greek uppercase lambda
                           ("pb" . [?•])
+                          ("pd" . [?†])
                           ("pe" . [?…])
                           ("ph" . [?­]) ;soft hyphen
                           ("pn" . [?–])	;N-dash
@@ -1914,7 +1915,7 @@ REPEAT is how many times to repeat the roll."
     (push-mark)
     (forward-line -1)
     (insert-file-contents filename nil)))
-(global-set-key (kbd "C-c F l") 't:insert-lined-file)
+(tkb-keys ((kbd "C-c F l") 't:insert-lined-file))
 
 (load-file "~/lib/emacs/tkb/arrows/arrows.el")
 
@@ -1950,7 +1951,6 @@ ring and put the result on the top of the kill ring."
                     "post.rst"))))
     (insert-file-contents filename)))
 (global-set-key (kbd "C-c i p") 'tkb-insert-post-fragment)
-(tkb-key-is-bound-to (kbd "C-c i p") 'tkb-insert-post-fragment)
 (tkb-key-is-bound-to (kbd "C-c i p") 'tkb-insert-post-fragment)
 (defun tkb-insert-fragment ()
   "Insert a fragment into the the current buffer, defaulting to the directory
