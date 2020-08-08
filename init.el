@@ -119,6 +119,9 @@
 			;;adoc-mode
 			auctex
 			caml
+                        cask
+                        cask-mode
+                        caskxy
 			cider
 			clojure-mode
 			clojure-quick-repls
@@ -135,6 +138,12 @@
 			nim-mode
 			projectile 
 			racket-mode
+                        ;;+++
+                        ;; These are available both from gnu and melpa,
+                        ;; so install manually.
+                        ;; realgud
+                        ;; realgud-lldb
+                        ;;---
 			;; regex-tool ; not currently using
                         unicode-fonts
 			use-package ;; too strict?
