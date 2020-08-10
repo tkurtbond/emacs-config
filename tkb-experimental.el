@@ -326,12 +326,17 @@ and add a log entry to it."
 
 
 (eval-after-load "rst.el"
-  '(custom-set-faces
+  '(begin
+    (modify-syntax-entry ?“ "(" rst-mode-syntax-table)
+    (modify-syntax-entry ?” ")" rst-mode-syntax-table)
+    (modify-syntax-entry ?‘ "(" rst-mode-syntax-table)
+    (modify-syntax-entry ?’ ")" rst-mode-syntax-table)
+    (custom-set-faces
     '(rst-level-1-face ((t (:background "red"))) t)
     '(rst-level-2-face ((t (:background "blue"))) t)
     '(rst-level-3-face ((t (:background "yellow"))) t)
     '(rst-level-4-face ((t (:background "magenta"))) t)
-    '(rst-level-5-face ((t (:background "white"))) t)))
+    '(rst-level-5-face ((t (:background "white"))) t))))
 
 
 (defun tkb-continue-line (n)
