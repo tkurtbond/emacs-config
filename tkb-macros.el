@@ -5,7 +5,7 @@
 ;;; $Id: tkb-macros.el 1.2 Tue, 09 May 2000 20:50:39 -0400 tkb $
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(eval-when-compile (require 'cl))
+(eval-when-compile (require 'cl-lib))
 
 (define-modify-macro notf (&rest args) not)
 (define-modify-macro cdrf (&rest args) cdr)
@@ -24,26 +24,26 @@ clauses return true, evaluate BODY.
 where 
     SPEC    = '() | (cons CLAUSE SPEC)
     CLAUSE  = (VARIABLE EXPRESSION) | (EXPRESSION) | BOUND-VARIABLE"
-  (labels ((expand (spec body)
-		   (cond
-		    ((null spec)
-		     `(progn ,@body))
-		    ((consp spec)
-		     (let ((exp (car spec)))
-		       (cond
-			((consp exp)
-			 (cond
-			  ((null (cdr exp))
-			   `(and ,(car exp) ,(expand (cdr spec) body)))
-			  (t
-			   (let ((var (car exp))
-				 (val (cadr exp)))
-			     `(let (,exp)
-				(and ,var ,(expand (cdr spec) body)))))))
-			(t
-			 `(and ,exp ,(expand (cdr spec) body))))))
-		    (t
-		     (error "not a proper list" spec)))))
+  (cl-labels ((expand (spec body)
+		      (cond
+		       ((null spec)
+		        `(progn ,@body))
+		       ((consp spec)
+		        (let ((exp (car spec)))
+		          (cond
+			   ((consp exp)
+			    (cond
+			     ((null (cdr exp))
+			      `(and ,(car exp) ,(expand (cdr spec) body)))
+			     (t
+			      (let ((var (car exp))
+				    (val (cadr exp)))
+			        `(let (,exp)
+				   (and ,var ,(expand (cdr spec) body)))))))
+			   (t
+			    `(and ,exp ,(expand (cdr spec) body))))))
+		       (t
+		        (error "not a proper list" spec)))))
     (expand spec body)))
 
 (put 'when-directory 'lisp-indent-function 1)

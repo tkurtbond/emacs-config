@@ -130,6 +130,7 @@
   (push '("\\.ml[iylp]?$" . caml-mode) auto-mode-alist))
 
 ;; Python
+(setq python-shell-interpreter "python3")
 (defun my-python-mode-hook ()
   (setq py-indent-offset 4)
   (setq font-lock-keywords python-font-lock-keywords)

@@ -52,8 +52,9 @@
 
 (defun tkb-initial-font-and-size (prefix)
   (interactive "P")
-  (require 'cl) ;; Because I sometimes use this after emacs -q, and it needs cl.
-
+  ;; Because I sometimes use this after emacs -q, and it needs cl.
+  (require 'cl-lib)
+  
   ;; need to do something with display-pixel-height
   (destructuring-bind (tag tkb-default-font tkb-default-height)
       (assoc-string (if prefix

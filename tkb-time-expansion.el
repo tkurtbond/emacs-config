@@ -123,7 +123,7 @@ WARNING: Doesn't handle seconds."
   "INTERVALS is a list of (START END . DESC) lists, where DESC is optional.
 if END is a dash, use the current time instead."
 
-  (labels ((verbose (&rest args) (unless quiet (apply #'message args))))
+  (cl-labels ((verbose (&rest args) (unless quiet (apply #'message args))))
     (let* (msgs
 	   (tab (make-hash-table :test 'equal))
 	   (total

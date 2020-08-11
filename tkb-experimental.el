@@ -1,7 +1,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; tkb-experimental.el -- Experimental -*- coding-system: utf-8 -*-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(require 'cl)
 
 ;; #$ Outputs the current filename.  It's not supposed to be used in lisp code.
 (message "%s" #$)
@@ -514,11 +513,11 @@ where the \"FILE\" is optional and the \".\" can also be a \",\"."
 
 
 (defun fmt-duration (time)
-  (flet ((f (duration unit)
-            (when duration (format (if (floatp duration)
-                                       "%f%s"
-                                     "%d%s")
-                                   duration unit))))
+  (cl-flet ((f (duration unit)
+               (when duration (format (if (floatp duration)
+                                          "%f%s"
+                                        "%d%s")
+                                      duration unit))))
     (destructuring-bind (hi lo ms) time
       (let ((s (+ hi lo))
             (x "")
@@ -1760,7 +1759,7 @@ then append DIRECTORY to the path in the environment ENV-VARIABLE."
       (goto-char start)
       (save-restriction
         (narrow-to-region start end)
-        ;; (flet ((noprop (s) (set-text-properties 0 (length s) nil s))))???
+        ;; (cl-flet ((noprop (s) (set-text-properties 0 (length s) nil s))))???
         (while (re-search-forward "\\(`[^`]+`\\)\\(_+\\)" nil t)
           (message "point is %d" (point))
           (let ((name  (match-string 1))

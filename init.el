@@ -3,6 +3,8 @@
 ;; See (info "(emacs)Init File")
 ;;(setq inhibit-default-init t) ; C-h S is your friend
 
+(require 'cl-lib)
+
 (setq inhibit-startup-screen t)
 (setq message-log-max 10000)
 (setq completion-ignore-case t)
@@ -26,8 +28,6 @@
   ;; http://emacsredux.com/blog/2013/04/02/highlight-current-line/
   (global-hl-line-mode +1))
 
-
-(require 'cl)
 
 (setq custom-file "~/lib/emacs/tkb/tkb-custom.el")
 (load custom-file)
@@ -89,7 +89,6 @@
 	    (lambda () (load "~/lib/emacs/tkb/tkb-gui-setup"))))
 
 (unless (version< emacs-version "24.1.1")
-  (require 'cl)
   ;; Error:
   ;; Failed to verify signature archive-contents.sig:
   ;; No public key for 066DAFCB81E42C40 created at 2019-10-29T17:10:02-0400 using RSA
@@ -104,7 +103,7 @@
   (require 'package)
   (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
   (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
-  (package-initialize)
+  ;; (package-initialize) ;; done in '~/.emacs'.
 
   (let ((tkb-packages '(
 			;; installing ada-mode using package-install
