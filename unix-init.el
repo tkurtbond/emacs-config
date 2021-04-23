@@ -79,7 +79,7 @@
   (setq tkb-emacs-dir d)
   (add-to-list 'load-path tkb-emacs-dir))
 
-(loop for d across ["~/lib/emacs/others" "~/lib/emacs/others/misc"]
+(cl-loop for d across ["~/lib/emacs/others" "~/lib/emacs/others/misc"]
       do (progn
 	   (when-directory (o (expand-file-name d))
 	     (message "adding %s to load-path" o)

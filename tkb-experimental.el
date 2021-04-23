@@ -24,7 +24,7 @@
 recommended by the ReST quickref: http://tinyurl.com/47lkhk"
   (interactive)
   (with-work-buffer " *ReST heads"
-      (loop for c
+      (cl-loop for c
             ;; recommended list from the rst quickref: http://tinyurl.com/47lkhk
             across "=-`:'\"~^_*+#<>"
             for i from 1
@@ -34,7 +34,7 @@ recommended by the ReST quickref: http://tinyurl.com/47lkhk"
 
 (defun tkb-select-frame ()
   (interactive)
-  (let* ((frames (loop for frame in (frame-list)
+  (let* ((frames (cl-loop for frame in (frame-list)
                        collect (cons (frame-parameter frame 'name)
                                      frame)
                        into frames finally return frames))
@@ -159,7 +159,7 @@ and add a log entry to it."
          (sep1   "_")
          (sep2   "_")
          (fileprefix (concat prefix)))
-    (loop for i from start
+    (cl-loop for i from start
           ;; The zeroth filename doesn't have the number.
           for testname = (if always
                              (format "%s%s%d%s" fileprefix sep2 i suffix)
@@ -179,7 +179,7 @@ and add a log entry to it."
                        date)
                    (format-time-string "%F")))
          (fileprefix (concat prefix sep1 date)))
-    (loop for i from 0
+    (cl-loop for i from 0
           ;; The zeroth filename doesn't have the number.
           for testname = (if always
                              (format "%s%s%d%s" fileprefix sep2 i suffix)
@@ -201,7 +201,7 @@ and add a log entry to it."
          (dirname (file-name-directory prefix))
          (filename (file-name-nondirectory prefix))
          (fileprefix (concat dirname date sep1 filename)))
-    (loop for i from 0
+    (cl-loop for i from 0
           ;; The zeroth filename doesn't have the number, unless ALWAYS
           for testname = (if always
                              (format "%s%s%d%s" fileprefix sep2 i suffix)
@@ -218,7 +218,7 @@ and add a log entry to it."
   ;; something so I can rename a buffer so I can have things like two
   ;; greps running at once.
   (interactive)
-  (rename-buffer (loop with bufname =
+  (rename-buffer (cl-loop with bufname =
                        (progn
                          (if (string-match (rx (and
                                             string-start
@@ -404,7 +404,7 @@ and add a log entry to it."
   (message "Word count: %s" (how-many "\\w+" (point-min) (point-max))))
 
 
-(defmacro* eval-after-load* (file varlist &rest body)
+(cl-defmacro eval-after-load* (file varlist &rest body)
   "Like `eval-after-load', but bind variables according to VARLIST in
 the current environment of the `eval-after-load' expression, not the
 environment when BODY is evaluated.  This allows easy passing of values
@@ -415,7 +415,7 @@ value of VALUEFORM in the environment of the `eval-after-load' expression.
 
 A difference with `eval-after-load' is that BODY doesn't have to be quoted."
   `(eval-after-load ,file
-     '(let ,(loop for v in varlist
+     '(let ,(cl-loop for v in varlist
                   collect (if (symbolp v)
                               `(,v ,(eval v))
                             `(,(car v) ,(eval (cadr v))))
@@ -1725,14 +1725,14 @@ Goes backward if ARG is negative; error if CHAR not found."
 
 (defun path-prepend (directories &optional env-variable)
   (let ((path (path-get env-variable)))
-    (loop for dir in (reverse directories)
+    (cl-loop for dir in (reverse directories)
           do (unless (member* dir path :test #'string-equal)
                (push dir path)))
     (path-set path env-variable)))
 
 (defun path-delete (directories &optional env-variable)
   (let ((path (path-get env-variable)))
-    (loop for dir in directories
+    (cl-loop for dir in directories
           do (setq path (delete* dir path :test #'string-equal)))
     (path-set path env-variable)))
 
@@ -1836,8 +1836,8 @@ REPEAT is how many times to repeat the roll."
 
 (defun d (sides number mod repeat)
   (interactive "nSides: \nnNumber: \nnMod: \nnRepeat: ")
-  (loop repeat repeat
-        collect (loop repeat number
+  (cl-loop repeat repeat
+        collect (cl-loop repeat number
                       sum (1+ (random sides)) into roll
                       finally return (+ roll mod))
         into rolls
@@ -1939,15 +1939,16 @@ REPEAT is how many times to repeat the roll."
 (when-load-file "magit"
   :load
   (global-set-key (kbd "C-x M s") 'magit-status)
-  (global-magit-file-mode)
-  (define-key magit-file-mode-map
-    (kbd "C-x M g") 'magit-file-dispatch))
+  (when (version< emacs-version "27.0")
+    (global-magit-file-mode)
+    (define-key magit-file-mode-map
+      (kbd "C-x M g") 'magit-file-dispatch)))
 
 (add-hook 'markdown-mode-hook 'flyspell-mode)
 
 (defun t:insert-alphabet ()
   (interactive)
-  (loop for x from ?A to ?Z
+  (cl-loop for x from ?A to ?Z
         for y from ?a to ?z
         do (insert (format "%c%c" x y))))
 

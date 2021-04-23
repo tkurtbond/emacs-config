@@ -53,7 +53,7 @@ templates")
   "Add DAYS to calendar.el GREGORIAN date."
   (c:a2g (+ (c:g2a gregorian) days)))
 
-(defun* cg2et ((month day year))
+(cl-defun cg2et ((month day year))
   "Convert calendar.el gregorian date (MONTH DAY YEAR) (as from calendar.el)
 to emacs time (as from `current-time')"
   (encode-time 1 1 1 day month year))
@@ -101,7 +101,7 @@ prompt for a date."
   (backward-char)
   (t:insert-interval))
 
-(defun* ci2g (&optional time)
+(cl-defun ci2g (&optional time)
   (let ((year  (s2n (format-time-string "%Y" time)))
 	(month (s2n (format-time-string "%m" time)))
 	(day   (s2n (format-time-string "%d" time))))
@@ -127,7 +127,7 @@ form (MONTH DAY YEAR)."
   (cond ((eq date t) (setq date (ci2g nil)))
 	(date date)
 	(t (setq date (tkb-status-report-filename-to-date (t:bfnse)))))
-  (loop with first-missing = nil
+  (cl-loop with first-missing = nil
 	with last-missing = nil
 	for gregorian = (c:subg date n)
 	then (c:subg gregorian n)

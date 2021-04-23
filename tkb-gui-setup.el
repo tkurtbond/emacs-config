@@ -62,7 +62,7 @@
 		      (if nil "dejavu-13pt" "Go Mono")) tkb-fonts)
 
     (setq tkb-default-top
-	  (case system-type
+	  (cl-case system-type
 	    ((darwin) 30)
             ((gnu/linux) 50)
 	    (otherwise 20)))
