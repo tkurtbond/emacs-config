@@ -117,9 +117,9 @@
 	  ))
   ;; Get rid of the NILs from missing implementations
   (setq slime-lisp-implementations
-	(loop for e in slime-lisp-implementations
+	(cl-loop for e in slime-lisp-implementations
 	      when (not (null e)) collect e))
-  (loop for (name running) in slime-lisp-implementations
+  (cl-loop for (name running) in slime-lisp-implementations
 	do (progn (when name (princ name) (princ " ")))
 	finally do (terpri)))
 
@@ -236,7 +236,7 @@
   (autoload 'run-goo "goo-shell" nil t))
 
 
-(case 'karl-landstrom
+(cl-case 'karl-landstrom
   ((steve-yegge)
    (autoload 'js2-mode "js2" nil t)
    (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode)))

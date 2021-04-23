@@ -157,7 +157,7 @@ currently under the curser"
  browse-url-browser-function 'browse-url-generic
  browse-url-generic-program "c:/Program Files/Mozilla Firefox/firefox.exe")
 
-(require 'cl)
+(require 'cl-lib)
 
 (defun yank-secondary ()
   "Insert the secondary selection at point.
@@ -212,7 +212,7 @@ currently under the curser"
     (set-selection-coding-system 'utf-8)
     (prefer-coding-system 'utf-8)))
 
-(require 'cl)
+(require 'cl-lib)
 
 (fset 'tkb-select-to-record-line
    [tab ?\C-[ ?\C-f ?\C-[ ?\C-f ?% ?t ?y ?p ?e ?, ?\C-[ ?\C-k ?\C-[ ?  backspace ?\C-[ ?\C-k ?\C-[ ?m ?\C-y ?  tab ?\C-a ?\C-n])
@@ -414,7 +414,7 @@ currently under the curser"
 
 (defun tkb-w32-initial-font-and-size (prefix)
   (interactive "P")
-  (require 'cl) ;; Because I sometimes use this after emacs -q, and it needs cl.
+  (require 'cl-lib) ;; Because I sometimes use this after emacs -q, and it needs cl.
 
   ;; need to do something with display-pixel-height
   (destructuring-bind (tag tkb-default-font tkb-default-height)
