@@ -30,16 +30,20 @@ since the end of line is very important in [gtn]roff."
     (if (not (save-excursion (search-backward "\\\"" bol t)))
      (do-auto-fill))))
 
-(setq nroff-mode-hook
-      (function (lambda ()
-            (setq comment-indent-function 'my-nroff-comment-indent)
-            (auto-fill-mode)
-            (make-local-variable 'auto-fill-function)
-            (setq auto-fill-function (function nroff-do-auto-fill))
-            (electric-nroff-mode)
-	    (flyspell-mode)
-            (push (cons ".(F" ".)F") nroff-brace-table)
-            (push (cons ".Bn" ".En") nroff-brace-table))))
+(defun tkb-nroff-mode-hook ()
+  (setq comment-indent-function 'my-nroff-comment-indent)
+  (when nil                             ;don't autofill in nroff mode, dammit.
+    (auto-fill-mode)
+    (make-local-variable 'auto-fill-function)
+    (setq auto-fill-function (function nroff-do-auto-fill)))
+  (electric-nroff-mode)
+  (flyspell-mode))
+
+(setq nroff-mode-hook #'tkb-nroff-mode-hook)
+(eval-after-load "nroff-mode"
+  '(progn
+     (push (cons ".(F" ".)F") nroff-brace-table)
+     (push (cons ".Bn" ".En") nroff-brace-table)))
 
 (defun my-nroff-comment-indent ()
   "Compute indent for an nroff/troff comment.

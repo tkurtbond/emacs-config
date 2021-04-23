@@ -5,6 +5,10 @@
 ;; #$ Outputs the current filename.  It's not supposed to be used in lisp code.
 (message "%s" #$)
 
+;;; Highlight cursor line: too annoying.
+;;(global-hl-line-mode +1)
+;;(global-hl-line-mode -1)
+
 (eval-after-load "w3m"
   '(define-key w3m-mode-map "f" #'w3m-find-file))
 
@@ -82,7 +86,7 @@ recommended by the ReST quickref: http://tinyurl.com/47lkhk"
            (file+headline "/Users/tkb/job/MPL/Org/journal.org" "MPL Journal")
            "* %^{Title} %U\n  %i\n  %?\n")
           ("M" "MHST Journal" entry
-           (file+headline "/Users/tkb/job/MPL/Org/mhst-journal.org" "MHST Journal")
+           (file+headline "/Users/tkb/job/MPL/MHST/Org/mhst-journal.org" "MHST Journal")
            "* %^{Title} %U\n  %i\n  %?\n")
           ("C" "MPL Contacts Log" entry
            (file+headline "/Users/tkb/job/MPL/Org/contacts.org" "MPL Contacts")
@@ -140,6 +144,8 @@ and add a log entry to it."
             ((kbd "C-c k o a") #'org-agenda))
   (add-hook 'org-mode-hook 'turn-on-font-lock))	; org-mode buffers only
 
+(setq org-use-sub-superscripts '{}
+      org-export-with-sub-superscripts '{})
 
 (defun tkb-toggle-trailing-whitespace-display ()
   (interactive)
@@ -1058,13 +1064,20 @@ over 40 is morbidly obese, over 50 is super morbidly obese."
           (insert word)
           (ispell-word))
       (message "no selection"))))
-
 (tkb-keys ((kbd "C-c $") (if (fboundp 'x-get-selection-value)
                              #'tkb-ispell-selection
                            #'(lambda () (interactive)
                                (message "\
 Not under a window system, so you can't ispell the selection")))))
 
+(defun tkb-ispell-prompted-word (word)
+  (interactive "sWord to check spelling? ")
+  (let ((buf (get-buffer-create "Spell Word")))
+    (switch-to-buffer buf)
+    (delete-region (point-min) (point-max))
+    (insert word)
+    (ispell-word)))
+(tkb-keys ((kbd "C-c %") #'tkb-ispell-prompted-word))
 
 (when nil
   ;; Requires w3
@@ -1423,7 +1436,7 @@ Goes backward if ARG is negative; error if CHAR not found."
       (make-local-variable 'font-lock-mode)
       (font-lock-mode -1))
     ;;(message "tkb-rst-mode-hook ran; font-lock-mode: %S" font-lock-mode)
-    (tkb-smart-unicode-mode)
+    ;;(tkb-smart-unicode-mode)        ; This got annoying after a while.
     ;;FIXME: makes all emacs hang???
     (when t (flyspell-mode 1))
     (when nil ;; Don't use this, since I mostly use pandoc now.
@@ -1833,27 +1846,55 @@ REPEAT is how many times to repeat the roll."
 (load-library "iso-transl.el")
 ;; This sticks keys in iso-transl-ctl-x-8-map, which makes them available under
 ;; the "C-x 8" key prefix.
+;; Note that section and pilcrow are in C-x 8: S and P.
+
 (iso-transl-define-keys '(("gl" . [?λ])   ; greek lowercase lambda
                           ("gL" . [?Λ])   ; greek uppercase lambda
-                          ("pb" . [?•])
-                          ("pd" . [?†])
-                          ("pe" . [?…])
-                          ("ph" . [?­]) ;soft hyphen
-                          ("pn" . [?–])	;N-dash
-                          ("pm" . [?—]) ;M-dash
-                          ("p-" . [?−])	;Minus sign
-                          ("p " . [? ]) ;non-breaking space.
-                          ("pp" . [?′]) ;prime
-                          ("pP" . [?″]) ;double prime
-                          ;; section and pilcrow are in C-x 8: S and P
-                          ("pS" . [?‘])
-                          ("ps" . [?’])
-                          ("pq" . [?”])
-                          ("pQ" . [?“])
-                          ("p*" . [?×])
-                          ("p/" . [?÷])
-                          ("gm" . [?♂])
-                          ("gf" . [?♀])
+                          ("pb" . [?•])   ; bullet
+                          ("pc" . [?©])   ; copyright
+                          ("pC" . [?🄯])   ; copyleft
+                          ("pD" . [?‡])   ; double dagger
+                          ("pd" . [?†])   ; dagger
+                          ("pe" . [?…])   ; ellipsis
+                          ("ph" . [?­])   ; soft hyphen
+                          ("pn" . [?–])   ; N-dash
+                          ("pm" . [?—])   ; M-dash
+                          ("p-" . [?−])   ; Minus sign
+                          ("p " . [? ])   ; non-breaking space.
+                          ("pp" . [?′])   ; prime
+                          ("pP" . [?″])   ; double prime
+                          ("pS" . [?‘])   ; open single quote
+                          ("ps" . [?’])   ; close single quote
+                          ("pQ" . [?“])   ; open double quote
+                          ("pq" . [?”])   ; close double quote
+                          ("pv" . [?‖])   ; double vertical bar
+                          ("p*" . [?×])   ; multiply
+                          ("p/" . [?÷])   ; divide
+                          ("Gh" . [?×]) ; Hybrid gender in biology, also
+                          ("Gm" . [?♂]) ; male sign
+                          ("Gf" . [?♀]) ; female sign
+                          ("GM" . [?⚣]) ; male homosexuality
+                          ("GF" . [?⚢]) ; female homosexuality
+                          ("Gb" . [?⚥]) ; male and female, transgender, both
+                          ("Ga" . [?⚪]) ; agender, sexless, genderless
+                          ;; Symbols
+                          ("si" . [?∞]) ; infinity
+                          ("sl" . [?◊]) ; lozenge
+                          ("st" . [?▶]) ; black right pointing triangle
+                          ("sI" . [?☛])
+                          ;; Fractions
+                          ("5/8" . [?⅝])
+                          ("4/5" . [?⅘])
+                          ("1/8" . [?⅛])
+                          ("1/6" . [?⅙])
+                          ("7/8" . [?⅞])
+                          ("3/8" . [?⅜])
+                          ("2/3" . [?⅔])
+                          ("5/6" . [?⅚])
+                          ("1/5" . [?⅕])
+                          ("1/3" . [?⅓])
+                          ("3/5" . [?⅗])
+                          ("2/5" . [?⅖])
                           ))
 
 
@@ -1967,5 +2008,117 @@ ring and put the result on the top of the kill ring."
     (insert-file-contents filename)))
 (global-set-key (kbd "C-c i f") 'tkb-insert-fragment)
 (tkb-key-is-bound-to (kbd "C-c i f") 'tkb-insert-fragment)
+
+(tkb-keys ((kbd "C-c W w") 'define-word)
+          ((kbd "C-c W W") 'define-word-at-point))
+(defun tkb-display-define-word (results)
+  (with-output-to-temp-buffer "*Define Word*"
+    (princ results)))
+(setq define-word-displayfn-alist '((wordnik . tkb-display-define-word)
+                                    (openthesaurus . tkb-display-define-word)
+                                    (webster . tkb-display-define-word)))
+
+
+(defun dice-average (number-of-dice number-of-sides plus)
+  "Figure out the average roll for NUMBER-OF-DICE with NUMBER-OF-SIDES, 
+optionally with a number PLUS added to the result specified with a prefix arg."
+  (interactive "nNumber of dice? \nnNumber of sides? \nP")
+  (unless plus (setq plus 0))
+  (let ((average-roll (+ (* (/ (+ number-of-sides 1) 2.0)
+                            number-of-dice)
+                         plus)))
+    (message "%dd%d+%d Average Roll: %g" number-of-dice number-of-sides plus
+             average-roll)))
+
+
+(defun height-mass (start-height start-mass end-height build-ratio)
+  "How much does your giant weigh? 
+Calculate from START-HEIGHT, START-MASS, and END-HEIGHT multiplied by 
+BUILD-RATIO the END-MASS.  BUILD-RATIO is a factor to express the difference
+in build between different creatures.  (The factor for a dwarf might be 2.25, 
+225% heavier than normal.)  
+Formula: end-mass = start-mass * (end-height / start-height)^3
+See: 
+https://en.wikipedia.org/wiki/Square%E2%80%93cube_law
+https://www.enworld.org/threads/how-much-does-my-giant-weight.106631/post-1846443"
+  (interactive "nStarting Height? \nnStarting Mass? \nnEnd Height? \nnBuild Ratio? ")
+  (let* ((start-height (* 1.0 start-height)) ; make measurements floats.
+         (start-mass (* 1.0 start-mass))
+         (end-height (* 1.0 end-height))
+         (ratio (expt (/ end-height start-height) 3))
+         (end-mass (* start-mass ratio)))
+    (message "Start Height: %g; Start Mass: %g; End Height: %g; Build Ratio: %g
+Ratio: %g; End Mass: %g; * Build Ratio: %g"
+             start-height start-mass end-height build-ratio
+             ratio end-mass (* build-ratio end-mass))))
+
+(defun flesh-to-stone-weight (human-weight)
+  "Calculate how much a human of HUMAN-WEIGHT pounds would weigh if they were 
+   converted into granite."
+  (interactive "nHuman weight in pounds: ")
+  (let* ((human-density 63.1)            ; lb/ft^3
+         (granite-density 168)           ; lb/ft^3
+         (granite-weight (* (/ human-weight human-density) granite-density)))
+    (message "A human of %f pounds would weigh %f pounds
+   if converted to granite."
+             human-weight granite-weight)))
+
+(defun tkb-remove-mod ()
+  (interactive)
+  (setq auto-mode-alist
+        (remove-if (cl-function (lambda ((ext . mode))
+                                  (cl-search ".mod" ext)))
+                   auto-mode-alist)))
+
+(defun tkb-unwrap-paragraphs (on-region)
+  "Remove newlines between lines in paragraphs, but not newlines all by
+themselves.  (The reverse of `fill-paragraph', \
+\\<global-map>\\[fill-paragraph].)"
+  (interactive "P")
+  (query-replace-regexp "\\([^\n]\\)\n\\([^\n]\\)" "\\1 \\2" nil
+                        (if on-region (point) nil)
+                        (if on-region (mark) nil)
+                        nil nil))
+
+(defun tkb-eval-insert (result)
+  "Evaluate a Lisp expression and insert it."
+  (interactive "XLisp Expression:")
+  (insert (format "%s" result)))
+(tkb-keys ((kbd "C-c k :") 'tkb-eval-insert))
+
+(defun tkb-average-of-exploding-die (sides &optional user-p)
+  (interactive "NNumber of sides? \np")
+  (let* ((average (/ (+ 1.0 sides) 2.0))
+         (wild (* average (/ (* 1.0 sides) (- sides 1)))))
+    (when user-p
+      (message "%d sides has an average of %g with a wild die average of %g"
+               sides average wild))
+    wild))
+(tkb-keys ((kbd "C-c k C-e") 'tkb-average-of-exploding-die))
+
+(defun tkb-mini-six-wild-roll-average (n)
+  (let* ((n (- n 1))
+         (avg (+ (tkb-average-of-exploding-die 6)
+                 (* n 3.5))))
+    avg))
+
+(defun tkb-average-1D-to-14D-with-wild-die ()
+  (interactive)
+  (with-output-to-temp-buffer "*OpenD6 dice codes with averages*"
+    (loop for i from 1 to 14
+          for avg = (tkb-mini-six-wild-roll-average i)
+          then (tkb-mini-six-wild-roll-average i)
+          do (princ (format "%dD with the wild die averages %g\n" i avg)))))
+
+(defun tkb-hex-color-to-decimal (hexstring)
+  "Convert a 6 digit hex color string to three decimal values for inputing in
+inkscape."
+  (interactive "S6 digit hex color string: ")
+  (let ((r (substring hexstring 0 2))
+        (g (substring hexstring 2 4))
+        (b (substring hexstring 4 6)))
+    (message "r: %d g: %d b: %d")))
+
+
 (message "End of tkb-experimental.el")
 ;;; end of tkb-experimental.el

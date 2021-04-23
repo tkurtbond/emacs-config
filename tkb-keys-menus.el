@@ -93,6 +93,7 @@
 
 (global-set-key (kbd "C-c d i") 'tkb-insert-iso-date)
 (global-set-key (kbd "C-c d I") #'tkb-kill-iso-date)
+(global-set-key (kbd "C-c d f") 'tkb-insert-fancy-date)
 (global-set-key (kbd "C-c d p") 'tkb-insert-date)
 (global-set-key (kbd "C-c d P") #'tkb-kill-date)
 (global-set-key (kbd "C-c d t") #'tkb-insert-time)
