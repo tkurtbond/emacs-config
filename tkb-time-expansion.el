@@ -78,7 +78,7 @@ WARNING: Doesn't handle seconds."
     (beginning-of-line))
   (let* ((tab (make-hash-table :test 'equal))
 	 (total
-	  (loop for (a b . c)
+	  (cl-loop for (a b . c)
 		in (remove-if-not
 		    #'(lambda (interval)
 			(let* ((start-empty
@@ -113,7 +113,7 @@ WARNING: Doesn't handle seconds."
       (princ (format "   %8s   %8s    %9f total\n" "" "" total)
 	     print-intervals)
       (princ "   ;\n" print-intervals)
-      (loop for key being the hash-keys of tab using (hash-values value)
+      (cl-loop for key being the hash-keys of tab using (hash-values value)
 	    sum value
 	    do (princ (format "   %8s   %8s    %9f %s\n" "" "" value key)
 		      print-intervals)))
@@ -123,11 +123,11 @@ WARNING: Doesn't handle seconds."
   "INTERVALS is a list of (START END . DESC) lists, where DESC is optional.
 if END is a dash, use the current time instead."
 
-  (labels ((verbose (&rest args) (unless quiet (apply #'message args))))
+  (cl-labels ((verbose (&rest args) (unless quiet (apply #'message args))))
     (let* (msgs
 	   (tab (make-hash-table :test 'equal))
 	   (total
-	    (loop for (beg* end* . comments)
+	    (cl-loop for (beg* end* . comments)
 		  in (remove-if-not
 		      #'(lambda (interval)
 			  (let* ((start-empty
@@ -167,7 +167,7 @@ if END is a dash, use the current time instead."
       (push (format "%8s   %8s    %9s\n" "" "" "---------") msgs)
       (push (format "%8s   %8s    %9f total\n" "" "" total) msgs)
       (push (concat (make-string 70 ?=) "\n") msgs)
-      (loop for key being the hash-keys of tab using (hash-values value)
+      (cl-loop for key being the hash-keys of tab using (hash-values value)
 	    sum value
 	    do (push (format "%8s   %8s    %9f %s\n" "" "" value key) msgs))
       (let ((msg (apply #'concat (mapcar #'(lambda (s) (concat "    " s))

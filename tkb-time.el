@@ -242,7 +242,7 @@ If TIME is true, use it for the time to format."
   (let ((b (get-buffer-create "*tkb months*")))
     (with-current-buffer b
       (erase-buffer)
-      (loop for month across tkb-month-names
+      (cl-loop for month across tkb-month-names
 	    for i from 1
 	    do (insert (format "%2d: %s\n" i month)))
       (fit-window-to-buffer (display-buffer b)))))

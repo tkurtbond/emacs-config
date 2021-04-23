@@ -5,10 +5,10 @@
 ;;; $Id: tkb-macros.el 1.2 Tue, 09 May 2000 20:50:39 -0400 tkb $
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(eval-when-compile (require 'cl))
+(eval-when-compile (require 'cl-lib))
 
-(define-modify-macro notf (&rest args) not)
-(define-modify-macro cdrf (&rest args) cdr)
+;; (define-modify-macro notf (&rest args) not) ;; took these out in 27.1?
+;; (define-modify-macro cdrf (&rest args) cdr) ;; took these out in 27.1?
 
 (defmacro λ (&rest body) `#'(lambda ,@body))
 
@@ -24,26 +24,26 @@ clauses return true, evaluate BODY.
 where 
     SPEC    = '() | (cons CLAUSE SPEC)
     CLAUSE  = (VARIABLE EXPRESSION) | (EXPRESSION) | BOUND-VARIABLE"
-  (labels ((expand (spec body)
-		   (cond
-		    ((null spec)
-		     `(progn ,@body))
-		    ((consp spec)
-		     (let ((exp (car spec)))
-		       (cond
-			((consp exp)
-			 (cond
-			  ((null (cdr exp))
-			   `(and ,(car exp) ,(expand (cdr spec) body)))
-			  (t
-			   (let ((var (car exp))
-				 (val (cadr exp)))
-			     `(let (,exp)
-				(and ,var ,(expand (cdr spec) body)))))))
-			(t
-			 `(and ,exp ,(expand (cdr spec) body))))))
-		    (t
-		     (error "not a proper list" spec)))))
+  (cl-labels ((expand (spec body)
+		      (cond
+		       ((null spec)
+		        `(progn ,@body))
+		       ((consp spec)
+		        (let ((exp (car spec)))
+		          (cond
+			   ((consp exp)
+			    (cond
+			     ((null (cdr exp))
+			      `(and ,(car exp) ,(expand (cdr spec) body)))
+			     (t
+			      (let ((var (car exp))
+				    (val (cadr exp)))
+			        `(let (,exp)
+				   (and ,var ,(expand (cdr spec) body)))))))
+			   (t
+			    `(and ,exp ,(expand (cdr spec) body))))))
+		       (t
+		        (error "not a proper list" spec)))))
     (expand spec body)))
 
 (put 'when-directory 'lisp-indent-function 1)
@@ -76,7 +76,7 @@ VARNAME is a symbol to which is bound the directory name found."
 			       (t
 				(error "when-directory: not a string, vector, or list: %S" ,dirvarname))))
 	    (,varname
-	     (some #'(lambda (filename)
+	     (cl-some #'(lambda (filename)
 		       (when (file-readable-p filename) filename))
 		   ,dirvarname)))
        (when ,varname
@@ -119,7 +119,7 @@ VARNAME is a symbol to which is bound the first filename found."
 	      (vector filevalues)
 	    filevalues)))
     `(let* ((,varname
-	     (some #'(lambda (filename)
+	     (cl-some #'(lambda (filename)
 		       (when (file-readable-p filename) filename))
 		   ,filevalues)))
        (when ,varname
@@ -232,7 +232,7 @@ the first form of BODY is :load) and execute the forms in BODY."
   (if (and (file-name-absolute-p exe)
 	   (file-executable-p exe))
       exe
-    (loop for dir in path
+    (cl-loop for dir in path
 	  thereis (tkb-is-executable-in-dir exe dir))))
 
 
@@ -275,7 +275,7 @@ Examples:
 	     (setq ,e (vector ,e)))
 	 (if (null ,p)
 	     (setq ,p exec-path))
-	 (let ((,var (some #'(lambda (exe) (tkb-find-executable exe ,p)) ,e)))
+	 (let ((,var (cl-some #'(lambda (exe) (tkb-find-executable exe ,p)) ,e)))
 	   (cond ((not ,var)
 		  (message "None of %S available" ,e)
 		  nil)
@@ -296,13 +296,13 @@ be followed by the name of a keymap."
   (let (just-warn-p keymap)
     (while (memq (car defns) '(:just-warn :keymap))
       (let ((keyword (pop defns)))
-	(case keyword
+	(cl-case keyword
 	  (:just-warn
-	   (notf just-warn-p))
+	   (setq just-warn-p (not just-warn-p)))
 	  (:keymap
 	   (setq keymap (pop defns))))))
     (unless keymap (setq keymap 'global-map))
-    (loop for (key fun) in defns
+    (cl-loop for (key fun) in defns
 	  collect `(define-key ,keymap ,key ,fun) into set-keys
 	  collect (eval key) into keys
 	  collect (if (and (consp fun) (memq (car fun) '(quote function)))

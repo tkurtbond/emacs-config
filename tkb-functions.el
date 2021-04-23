@@ -186,12 +186,12 @@ or the filename part without an extension)."
   (interactive)
   (setq isearch-lazy-highlight (not isearch-lazy-highlight)))
 
-(defun* tkb-check-bindings (keys-list &optional bindings-list (keymap global-map))
+(cl-defun tkb-check-bindings (keys-list &optional bindings-list (keymap global-map))
   "Check if the key sequences in KEYS-LIST are already defined;
 BINDINGS-LIST optionally contains the new bindings (functions)."
   (unless bindings-list
     (setq bindings-list (make-list (length keys-list) nil)))
-  (loop for keys in keys-list
+  (cl-loop for keys in keys-list
 	for new-binding in bindings-list
 	for binding = (lookup-key keymap keys)
 	;; lookup-key returns a number for key sequences that don't have
@@ -203,7 +203,7 @@ BINDINGS-LIST optionally contains the new bindings (functions)."
 			(format "  %s is %S but will become %S\n" (key-description keys) binding new-binding)
 		      (format "  %s is %S\n" (key-description keys) binding))
 	into msgs
-	finally return (values bindings (apply #'concat msgs))))
+	finally return (cl-values bindings (apply #'concat msgs))))
 
 (cl-defun tkb-key-is-bound-to (key expected-fun &optional (keymap global-map))
   "Check if the key sequence in KEY is bound to EXPECTED-FUN."

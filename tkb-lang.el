@@ -117,9 +117,9 @@
 	  ))
   ;; Get rid of the NILs from missing implementations
   (setq slime-lisp-implementations
-	(loop for e in slime-lisp-implementations
+	(cl-loop for e in slime-lisp-implementations
 	      when (not (null e)) collect e))
-  (loop for (name running) in slime-lisp-implementations
+  (cl-loop for (name running) in slime-lisp-implementations
 	do (progn (when name (princ name) (princ " ")))
 	finally do (terpri)))
 
@@ -130,6 +130,7 @@
   (push '("\\.ml[iylp]?$" . caml-mode) auto-mode-alist))
 
 ;; Python
+(setq python-shell-interpreter "python3")
 (defun my-python-mode-hook ()
   (setq py-indent-offset 4)
   (setq font-lock-keywords python-font-lock-keywords)
@@ -176,6 +177,7 @@
 ;; For Chicken Scheme
 (put 'do-list 'scheme-indent-function 2)
 (put 'match-let 'scheme-indent-function 1)
+(put 'when-in-hash 'scheme-indent-function 1)
 
 ;; For Emacs lisp
 (put 'eval-after-load 'lisp-indent-function 1)
@@ -188,6 +190,9 @@
 (put 'with-open-file 'lisp-indent-function 1)
 (put 'and-let* 'lisp-indent-function 1)
 (put 'when-in-hash 'lisp-indent-function 1)
+(put 'register-groups-bind 'lisp-indent-function 2)
+(put 'ppcre:register-groups-bind 'lisp-indent-function 2)
+
 
 ;; For EuLisp
 (put 'dynamic-let 'lisp-indent-function 1)
@@ -202,17 +207,32 @@
 
 
 ;; Loading
-(setq auto-mode-alist (append '(("\\.ec\\'" . c-mode)
-				("\\.tr\\'" . nroff-mode)
-				("\\.nr\\'" . nroff-mode)
-				("\\.stk\\'" . scheme-mode)
-				("\\.ss\\'" . scheme-mode)
-				("\\.perl\\'" . perl-mode)
-				("\\.pl\\'" . perl-mode)
-				("\\.ph\\'" . perl-mode)
-				("\\.pm\\'" . perl-mode)
-				)
-			      auto-mode-alist))
+(when nil
+  (setq auto-mode-alist (append '(("\\.ec\\'" . c-mode)
+				  ("\\.tr\\'" . nroff-mode)
+				  ("\\.nr\\'" . nroff-mode)
+                                  ("\\.mom\\'" . nroff-mode)
+				  ("\\.stk\\'" . scheme-mode)
+				  ("\\.ss\\'" . scheme-mode)
+				  ("\\.perl\\'" . perl-mode)
+				  ("\\.pl\\'" . perl-mode)
+				  ("\\.ph\\'" . perl-mode)
+				  ("\\.pm\\'" . perl-mode)
+				  )
+			        auto-mode-alist)))
+(loop for i in '(("\\.ec\\'" . c-mode)
+                 ("\\.tr\\'" . nroff-mode)
+                 ("\\.nr\\'" . nroff-mode)
+                 ("\\.mom\\'" . nroff-mode)
+                 ("\\.stk\\'" . scheme-mode)
+                 ("\\.ss\\'" . scheme-mode)
+                 ("\\.perl\\'" . perl-mode)
+                 ("\\.pl\\'" . perl-mode)
+                 ("\\.ph\\'" . perl-mode)
+                 ("\\.pm\\'" . perl-mode)
+                 )
+      do (add-to-list 'auto-mode-alist i)
+      finally return auto-mode-alist)
 
 (autoload 'lout-mode "lout-mode"
   "Mode for editing Lout (a typesetting language) source.")
@@ -235,7 +255,7 @@
   (autoload 'run-goo "goo-shell" nil t))
 
 
-(case 'karl-landstrom
+(cl-case 'karl-landstrom
   ((steve-yegge)
    (autoload 'js2-mode "js2" nil t)
    (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode)))
