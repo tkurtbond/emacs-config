@@ -38,11 +38,12 @@
 	("consolas" "-outline-Consolas-normal-r-normal-normal-17-127-96-96-c-*-iso8859-1" 55)
 	("inconsolata" "-outline-Inconsolata-medium-r-normal-normal-17-127-96-96-c-*-iso8859-1" 55)
 
-	("Go Mono" ,(if (member (system-name) '("moonglum" "oona"))
+	("Go Mono" ,(if (or (member (system-name) '("moonglum" "oona"))
+                            (>= (display-pixel-height) 2160))
 			"-*-Go Mono-normal-normal-normal-*-20-*-*-*-m-0-iso10646-1"
 			"-*-Go Mono-normal-normal-normal-*-18-*-*-*-m-0-iso10646-1")
-	 50)
-	))
+	 ,(if (>= (display-pixel-height) 2160) 55 50)
+	)))
 
 (defun tkb-set-frame-font ()
   (interactive)
@@ -59,7 +60,8 @@
   (destructuring-bind (tag tkb-default-font tkb-default-height)
       (assoc-string (if prefix
 			(completing-read "Font? " tkb-fonts)
-		      (if nil "dejavu-13pt" "Go Mono")) tkb-fonts)
+		      (if nil "dejavu-13pt" "Go Mono"))
+                    tkb-fonts)
 
     (setq tkb-default-top
 	  (cl-case system-type
