@@ -1987,6 +1987,8 @@ ring and put the result on the top of the kill ring."
 (tkb-keys ((kbd "C-c k S") 'tkb-sanitize-kill-for-filename))
 
 (defun tkb-initialize-kill-for-filename (string)
+  "Get the initial letters in the the words of the top of the kill ring,
+concatenate them, and pu the result on the top of the kill ring."
   (interactive (list (current-kill 0 t)))
   (let* ((string (replace-regexp-in-string "'" "" string))
          (strings (split-string string "[-_:()\" \f\t\n\r\v]+" t "[ \t]+"))
