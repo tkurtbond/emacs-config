@@ -1982,9 +1982,18 @@ ring and put the result on the top of the kill ring."
   ;; gets the kill or the system clipboard if it is new.
   (interactive (list (current-kill 0 t)))
   (let ((new-string (tkb-sanitize-for-filename string)))
-    (message "Old string: %s\nNew String: %s" string new-string)
+    (message "Old string: %s\nNew string: %s" string new-string)
     (kill-new new-string)))
 (tkb-keys ((kbd "C-c k S") 'tkb-sanitize-kill-for-filename))
+
+(defun tkb-prefix-iso-date-kill (string)
+  "Add the ISO YYYY-MM-DD date followed by - as a prefix to the current kill 
+ring."
+  (interactive (list (current-kill 0 t)))
+  (let ((new-string (concat (format-time-string "%Y-%2m-%2d") "-" string)))
+    (message "Old string: %s\nNew string: %s" string new-string)
+    (kill-new new-string)))
+(tkb-keys ((kbd "C-c k P") 'tkb-prefix-iso-date-kill))
 
 (defun tkb-insert-post-fragment ()
   "Insert a fragment into the current, defaulting to 
