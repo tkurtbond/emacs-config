@@ -177,6 +177,7 @@
 ;; For Chicken Scheme
 (put 'do-list 'scheme-indent-function 2)
 (put 'match-let 'scheme-indent-function 1)
+(put 'match 'scheme-indent-function 1)
 (put 'when-in-hash 'scheme-indent-function 1)
 
 ;; For Emacs lisp

@@ -36,7 +36,7 @@ since the end of line is very important in [gtn]roff."
     (auto-fill-mode)
     (make-local-variable 'auto-fill-function)
     (setq auto-fill-function (function nroff-do-auto-fill)))
-  (electric-nroff-mode)
+  ;; (electric-nroff-mode) ;; Missing in 27.2?
   (flyspell-mode))
 
 (setq nroff-mode-hook #'tkb-nroff-mode-hook)
