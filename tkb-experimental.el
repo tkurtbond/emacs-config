@@ -1986,6 +1986,15 @@ ring and put the result on the top of the kill ring."
     (kill-new new-string)))
 (tkb-keys ((kbd "C-c k S") 'tkb-sanitize-kill-for-filename))
 
+(defun tkb-initialize-kill-for-filename (string)
+  (interactive (list (current-kill 0 t)))
+  (let* ((string (replace-regexp-in-string "'" "" string))
+         (strings (split-string string "[-_:()\" \f\t\n\r\v]+" t "[ \t]+"))
+         (new-string (map 'string (lambda (s) (aref s 0)) strings)))
+    (message "Old string: %s\nNew String: %s" string new-string)
+    (kill-new new-string)))
+(tkb-keys ((kbd "C-c kP") 'tkb-initialize-kill-for-filename))
+
 (defun tkb-prefix-iso-date-kill (string)
   "Add the ISO YYYY-MM-DD date followed by - as a prefix to the current kill 
 ring."
