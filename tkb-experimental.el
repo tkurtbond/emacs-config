@@ -2129,6 +2129,10 @@ inkscape."
         (b (substring hexstring 4 6)))
     (message "r: %d g: %d b: %d")))
 
+(defun tkb-find-savage-worlds-attributes ()
+  (interactive)
+  (re-search-forward (rx (or "Agility" "Smarts" "Spirit" "Strength" "Vigor"))))
+
 
 (message "End of tkb-experimental.el")
 ;;; end of tkb-experimental.el
