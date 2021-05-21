@@ -1817,7 +1817,15 @@ Goes backward if ARG is negative; goes to end of buffer if CHAR not found."
 
 
 (defun d4   () (1+ (random   4)))
-(defun d6   () (1+ (random   6)))
+(defun d6   (num-dice)
+  (interactive "p")
+  (loop for i from 1 to num-dice
+        for roll = (1+ (random   6)) then (1+ (random   6))
+        collect roll into rolls
+        sum roll into result
+        finally do (message "%dd6: %d rolls: %S" num-dice result rolls)
+        finally return result))
+                 )
 (defun d8   () (1+ (random   8)))
 (defun d10  () (1+ (random  10)))
 (defun d12  () (1+ (random  12)))
@@ -2139,6 +2147,10 @@ inkscape."
         (g (substring hexstring 2 4))
         (b (substring hexstring 4 6)))
     (message "r: %d g: %d b: %d")))
+
+(defun tkb-find-savage-worlds-attributes ()
+  (interactive)
+  (re-search-forward (rx (or "Agility" "Smarts" "Spirit" "Strength" "Vigor"))))
 
 
 (message "End of tkb-experimental.el")
