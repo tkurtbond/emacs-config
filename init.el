@@ -125,6 +125,7 @@
 			clojure-mode
 			clojure-quick-repls
 			clojure-snippets
+                        define-word
 			docbook
 			;;elscreen ; Did I ever really use this?
 			f
