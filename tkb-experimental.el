@@ -420,7 +420,8 @@ A difference with `eval-after-load' is that BODY doesn't have to be quoted."
                               `(,v ,(eval v))
                             `(,(car v) ,(eval (cadr v))))
                   into new-varlist
-                  finally return new-varlist) ,@body)))
+                  finally return new-varlist)
+        ,@body)))
 (put 'eval-after-load* 'lisp-indent-function
      (1+ (get 'eval-after-load 'lisp-indent-function)))
 
@@ -1013,24 +1014,33 @@ over 40 is morbidly obese, over 50 is super morbidly obese."
     (message "whole: %s numeric: %d" whole (prefix-numeric-value whole))
     (let ((fn (buffer-file-name)))
       (kill-new (if whole fn (file-name-nondirectory fn)))))
-  (tkb-keys ((kbd "C-c P") #'tkb-copy-buffer-file-name))
+  (tkb-keys ((kbd "C-c b f") #'tkb-copy-buffer-file-name))
   (defun tkb-copy-downcase-buffer-file-name (whole)
     (interactive "P")
     (message "whole: %s numeric: %d" whole (prefix-numeric-value whole))
     (let* ((fn (buffer-file-name))
            (fn (if whole fn (file-name-nondirectory fn))))
       (kill-new (downcase fn))))
-  (tkb-keys ((kbd "C-c Y") #'tkb-copy-downcase-buffer-file-name))
+  (tkb-keys ((kbd "C-c b F") #'tkb-copy-downcase-buffer-file-name))
 
   (defun tkb-copy-buffer-name ()
     (interactive)
     (kill-new (buffer-name)))
-  (tkb-keys ((kbd "C-c B") #'tkb-copy-buffer-name))
-  (defun tkb-lower-to-register (register start end)
-    (interactive "cLowercase to register: \nr")
-    (set-register register (downcase (buffer-substring start end))))
-  (tkb-keys ((kbd "C-c *") 'tkb-lower-to-register))
+  (tkb-keys ((kbd "C-c b n") #'tkb-copy-buffer-name))
+
+  (defun tkb-buffer-name-to-register (register)
+    (interactive "cBuffer name to register: ")
+    (set-register register (buffer-name)))
+  (tkb-keys ((kbd "C-c b r") #'tkb-buffer-name-to-register))
+
   )
+
+(defun tkb-lower-to-register (register start end)
+  (interactive "cLowercase to register: \nr")
+  (set-register register (downcase (buffer-substring start end))))
+(tkb-keys ((kbd "C-c *") 'tkb-lower-to-register))
+
+
 
 (progn
   ;; http://emacs.wordpress.com/2007/01/22/killing-yanking-and-copying-lines/
@@ -1825,7 +1835,6 @@ Goes backward if ARG is negative; goes to end of buffer if CHAR not found."
         sum roll into result
         finally do (message "%dd6: %d rolls: %S" num-dice result rolls)
         finally return result))
-                 )
 (defun d8   () (1+ (random   8)))
 (defun d10  () (1+ (random  10)))
 (defun d12  () (1+ (random  12)))

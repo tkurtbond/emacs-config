@@ -10,9 +10,9 @@ which should be `t' or `nil'.  TIMEOUT defaults to 5 seconds."
   (interactive)
   (unless timeout (setq timeout 5.0))
   (with-timeout (timeout
-		 (message "%s timed out after %f seconds; returning %S"
-			    prompt timeout default)
-		 default)
+                 (message "%s timed out after %f seconds; returning %S"
+                            prompt timeout default)
+                 default)
     (y-or-n-p prompt)))
 
 (defun empty-string-p (s)
@@ -28,10 +28,10 @@ or at the column specified by the prefix arg."
   (interactive "P")
   (let ((col (if col col tkb-align-column)))
     (let ((current-end (save-excursion
-			 (end-of-line)
-			 (current-column))))
+                         (end-of-line)
+                         (current-column))))
       (if (< current-end col)
-	  (insert (make-string (- col current-end) ? ))))))
+          (insert (make-string (- col current-end) ? ))))))
 
 (defun tkb-get-clipboard ()
   (interactive)
@@ -54,16 +54,16 @@ if a prefix greater than 1 is specified (remember C-u by itself is 4,
 or the filename part without an extension)."
   (interactive "p")
   (insert (if (> prefix 1)
-	      (buffer-file-name)
-	    (if (< prefix 0)
-		(file-name-sans-extension
-		 (file-name-nondirectory (buffer-file-name)))
-	      (file-name-nondirectory (buffer-file-name))))))
+              (buffer-file-name)
+            (if (< prefix 0)
+                (file-name-sans-extension
+                 (file-name-nondirectory (buffer-file-name)))
+              (file-name-nondirectory (buffer-file-name))))))
 
 (defun tkb-count-region ()
   (interactive)
   (message "%d characters in region."
-	   (abs (- (mark) (point)))))
+           (abs (- (mark) (point)))))
 
 (defun tkb-pad-string (s)
   "Pad string S with spaces between each character"
@@ -78,26 +78,26 @@ or the filename part without an extension)."
   "Insert Buffer Name with spaces between each character. With arg, upcase."
   (interactive "P")
   (tkb-pad-string (cond (up (upcase (buffer-name)))
-			(t (buffer-name)))))
+                        (t (buffer-name)))))
 
 (defun tkb-ibn (up)
   "Insert Buffer Name. With arg, upcase."
   (interactive "P")
   (insert (cond (up (upcase (buffer-name)))
-		(t (buffer-name)))))
+                (t (buffer-name)))))
 (tkb-keys ((kbd "C-c k B") #'tkb-ibn))
 
 (defun tkb-stretch-string (s)
   (interactive "sString: ")
   (let* ((len (length s))
-	 (ns (make-string (* len 3) ?\s))
-	 (i 0))
+         (ns (make-string (* len 3) ?\s))
+         (i 0))
     (while (< i len)
       (let ((c (aref s i))
-	    (n (* i 3)))
-	(aset ns n c)
-	(aset ns (+ n 1) c)
-	(aset ns (+ n 2) c))
+            (n (* i 3)))
+        (aset ns n c)
+        (aset ns (+ n 1) c)
+        (aset ns (+ n 2) c))
       (incf i))
     (insert ns)))
 
@@ -118,40 +118,40 @@ or the filename part without an extension)."
   (interactive "P")
   (message "mail-self: %S" self)
   (let ((to (if self
-		(if (stringp self)
-		    self
-		  (completing-read "Username: "
-				   `(("tkurtbond+note@gmail.com" 1)
-				     ("kbond+note@mpl.com" 2))))
-	      "tkurtbond+note@gmail.com")))
+                (if (stringp self)
+                    self
+                  (completing-read "Username: "
+                                   `(("tkurtbond+note@gmail.com" 1)
+                                     ("kbond+note@mpl.com" 2))))
+              "tkurtbond+note@gmail.com")))
     ;; Whoa, way too fiddly. ???
     (let ((mail-self-blind (and self
-				(or (and (numberp self)
-					 (< self 0))
-				    (eq self '-)))))
+                                (or (and (numberp self)
+                                         (< self 0))
+                                    (eq self '-)))))
       (compose-mail to)
       (mail-subject))))
-(global-set-key (kbd "C-c n") 'tkb-mail-self-note)
+(global-set-key (kbd "C-c m n") 'tkb-mail-self-note)
 
 (defun tkb-mail-self-note-mpl ()
   (interactive)
   (tkb-mail-self-note "kbond+note@mpl.com"))
-(global-set-key (kbd "C-c N") 'tkb-mail-self-note-mpl)
+(global-set-key (kbd "C-c m N") 'tkb-mail-self-note-mpl)
 
 (defun tkb-mail-bosses ()
   (interactive)
   (random t)
   (let ((bosses ["htheiling@mpl.com" "dsweda@mpl.com" "cbenson@mpl.com"
-		 "bmoats@mpl.com"])
-	to)
+                 "bmoats@mpl.com"])
+        to)
     (while (not (= (length to) 3))
       (let ((user (aref bosses (random 3))))
-	(unless (member user to)
-	  (push user to))))
+        (unless (member user to)
+          (push user to))))
     (message "To: %S" to)
     (compose-mail (mapconcat (function (lambda (n) n)) to ", "))
     (mail-subject)))
-(global-set-key (kbd "C-c b") 'tkb-mail-bosses)    
+(global-set-key (kbd "C-c m b") 'tkb-mail-bosses)
 
 (defun tkb-edit-incoming-links ()
   (interactive)
@@ -192,18 +192,18 @@ BINDINGS-LIST optionally contains the new bindings (functions)."
   (unless bindings-list
     (setq bindings-list (make-list (length keys-list) nil)))
   (cl-loop for keys in keys-list
-	for new-binding in bindings-list
-	for binding = (lookup-key keymap keys)
-	;; lookup-key returns a number for key sequences that don't have
-	;; valid sequence of prefix characters in the keymap.
-	when (and binding (not (numberp binding)))
-	collect (cons keys binding)
-	into bindings
-	and collect (if new-binding
-			(format "  %s is %S but will become %S\n" (key-description keys) binding new-binding)
-		      (format "  %s is %S\n" (key-description keys) binding))
-	into msgs
-	finally return (cl-values bindings (apply #'concat msgs))))
+        for new-binding in bindings-list
+        for binding = (lookup-key keymap keys)
+        ;; lookup-key returns a number for key sequences that don't have
+        ;; valid sequence of prefix characters in the keymap.
+        when (and binding (not (numberp binding)))
+        collect (cons keys binding)
+        into bindings
+        and collect (if new-binding
+                        (format "  %s is %S but will become %S\n" (key-description keys) binding new-binding)
+                      (format "  %s is %S\n" (key-description keys) binding))
+        into msgs
+        finally return (cl-values bindings (apply #'concat msgs))))
 
 (cl-defun tkb-key-is-bound-to (key expected-fun &optional (keymap global-map))
   "Check if the key sequence in KEY is bound to EXPECTED-FUN."
@@ -248,24 +248,24 @@ Goes backward if ARG is negative; error if CHAR not found."
   ;; Avoid "obsolete" warnings for translation-table-for-input.
   (with-no-warnings
     (if (char-table-p translation-table-for-input)
-	(setq char (or (aref translation-table-for-input char) char))))
+        (setq char (or (aref translation-table-for-input char) char))))
   (kill-region (point) (progn
-			 (search-forward (char-to-string char) nil nil arg)
-			 (goto-char (if (> arg 0) (1- (point)) (1+ (point))))
-			 (point))))
+                         (search-forward (char-to-string char) nil nil arg)
+                         (goto-char (if (> arg 0) (1- (point)) (1+ (point))))
+                         (point))))
 (tkb-keys ((kbd "M-Z") #'t:zap-to-char))
 
 (defun tkb-push-env-var (var newval &optional first)
   (let ((val (getenv var)))
     (setenv var (if val
-		    (if first
-			(concat newval ":" val)
-		      (concat val ":" newval))
-		  newval))))
+                    (if first
+                        (concat newval ":" val)
+                      (concat val ":" newval))
+                  newval))))
 
 
 ;;; http://www.emacswiki.org/emacs/UnfillParagraph
-;;; Stefan Monnier <foo at acm.org>. It is the opposite of fill-paragraph    
+;;; Stefan Monnier <foo at acm.org>. It is the opposite of fill-paragraph
 (defun unfill-paragraph ()
   "Takes a multi-line paragraph and makes it into a single line of text."
   (interactive)
@@ -274,18 +274,18 @@ Goes backward if ARG is negative; error if CHAR not found."
 
 
 
-(progn 
+(progn
 ;;; http://www.danielehrman.com/blog/2014/5/25/11-must-haves-for-every-power-programmer
-(defun save-macro (name)                  
+(defun save-macro (name)
   "save a macro. Take a name as argument
-     and save the last defined macro under 
+     and save the last defined macro under
      this name at the end of your .emacs"
-  (interactive "SName of the macro :")  ; ask for the name of the macro    
-  (name-last-kbd-macro name)            ; use this name for the macro    
-  (find-file user-init-file)            ; open ~/.emacs or other user init file 
+  (interactive "SName of the macro :")  ; ask for the name of the macro
+  (name-last-kbd-macro name)            ; use this name for the macro
+  (find-file user-init-file)            ; open ~/.emacs or other user init file
   (goto-char (point-max))               ; go to the end of the .emacs
   (newline)                             ; insert a newline
-  (insert-kbd-macro name)               ; copy the macro 
+  (insert-kbd-macro name)               ; copy the macro
   (newline)                             ; insert a newline
   (switch-to-buffer nil))               ; return to the initial buffer
 

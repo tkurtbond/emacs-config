@@ -59,6 +59,12 @@
 (define-prefix-command 'tkb-time-map)
 (global-set-key (kbd "C-c T") 'tkb-time-map)
 
+(define-prefix-command 'tkb-mail-map)
+(global-set-key (kbd "C-c m") 'tkb-mail-map)
+
+(define-prefix-command 'tkb-buffer-map)
+(global-set-key (kbd "C-c b") 'tkb-buffer-map)
+
 (global-set-key [f3] 'tkb-start-categorizing-links)
 (global-set-key [f4] 'tkb-categorize-next-link)
 ;(global-set-key [f5] 'tkb-burst-digest-and-back)
@@ -122,7 +128,7 @@
 	  ((kbd "C-c k r") #'comment-region))
 ;;(tkb-keys ((kbd "C-c K U") #'tkb-unicode-character-insert)) ; C-x 8 RET
 (global-set-key (kbd "C-c k w") 'whitespace-cleanup)
-(global-set-key (kbd "C-c m") 'compile)
+;;(global-set-key (kbd "C-c m") 'compile) ; now used for stuff relating to mail
 (global-set-key (kbd "C-c o") 'overwrite-mode)
 (global-set-key (kbd "C-c r") 'tkb-count-region)
 (global-set-key (kbd "C-c t") 'tkb-find-next-tag)
