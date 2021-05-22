@@ -20,7 +20,7 @@
     (insert s*)))
 
 (defun tkb-rst-print-subheads ()
-  "Print the recommend underlines with levels for the underline characters 
+  "Print the recommend underlines with levels for the underline characters
 recommended by the ReST quickref: http://tinyurl.com/47lkhk"
   (interactive)
   (with-work-buffer " *ReST heads"
@@ -1750,24 +1750,24 @@ Goes backward if ARG is negative; error if CHAR not found."
   (path-set (append (path-get env-variable) directories) env-variable))
 
 (defun tkb-prepend-to-path (directory env-variable)
-  "Read a directory into DIRECTORY and if prefix arg in ENV-VARIABLE is 
+  "Read a directory into DIRECTORY and if prefix arg in ENV-VARIABLE is
 present read a string into ENV-VARIABLE and if not default ENV-VARIABLE to PATH,
 then prepend DIRECTORY to the path in the environment ENV-VARIABLE."
   (interactive "DDirectory to add to environment variable at start? \nP")
   (let ((directory (expand-file-name directory))
-        (env-variable 
+        (env-variable
          (if env-variable (read-string "Environment Variable? ") "PATH")))
     (message "Directory: %s" directory)
     (path-prepend (list directory) env-variable)
     (message "%s=%s" env-variable (getenv env-variable))))
 
 (defun tkb-append-to-path (directory env-variable)
-  "Read a directory into DIRECTORY and if prefix arg in ENV-VARIABLE is 
+  "Read a directory into DIRECTORY and if prefix arg in ENV-VARIABLE is
 present read a string into ENV-VARIABLE and if not default ENV-VARIABLE to PATH,
 then append DIRECTORY to the path in the environment ENV-VARIABLE."
   (interactive "DDirectory to add to environment variable at end? \nP")
   (let ((directory (expand-file-name directory))
-        (env-variable 
+        (env-variable
          (if env-variable (read-string "Environment Variable? ") "PATH")))
     (message "Directory: %s" directory)
     (path-append (list directory) env-variable)
@@ -2015,7 +2015,7 @@ concatenate them, and pu the result on the top of the kill ring."
 (tkb-keys ((kbd "C-c kP") 'tkb-initialize-kill-for-filename))
 
 (defun tkb-prefix-iso-date-kill (string)
-  "Add the ISO YYYY-MM-DD date followed by - as a prefix to the current kill 
+  "Add the ISO YYYY-MM-DD date followed by - as a prefix to the current kill
 ring."
   (interactive (list (current-kill 0 t)))
   (let ((new-string (concat (format-time-string "%Y-%2m-%2d") "-" string)))
@@ -2024,7 +2024,7 @@ ring."
 (tkb-keys ((kbd "C-c k P") 'tkb-prefix-iso-date-kill))
 
 (defun tkb-insert-post-fragment ()
-  "Insert a fragment into the current, defaulting to 
+  "Insert a fragment into the current, defaulting to
 ~/nikola/newblog/fragments/post.rst."
   (interactive)
   (let ((filename (expand-file-name
@@ -2047,18 +2047,37 @@ ring."
 (global-set-key (kbd "C-c i f") 'tkb-insert-fragment)
 (tkb-key-is-bound-to (kbd "C-c i f") 'tkb-insert-fragment)
 
-(tkb-keys ((kbd "C-c W w") 'define-word)
-          ((kbd "C-c W W") 'define-word-at-point))
-(defun tkb-display-define-word (results)
-  (with-output-to-temp-buffer "*Define Word*"
-    (princ results)))
-(setq define-word-displayfn-alist '((wordnik . tkb-display-define-word)
-                                    (openthesaurus . tkb-display-define-word)
-                                    (webster . tkb-display-define-word)))
+(progn
+  (tkb-keys ((kbd "C-c W w") 'define-word)
+            ((kbd "C-c W W") 'define-word-at-point))
+  (defadvice define-word (around tkb-around-define-word activate)
+    "Dynamically bind tkb-define-word-word to the word passed in."
+    (let ()
+      (defvar tkb-define-word-word word)
+      ad-do-it))
+
+  (defun tkb-display-define-word (results)
+    (with-output-to-temp-buffer "*Define Word*"
+      (when (boundp 'tkb-define-word-word)
+        (let* ((headline (format "Definition of \"%s\""
+                                 tkb-define-word-word))
+               (underline (make-string (length headline) ?=)))
+          (princ headline)
+          (princ "\n")
+          (princ underline)
+          (princ "\n\n")))
+      (princ results)))
+
+  (setq define-word-displayfn-alist '((wordnik . tkb-display-define-word)
+                                      (openthesaurus . tkb-display-define-word)
+                                      (webster . tkb-display-define-word)))
+
+  (setq define-word-limit 100)
+  )
 
 
 (defun dice-average (number-of-dice number-of-sides plus)
-  "Figure out the average roll for NUMBER-OF-DICE with NUMBER-OF-SIDES, 
+  "Figure out the average roll for NUMBER-OF-DICE with NUMBER-OF-SIDES,
 optionally with a number PLUS added to the result specified with a prefix arg."
   (interactive "nNumber of dice? \nnNumber of sides? \nP")
   (unless plus (setq plus 0))
@@ -2070,13 +2089,13 @@ optionally with a number PLUS added to the result specified with a prefix arg."
 
 
 (defun height-mass (start-height start-mass end-height build-ratio)
-  "How much does your giant weigh? 
-Calculate from START-HEIGHT, START-MASS, and END-HEIGHT multiplied by 
+  "How much does your giant weigh?
+Calculate from START-HEIGHT, START-MASS, and END-HEIGHT multiplied by
 BUILD-RATIO the END-MASS.  BUILD-RATIO is a factor to express the difference
-in build between different creatures.  (The factor for a dwarf might be 2.25, 
-225% heavier than normal.)  
+in build between different creatures.  (The factor for a dwarf might be 2.25,
+225% heavier than normal.)
 Formula: end-mass = start-mass * (end-height / start-height)^3
-See: 
+See:
 https://en.wikipedia.org/wiki/Square%E2%80%93cube_law
 https://www.enworld.org/threads/how-much-does-my-giant-weight.106631/post-1846443"
   (interactive "nStarting Height? \nnStarting Mass? \nnEnd Height? \nnBuild Ratio? ")
@@ -2091,7 +2110,7 @@ Ratio: %g; End Mass: %g; * Build Ratio: %g"
              ratio end-mass (* build-ratio end-mass))))
 
 (defun flesh-to-stone-weight (human-weight)
-  "Calculate how much a human of HUMAN-WEIGHT pounds would weigh if they were 
+  "Calculate how much a human of HUMAN-WEIGHT pounds would weigh if they were
    converted into granite."
   (interactive "nHuman weight in pounds: ")
   (let* ((human-density 63.1)            ; lb/ft^3
