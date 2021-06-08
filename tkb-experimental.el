@@ -1985,6 +1985,7 @@ REPEAT is how many times to repeat the roll."
 (defun tkb-sanitize-for-filename (string)
   "Clean up characters in STRING that aren't good for filenames."
   (->> string
+       (replace-regexp-in-string "'" "")
        (replace-regexp-in-string "[^-.a-z0-9]+" "-")
        (replace-regexp-in-string "-+" "-")
        (replace-regexp-in-string "-\\." ".")
