@@ -1725,29 +1725,44 @@ Goes backward if ARG is negative; error if CHAR not found."
 (when-exec-found (gls "gls")
   (setq insert-directory-program gls))
 
-(defun path-get (&optional env-variable)
+(defun tkb-path-get (&optional env-variable)
   (let ((env-variable (if env-variable env-variable "PATH")))
     (split-string (getenv env-variable) ":")))
 
-(defun path-set (path-elements &optional env-variable)
+(defun tkb-path-set (path-elements &optional env-variable)
   (let ((env-variable (if env-variable env-variable "PATH")))
     (setenv env-variable (mapconcat #'identity path-elements ":"))))
 
-(defun path-prepend (directories &optional env-variable)
-  (let ((path (path-get env-variable)))
+(defun tkb-path-prepend (directories &optional env-variable)
+  (let ((path (tkb-path-get env-variable)))
     (cl-loop for dir in (reverse directories)
           do (unless (member* dir path :test #'string-equal)
                (push dir path)))
-    (path-set path env-variable)))
+    (tkb-path-set path env-variable)))
 
-(defun path-delete (directories &optional env-variable)
-  (let ((path (path-get env-variable)))
+(defun tkb-path-delete (directories &optional env-variable)
+  (let ((path (tkb-path-get env-variable)))
     (cl-loop for dir in directories
           do (setq path (delete* dir path :test #'string-equal)))
-    (path-set path env-variable)))
+    (tkb-path-set path env-variable)))
 
-(defun path-append (directories &optional env-variable)
-  (path-set (append (path-get env-variable) directories) env-variable))
+(defun tkb-path-append (directories &optional env-variable)
+  (tkb-path-set (append (tkb-path-get env-variable) directories) env-variable))
+
+(defun tkb-edit-path ()
+  (interactive)
+  (let ((path (tkb-path-get "PATH"))
+        (buf (get-buffer-create "*Editing PATH*")))
+    (pop-to-buffer buf)
+    (delete-region (point-min) (point-max))
+    (cl-loop for dir in path do (progn (insert dir) (insert "\n")))))
+
+(defun tkb-save-path ()
+  (interactive)
+  (let* ((s (buffer-substring-no-properties (point-min) (point-max)))
+         (path (s-split "\n" s)))
+    (tkb-path-set path "PATH")))
+  
 
 (defun tkb-prepend-to-path (directory env-variable)
   "Read a directory into DIRECTORY and if prefix arg in ENV-VARIABLE is
@@ -1758,7 +1773,7 @@ then prepend DIRECTORY to the path in the environment ENV-VARIABLE."
         (env-variable
          (if env-variable (read-string "Environment Variable? ") "PATH")))
     (message "Directory: %s" directory)
-    (path-prepend (list directory) env-variable)
+    (tkb-path-prepend (list directory) env-variable)
     (message "%s=%s" env-variable (getenv env-variable))))
 
 (defun tkb-append-to-path (directory env-variable)
@@ -1770,7 +1785,7 @@ then append DIRECTORY to the path in the environment ENV-VARIABLE."
         (env-variable
          (if env-variable (read-string "Environment Variable? ") "PATH")))
     (message "Directory: %s" directory)
-    (path-append (list directory) env-variable)
+    (tkb-path-append (list directory) env-variable)
     (message "%s=%s" env-variable (getenv env-variable))))
 
 
