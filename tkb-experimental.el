@@ -2196,6 +2196,14 @@ inkscape."
   (interactive)
   (re-search-forward (rx (or "Agility" "Smarts" "Spirit" "Strength" "Vigor"))))
 
+(defun tkb-save-buffer ()
+  (interactive)
+  (let* ((s (buffer-substring (point-min) (point-max)))
+         (new-name (concat "Copy of " (buffer-name)))
+         (new-buf (get-buffer-create new-name)))
+    (switch-to-buffer new-buf)
+    (insert s)))
+(tkb-keys ((kbd "C-c b s") 'tkb-save-buffer))
 
 (message "End of tkb-experimental.el")
 ;;; end of tkb-experimental.el
