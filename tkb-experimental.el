@@ -1914,6 +1914,8 @@ REPEAT is how many times to repeat the roll."
                           ("sl" . [?◊]) ; lozenge
                           ("st" . [?▶]) ; black right pointing triangle
                           ("sI" . [?☛])
+                          ("sp" . [?¶]) ; pilcrow
+                          ("ss" . [?§]) ; SECTION SIGN in Unicode; also silcrow
                           ;; Fractions
                           ("5/8" . [?⅝])
                           ("4/5" . [?⅘])
