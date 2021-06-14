@@ -2207,5 +2207,23 @@ inkscape."
     (insert s)))
 (tkb-keys ((kbd "C-c b s") 'tkb-save-buffer))
 
+(progn
+  ;; https://www.emacswiki.org/emacs/UnfillRegion
+  (defun unfill-region (beg end)
+    "Unfill the region, joining text paragraphs into a single
+    logical line.  This is useful, e.g., for use with
+    `visual-line-mode'."
+    (interactive "*r")
+    (let ((fill-column (point-max)))
+      (fill-region beg end)))
+
+  ;; Handy key definition
+  (define-key global-map "\C-\M-Q" 'unfill-region))
+
+(defun tkb-points-to-inches (points)
+  (interactive "NNumber of Points? ")
+  (let ((inches (/ points 72.0)))
+    (message "%f points is %f inches" points inches)))
+
 (message "End of tkb-experimental.el")
 ;;; end of tkb-experimental.el
