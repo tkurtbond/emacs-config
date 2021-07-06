@@ -260,6 +260,7 @@ time, to get the time to be finished."
     ("PrattEI"   "Pratt EI DB Upgrade")
     ("PrattRPD"  "Pratt Repairline Passdown")
     ("PrattStdCont"  "Pratt Standard Work Project Continuation")
+    ("SISMigration"  "SIS Migration work (\"4.1.7 New System Migration\")")
     ("Staff"	 "Staff Meetings")
     ("SysAdmin"  "Corp System Administration")
     ("TASC-MP"   "TASC Mentor Protoge")

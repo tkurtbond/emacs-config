@@ -75,7 +75,7 @@
 (global-set-key (kbd "C-c #") 'query-replace-regexp)
 
 (global-set-key (kbd "C-c C-i") 'indent-to)
-(global-set-key (kbd "C-c k I") #'(lambda (column)
+(global-set-key (kbd "C-c i I") #'(lambda (column)
 			     (interactive "P")
 			     (let ((column (cond ((null column) 40)
 						 ((listp column) (car column))

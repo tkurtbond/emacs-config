@@ -1034,6 +1034,11 @@ over 40 is morbidly obese, over 50 is super morbidly obese."
     (set-register register (buffer-name)))
   (tkb-keys ((kbd "C-c b r") #'tkb-buffer-name-to-register))
 
+  (defun tkb-copy-buffer-basename ()
+    (interactive)
+    (kill-new (file-name-base buffer-file-name)))
+  (tkb-keys ((kbd "C-c b b") #'tkb-copy-buffer-basename))
+
   )
 
 (defun tkb-lower-to-register (register start end)
@@ -1881,35 +1886,35 @@ REPEAT is how many times to repeat the roll."
 ;; the "C-x 8" key prefix.
 ;; Note that section and pilcrow are in C-x 8: S and P.
 
-(iso-transl-define-keys '(("gl" . [?λ])   ; greek lowercase lambda
-                          ("gL" . [?Λ])   ; greek uppercase lambda
-                          ("pb" . [?•])   ; bullet
-                          ("pc" . [?©])   ; copyright
-                          ("pC" . [?🄯])   ; copyleft
-                          ("pD" . [?‡])   ; double dagger
-                          ("pd" . [?†])   ; dagger
-                          ("pe" . [?…])   ; ellipsis
-                          ("ph" . [?­])   ; soft hyphen
-                          ("pn" . [?–])   ; N-dash
-                          ("pm" . [?—])   ; M-dash
-                          ("p-" . [?−])   ; Minus sign
-                          ("p " . [? ])   ; non-breaking space.
-                          ("pp" . [?′])   ; prime
-                          ("pP" . [?″])   ; double prime
-                          ("pS" . [?‘])   ; open single quote
-                          ("ps" . [?’])   ; close single quote
-                          ("pQ" . [?“])   ; open double quote
-                          ("pq" . [?”])   ; close double quote
-                          ("pv" . [?‖])   ; double vertical bar
-                          ("p*" . [?×])   ; multiply
-                          ("p/" . [?÷])   ; divide
-                          ("Gh" . [?×]) ; Hybrid gender in biology, also
-                          ("Gm" . [?♂]) ; male sign
-                          ("Gf" . [?♀]) ; female sign
-                          ("GM" . [?⚣]) ; male homosexuality
-                          ("GF" . [?⚢]) ; female homosexuality
-                          ("Gb" . [?⚥]) ; male and female, transgender, both
-                          ("Ga" . [?⚪]) ; agender, sexless, genderless
+(iso-transl-define-keys '(("gl" . [?λ])  ; greek lowercase lambda
+                          ("gL" . [?Λ])  ; greek uppercase lambda
+                          ("pb" . [?•])  ; bullet
+                          ("pc" . [?©])  ; copyright
+                          ("pC" . [?🄯])  ; copyleft
+                          ("pD" . [?‡])  ; double dagger
+                          ("pd" . [?†])  ; dagger
+                          ("pe" . [?…])  ; ellipsis
+                          ("ph" . [?­])  ; soft hyphen
+                          ("pn" . [?–])  ; N-dash
+                          ("pm" . [?—])  ; M-dash
+                          ("p-" . [?−])  ; Minus sign
+                          ("p " . [? ])  ; non-breaking space.
+                          ("pp" . [?′])  ; prime
+                          ("pP" . [?″])  ; double prime
+                          ("pS" . [?‘])  ; open single quote
+                          ("ps" . [?’])  ; close single quote
+                          ("pQ" . [?“])  ; open double quote
+                          ("pq" . [?”])  ; close double quote
+                          ("pv" . [?‖])  ; double vertical bar
+                          ("p*" . [?×])  ; multiply
+                          ("p/" . [?÷])  ; divide
+                          ("Gh" . [?×])  ; Hybrid gender in biology
+                          ("Gm" . [?♂])  ; male sign
+                          ("Gf" . [?♀])  ; female sign
+                          ("GM" . [?⚣])  ; male homosexuality
+                          ("GF" . [?⚢])  ; female homosexuality
+                          ("Gb" . [?⚥])  ; male & female, transgender
+                          ("Ga" . [?⚪])  ; agender, sexless
                           ;; Symbols
                           ("si" . [?∞]) ; infinity
                           ("sl" . [?◊]) ; lozenge
@@ -2031,7 +2036,7 @@ concatenate them, and pu the result on the top of the kill ring."
          (new-string (map 'string (lambda (s) (aref s 0)) strings)))
     (message "Old string: %s\nNew String: %s" string new-string)
     (kill-new new-string)))
-(tkb-keys ((kbd "C-c kP") 'tkb-initialize-kill-for-filename))
+(tkb-keys ((kbd "C-c k I") 'tkb-initialize-kill-for-filename))
 
 (defun tkb-prefix-iso-date-kill (string)
   "Add the ISO YYYY-MM-DD date followed by - as a prefix to the current kill
