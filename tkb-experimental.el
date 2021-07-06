@@ -643,9 +643,10 @@ appropriate directory structure."
     "Describe the character after point (before if a prefix was specified)
 if it is a unicode character."
     (interactive "P")
-    (let ((char (if before (char-before) (char-after))))
-      (message "%S" (assoc (encode-char char 'ucs)
-                           unicode-character-list))))
+    (let* ((char (if before (char-before) (char-after)))
+           (info (assoc (encode-char char 'ucs) unicode-character-list))
+           (info (cons (format "#x%X" (car info)) info)))
+      (message "%S" info)))
   (tkb-keys ((kbd "C-c k d") #'tkb-describe-character))
 
   (define-minor-mode tkb-smart-unicode-mode
