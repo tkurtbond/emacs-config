@@ -39,7 +39,7 @@
 	("inconsolata" "-outline-Inconsolata-medium-r-normal-normal-17-127-96-96-c-*-iso8859-1" 55)
 
 	("Go Mono" ,(if (or (member (system-name) '("moonglum" "oona"))
-                            (>= (display-pixel-height) 2160))
+                            (> (display-pixel-height) 2280))
 			"-*-Go Mono-normal-normal-normal-*-20-*-*-*-m-0-iso10646-1"
 			"-*-Go Mono-normal-normal-normal-*-18-*-*-*-m-0-iso10646-1")
 	 ,(if (>= (display-pixel-height) 2160) 55 50)
