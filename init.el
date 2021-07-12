@@ -130,7 +130,8 @@
 			;;elscreen ; Did I ever really use this?
 			f
 			fuel
-			;; geiser ; not working for me
+			ac-geiser geiser geiser-chez geiser-chibi geiser-chicken
+                        geiser-guile geiser-racket
                         julia-mode
                         magit
 			markdown-mode

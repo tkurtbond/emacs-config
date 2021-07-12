@@ -1985,6 +1985,7 @@ REPEAT is how many times to repeat the roll."
   )
 
 (when-exec-found (e "chez") (setq geiser-chez-binary e))
+(setq geiser-default-implementation 'chicken) 
 
 (when-load-file "magit"
   :load
