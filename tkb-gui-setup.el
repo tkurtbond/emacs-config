@@ -38,12 +38,14 @@
 	("consolas" "-outline-Consolas-normal-r-normal-normal-17-127-96-96-c-*-iso8859-1" 55)
 	("inconsolata" "-outline-Inconsolata-medium-r-normal-normal-17-127-96-96-c-*-iso8859-1" 55)
 
-	("Go Mono" ,(if (or (member (system-name) '("moonglum" "oona"))
-                            (> (display-pixel-height) 2280))
-			"-*-Go Mono-normal-normal-normal-*-20-*-*-*-m-0-iso10646-1"
-			"-*-Go Mono-normal-normal-normal-*-18-*-*-*-m-0-iso10646-1")
-	 ,(if (>= (display-pixel-height) 2160) 55 50)
-	)))
+	("Go Mono" ,@(cond
+                      ((> (display-pixel-height) 2280)
+                       '("-*-Go Mono-normal-normal-normal-*-20-*-*-*-m-0-iso10646-1" 55))
+                      ((> (display-pixel-height) 1080)
+                       '("-*-Go Mono-normal-normal-normal-*-17-*-*-*-m-0-iso10646-1" 55))
+                      (t
+                       '("-*-Go Mono-normal-normal-normal-*-12-*-*-*-m-0-iso10646-1" 50))))
+	))
 
 (defun tkb-set-frame-font ()
   (interactive)
