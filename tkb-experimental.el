@@ -146,6 +146,7 @@ and add a log entry to it."
 
 (setq org-use-sub-superscripts '{}
       org-export-with-sub-superscripts '{})
+(tkb-keys ((kbd "C-c k o TAB") #'org-global-cycle))
 
 (defun tkb-toggle-trailing-whitespace-display ()
   (interactive)
