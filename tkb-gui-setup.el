@@ -44,7 +44,7 @@
                       ((> (display-pixel-height) 1080)
                        '("-*-Go Mono-normal-normal-normal-*-17-*-*-*-m-0-iso10646-1" 55))
                       (t
-                       '("-*-Go Mono-normal-normal-normal-*-12-*-*-*-m-0-iso10646-1" 50))))
+                       '("-*-Go Mono-normal-normal-normal-*-14-*-*-*-m-0-iso10646-1" 50))))
 	))
 
 (defun tkb-set-frame-font ()
