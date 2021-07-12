@@ -12,9 +12,10 @@
  '(load-home-init-file t t)
  '(mew-use-full-window t)
  '(mh-compose-space-does-completion-flag t)
- '(mh-fetch-x-image-url 'ask)
+ '(mh-fetch-x-image-url (quote ask))
  '(mh-identity-list
-   '(("tkb.mpl.com"
+   (quote
+    (("tkb.mpl.com"
       (("From" . "\"T. Kurt Bond\" <tkb@tkb.mpl.com>")
        (":signature" . "~/.signature-old")))
      ("gmail"
@@ -26,11 +27,12 @@
      ("leo"
       (("From" . "thomas.bond@leo.gov")
        (":signature" . "~/.signature-leo")
-       ("Return-Path" . "<thomas.bond@leo.gov>")))))
+       ("Return-Path" . "<thomas.bond@leo.gov>"))))))
  '(package-selected-packages
-   '(ansi package-build shut-up epl git commander dash s cask cask-mode caskxy cargo rust-mode julia-mode lua-mode mew unicode-fonts define-word wanderlust magit auctex adoc-mode caml jabber cider clojure-mode racket-mode go-guru go-mode use-package yaml-mode markdown-mode w3m projectile nim-mode fuel f docbook clojure-snippets clojure-quick-repls clojure-mode-extra-font-locking))
+   (quote
+    (ac-geiser geiser geiser-chez geiser-chibi geiser-chicken geiser-guile geiser-racket ansi package-build shut-up epl git commander dash s cask cask-mode caskxy cargo rust-mode julia-mode lua-mode mew unicode-fonts define-word wanderlust magit auctex adoc-mode caml jabber cider clojure-mode racket-mode go-guru go-mode use-package yaml-mode markdown-mode w3m projectile nim-mode fuel f docbook clojure-snippets clojure-quick-repls clojure-mode-extra-font-locking)))
  '(rst-level-face-max 10)
- '(send-mail-function 'mailclient-send-it)
+ '(send-mail-function (quote mailclient-send-it))
  '(w3m-use-cookies t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
