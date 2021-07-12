@@ -1985,7 +1985,14 @@ REPEAT is how many times to repeat the roll."
   )
 
 (when-exec-found (e "chez") (setq geiser-chez-binary e))
-(setq geiser-default-implementation 'chicken) 
+(setq geiser-default-implementation 'chicken) ;; not sure why this doesn't work.
+(eval-after-load "geiser-chicken"
+  '(defun geiser-chicken--external-help (id _module)
+     "Load chicken doc for ID into a buffer."
+     (let* ((version (geiser-chicken--version (geiser-chicken--binary)))
+	    (major-version (car (split-string version "\\\."))))
+       (browse-url (format "http://localhost:7001/cdoc?q=%s&query-name=Look+up"
+                           id)))))
 
 (when-load-file "magit"
   :load
