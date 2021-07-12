@@ -636,8 +636,11 @@ appropriate directory structure."
 
 (when t			       ; used by my hooks for rst and formerly asciidoc
   (add-to-list 'load-path (expand-file-name "~/lib/emacs/others/misc"))
-  (load-library "unichars")
+  ;; look at https://github.com/ndw/xmlunicode for xmlunicode.el and a way
+  ;; to make something like unichars.el.  xmlunicode.el provides the 
+  ;; "smart-unicode-*" functions.
   (load-library "xmlunicode")
+  (load-library "unichars")
 
   (defun tkb-describe-character (before)
     "Describe the character after point (before if a prefix was specified)
@@ -654,7 +657,14 @@ if it is a unicode character."
     '(("\"" . unicode-smart-double-quote)
       ("'"  . unicode-smart-single-quote)
       ("-"  . unicode-smart-hyphen)
-      ("."  . unicode-smart-period))))
+      ("."  . unicode-smart-period)))
+
+  (defadvice unicode-smart-hyphen (after tkb-after-unicode-smart-hyphen last
+                                         activate compile)
+    (tkb-describe-character t))
+
+
+  )
 
 
 (when nil				;retiring doc-mode 2019-11-03
