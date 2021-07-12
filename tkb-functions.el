@@ -299,6 +299,7 @@ Goes backward if ARG is negative; error if CHAR not found."
 )
 
 (defun tkb-list-properties ()
+  "Show text properties at point."
   (interactive)
   (message "%s" (text-properties-at (point))))
 
