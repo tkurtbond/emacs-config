@@ -636,11 +636,11 @@ appropriate directory structure."
 
 (when t			       ; used by my hooks for rst and formerly asciidoc
   (add-to-list 'load-path (expand-file-name "~/lib/emacs/others/misc"))
-  ;; look at https://github.com/ndw/xmlunicode for xmlunicode.el and a way
-  ;; to make something like unichars.el.  xmlunicode.el provides the 
+  ;; look at https://github.com/ndw/xmlunicode for xmlunicode.el 
+  ;; xmlunicode-character-list.el.  xmlunicode.el provides the 
   ;; "smart-unicode-*" functions.
-  (load-library "xmlunicode")
   (load-library "unichars")
+  (load-library "xmlunicode")
 
   (defun tkb-describe-character (before)
     "Describe the character after point (before if a prefix was specified)
