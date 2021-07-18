@@ -2091,13 +2091,16 @@ ring."
 (tkb-key-is-bound-to (kbd "C-c i f") 'tkb-insert-fragment)
 
 (progn
+  (defvar tkb-define-word-word nil)
+
   (tkb-keys ((kbd "C-c W w") 'define-word)
             ((kbd "C-c W W") 'define-word-at-point))
   (defadvice define-word (around tkb-around-define-word activate)
     "Dynamically bind tkb-define-word-word to the word passed in."
     (let ()
-      (defvar tkb-define-word-word word)
-      ad-do-it))
+      (setq tkb-define-word-word word)
+      ad-do-it
+      (setq tkb-define-word-word nil)))
 
   (defun tkb-display-define-word (results)
     (with-output-to-temp-buffer "*Define Word*"
