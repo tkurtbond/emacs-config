@@ -1927,6 +1927,7 @@ REPEAT is how many times to repeat the roll."
                           ("Gb" . [?⚥])  ; male & female, transgender
                           ("Ga" . [?⚪])  ; agender, sexless
                           ;; Symbols
+                          ("sc" . [?✓]) ; CHECK MARK in Unicode.
                           ("si" . [?∞]) ; infinity
                           ("sl" . [?◊]) ; lozenge
                           ("st" . [?▶]) ; black right pointing triangle
