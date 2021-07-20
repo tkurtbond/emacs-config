@@ -637,8 +637,8 @@ appropriate directory structure."
 
 (when t			       ; used by my hooks for rst and formerly asciidoc
   (add-to-list 'load-path (expand-file-name "~/lib/emacs/others/misc"))
-  ;; look at https://github.com/ndw/xmlunicode for xmlunicode.el 
-  ;; xmlunicode-character-list.el.  xmlunicode.el provides the 
+  ;; look at https://github.com/ndw/xmlunicode for xmlunicode.el
+  ;; xmlunicode-character-list.el.  xmlunicode.el provides the
   ;; "smart-unicode-*" functions.
   (load-library "unichars")
   (load-library "xmlunicode")
@@ -1779,7 +1779,7 @@ Goes backward if ARG is negative; error if CHAR not found."
   (let* ((s (buffer-substring-no-properties (point-min) (point-max)))
          (path (s-split "\n" s)))
     (tkb-path-set path "PATH")))
-  
+
 
 (defun tkb-prepend-to-path (directory env-variable)
   "Read a directory into DIRECTORY and if prefix arg in ENV-VARIABLE is
@@ -1992,7 +1992,7 @@ REPEAT is how many times to repeat the roll."
   '(defun geiser-chicken--external-help (id _module)
      "Load chicken doc for ID into a buffer."
      (let* ((version (geiser-chicken--version (geiser-chicken--binary)))
-	    (major-version (car (split-string version "\\\."))))
+            (major-version (car (split-string version "\\\."))))
        (browse-url (format "http://localhost:7001/cdoc?q=%s&query-name=Look+up"
                            id)))))
 
@@ -2012,16 +2012,36 @@ REPEAT is how many times to repeat the roll."
         for y from ?a to ?z
         do (insert (format "%c%c" x y))))
 
+(defun named-line (name)
+  (let* ((line-len 79)
+         (prefix-len 10))
+    (concat (make-string prefix-len ?=) " " name " "
+                       (make-string (- line-len prefix-len
+                                       1 (length name) 1)
+                                    ?=))))
+
+
+
 (defun t:insert-lined-file (filename)
   (interactive "fFile to insert between lines: ")
   (let ((just-filename (file-name-nondirectory filename)))
-    (insert "===== " just-filename " "
-            (make-string (- 60 (length just-filename) 1 6) ?=) "\n")
-    (insert (make-string 60 ?=) "\n")
+    (insert (named-line filename) "\n")
+    (insert (named-line (concat "End of " filename)) "\n")
     (push-mark)
     (forward-line -1)
     (insert-file-contents filename nil)))
 (tkb-keys ((kbd "C-c F l") 't:insert-lined-file))
+
+(defun t:yank-lined (lined-name)
+  (interactive "P")
+  (setq lined-name (if lined-name (read-from-minibuffer "Lined Name? ")
+                     "Example"))
+  (insert (named-line lined-name) "\n")
+  (insert (named-line (concat "End of " lined-name)) "\n")
+  (push-mark)
+  (forward-line -1)
+  (yank))
+(tkb-keys ((kbd "C-c k y") #'t:yank-lined))
 
 (load-file "~/lib/emacs/tkb/arrows/arrows.el")
 
