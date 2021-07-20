@@ -125,6 +125,7 @@
 			clojure-mode
 			clojure-quick-repls
 			clojure-snippets
+                        dante           ; For Haskell
                         define-word
 			docbook
 			;;elscreen ; Did I ever really use this?
@@ -132,6 +133,7 @@
 			fuel
 			ac-geiser geiser geiser-chez geiser-chibi geiser-chicken
                         geiser-guile geiser-racket
+                        haskell-mode
                         julia-mode
                         magit
 			markdown-mode
