@@ -649,7 +649,8 @@ if it is a unicode character."
     (interactive "P")
     (let* ((char (if before (char-before) (char-after)))
            (info (assoc (encode-char char 'ucs) unicode-character-list))
-           (info (cons (format "#x%X" (car info)) info)))
+           (info (if info (cons (format "#x%X" (car info)) info)
+                   "Not in this list, try 'C-c k D' (describe-char)")))
       (message "%S" info)))
   (tkb-keys ((kbd "C-c k d") #'tkb-describe-character))
 
@@ -2273,6 +2274,33 @@ inkscape."
   (interactive "NNumber of Points? ")
   (let ((inches (/ points 72.0)))
     (message "%f points is %f inches" points inches)))
+
+(when nil
+  ;; For fiddling with/debugging man pages.
+  (setq manual-program "man -C ~/lib/man.conf")
+  (setq manual-program "man")
+  (setq Man-switches "-C ~/lib/man.conf")
+  (setq Man-switches "")
+  (setq Man-fontify-manpage-flag t))
+
+;; For some reason, when I pass a conf file that uses the version of
+;; groff I've installed, man pages in emacs come out underlined.  I
+;; guess the fontification doesn't deal well with the ANSI escapes the
+;; current grotty outputs.  Anyway, I had to add -P-c to the NROFF
+;; entry in my private version of man.conf to get it to use the old
+;; style backspace bolding to get man pages in emacs to come out
+;; right.  :( So now I have a ~/local/etc/man.conf to deal with local
+;; variations on where I install groff.  And I've started using
+;; ~/.bashrc_local-$(hostname -s) again to set up the proper alias for
+;; man.  :(
+(when nil 
+  (when-exec-found (groff "groff" (list "/usr/local/sw/versions/groff/git/bin"
+                                        "/sw/versions/groff/git/bin"))
+    (message "Found a groff of ours: %s" groff)))
+
+(when (file-exists-p "~/local/etc/man.conf")
+  (setq Man-switches "-C ~/local/etc/man.conf"))
+
 
 (message "End of tkb-experimental.el")
 ;;; end of tkb-experimental.el
