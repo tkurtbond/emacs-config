@@ -126,6 +126,7 @@
 			clojure-quick-repls
 			clojure-snippets
                         dante           ; For Haskell
+                        dash
                         define-word
 			docbook
 			;;elscreen ; Did I ever really use this?
@@ -148,6 +149,7 @@
                         ;; realgud-lldb
                         ;;---
 			;; regex-tool ; not currently using
+                        s
                         unicode-fonts
 			use-package ;; too strict?
 			wanderlust ;; apparently using again.
