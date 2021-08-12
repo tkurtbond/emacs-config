@@ -160,7 +160,9 @@
       (package-refresh-contents))
     (dolist (p tkb-packages)
       (unless (package-installed-p p)
-	(package-install p)))))
+	(package-install p)))
+    (load "s.el")                       ;because it's autoloads didn't work
+    ))
 
 ;; wanderlust
 (autoload 'wl-user-agent-compose "wl-draft" nil t)
