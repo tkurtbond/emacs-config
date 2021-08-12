@@ -1823,7 +1823,7 @@ Goes backward if ARG is negative; error if CHAR not found."
     (delete-region (point-min) (point-max))
     (cl-loop for dir in path do (progn (insert dir) (insert "\n")))
     (buffer-local-set-key (kbd "C-c C-c") 'tkb-save-path)
-    (message "Use C-c C-c to finish and set your path")))
+    (message "Use C-c C-c to finish and set your path, or C-x k to abort.")))
 
 (defun tkb-prepend-to-path (directory env-variable)
   "Read a directory into DIRECTORY and if prefix arg in ENV-VARIABLE is
