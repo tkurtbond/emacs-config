@@ -1767,20 +1767,62 @@ Goes backward if ARG is negative; error if CHAR not found."
 (defun tkb-path-append (directories &optional env-variable)
   (tkb-path-set (append (tkb-path-get env-variable) directories) env-variable))
 
-(defun tkb-edit-path ()
-  (interactive)
-  (let ((path (tkb-path-get "PATH"))
-        (buf (get-buffer-create "*Editing PATH*")))
-    (pop-to-buffer buf)
-    (delete-region (point-min) (point-max))
-    (cl-loop for dir in path do (progn (insert dir) (insert "\n")))))
+(defun buffer-local-set-key (key func)
+  ;; From: https://www.emacswiki.org/emacs/BufferLocalKeys
+  (interactive "KSet key on this buffer: \naCommand: ")
+  (let* ((mode-name (format "%s-magic" (buffer-name)))
+         (name (intern mode-name))
+         (map-name (format "%s-map" mode-name))
+         (map (intern map-name)))
+    (eval
+     `(define-minor-mode ,name
+        ,(concat
+          "Automagically built minor mode to define buffer-local keys.\n"
+          "\\{" map-name "}")
+        nil " Editing"))
+    (unless (boundp map)
+      (set map (make-sparse-keymap)))
+    ;; (eval
+    ;;  `(define-key ,map ,key ',func))
+    (define-key map key func)
+    (funcall name t)))
+
+(defun buffer-local-set-key (key func)
+  ;; From: https://www.emacswiki.org/emacs/BufferLocalKeys
+  (interactive "KSet key on this buffer: \naCommand: ")
+  (let* ((mode-name (format "%s-magic" (buffer-name)))
+         (name (intern mode-name))
+         (map-name (format "%s-map" mode-name))
+         (map (intern map-name)))
+    (unless (boundp map)
+      (set map (make-sparse-keymap)))
+    (eval
+     `(define-minor-mode ,name
+        ,(concat
+          "Automagically built minor mode to define buffer-local keys.\n"
+          "\\{" map-name "}")
+        nil " Editing" ,map))
+    (eval
+     `(define-key ,map ,key ',func))
+    (funcall name t)))
 
 (defun tkb-save-path ()
   (interactive)
   (let* ((s (buffer-substring-no-properties (point-min) (point-max)))
-         (path (s-split "\n" s)))
-    (tkb-path-set path "PATH")))
+         (path (-remove (lambda (path-element)
+                          (string-match "^[ \t]*$" path-element))
+                        (s-split "\n" s))))
+    (message "Setting PATH to \"%s\"" (tkb-path-set path "PATH"))))
 
+(defun tkb-edit-path ()
+  (interactive)
+  (let ((path (tkb-path-get "PATH"))
+        (buf (get-buffer-create "*Editing-PATH*")))
+    (pop-to-buffer buf)
+    (delete-region (point-min) (point-max))
+    (cl-loop for dir in path do (progn (insert dir) (insert "\n")))
+    (buffer-local-set-key (kbd "C-c C-c") 'tkb-save-path)
+    (message "Use C-c C-c to finish and set your path")))
 
 (defun tkb-prepend-to-path (directory env-variable)
   "Read a directory into DIRECTORY and if prefix arg in ENV-VARIABLE is
