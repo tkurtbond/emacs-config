@@ -126,6 +126,7 @@
 			clojure-quick-repls
 			clojure-snippets
                         dante           ; For Haskell
+                        dash
                         define-word
 			docbook
 			;;elscreen ; Did I ever really use this?
@@ -148,6 +149,7 @@
                         ;; realgud-lldb
                         ;;---
 			;; regex-tool ; not currently using
+                        s
                         unicode-fonts
 			use-package ;; too strict?
 			wanderlust ;; apparently using again.
@@ -158,7 +160,9 @@
       (package-refresh-contents))
     (dolist (p tkb-packages)
       (unless (package-installed-p p)
-	(package-install p)))))
+	(package-install p)))
+    (load "s.el")                       ;because it's autoloads didn't work
+    ))
 
 ;; wanderlust
 (autoload 'wl-user-agent-compose "wl-draft" nil t)
