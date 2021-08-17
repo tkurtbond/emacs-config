@@ -2275,6 +2275,16 @@ inkscape."
   (let ((inches (/ points 72.0)))
     (message "%f points is %f inches" points inches)))
 
+(defun narrow-to-region-indirect (start end)
+  ;; From https://demonastery.org/2013/04/emacs-narrow-to-region-indirect/
+  "Restrict editing in this buffer to the current region, indirectly."
+  (interactive "r")
+  (deactivate-mark)
+  (let ((buf (clone-indirect-buffer nil nil)))
+    (with-current-buffer buf
+      (narrow-to-region start end))
+    (switch-to-buffer buf)))
+
 (when nil
   ;; For fiddling with/debugging man pages.
   (setq manual-program "man -C ~/lib/man.conf")

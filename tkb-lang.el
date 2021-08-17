@@ -179,6 +179,7 @@
 (put 'match-let 'scheme-indent-function 1)
 (put 'match 'scheme-indent-function 1)
 (put 'when-in-hash 'scheme-indent-function 1)
+(put 'when-in-alist 'scheme-indent-function 1)
 
 ;; For Emacs lisp
 (put 'eval-after-load 'lisp-indent-function 1)
