@@ -181,6 +181,20 @@
 (put 'when-in-hash 'scheme-indent-function 1)
 (put 'when-in-alist 'scheme-indent-function 1)
 
+(defun tkb-beginning-of-defun (&optional arg)
+  ;; This is crude, but I think it works ok.
+  (interactive "p")
+  (unless arg (setq arg 1))
+  (if (< arg 0)
+      (dotimes (_ (- arg)) (re-search-forward "^[ \t]\\s(def"))
+    (dotimes (_ arg) (re-search-backward "^[ \t]*\\s(def"))))
+
+(defun tkb-scheme-mode-hook ()
+  (interactive)
+  (setq-local beginning-of-defun-function #'tkb-beginning-of-defun))
+
+(add-hook 'scheme-mode-hook #'tkb-scheme-mode-hook)
+
 ;; For Emacs lisp
 (put 'eval-after-load 'lisp-indent-function 1)
 (put 'global-set-key 'lisp-indent-function 1)
