@@ -2354,6 +2354,37 @@ inkscape."
 (when (file-exists-p "~/local/etc/man.conf")
   (setq Man-switches "-C ~/local/etc/man.conf"))
 
+(defun tkb-sanitize-ats-and-uppercase ()
+  ;; Abandoned for tkb-sanitize-ats-and-underscores.
+  (interactive)
+  (let* ((s (substring-no-properties (gui-get-selection 'PRIMARY 'STRING)))
+         (s (loop for c across s
+                  with x = '()
+                  if (or (<= ?A c ?Z) (= c ?@)) collect c into x
+                  finally return (concat x))))
+    (message "%s" s)
+    (kill-new s)))
+
+(defun tkb-sanitize-ats-and-underscores ()
+  "Get selection and turn things like \"Aaa@An_Example_Title\" into \"A@AET\"
+and make it the current selection."
+  (interactive)
+  (cl-labels ((sanitize (s)
+                        (let ((start 0)
+                              (len (length s))
+                              acc)
+                          (while (and (< start len) (string-match "\\([0-9a-z]+\\)" s start))
+                            (push (aref  s (match-beginning 1)) acc)
+                            (when (and (< (match-end 1) len)
+                                       (= ?@ (aref s (match-end 1))))
+                              (push ?@ acc))
+                            (setq start (1+ (match-end 1))))
+                          (concat (reverse acc)))))
+    (let* ((s (substring-no-properties (gui-get-selection 'PRIMARY 'STRING)))
+           (s (sanitize s)))
+      (message "%s" s)
+      (kill-new s))))
+(global-set-key (kbd "C-c q") #'tkb-sanitize-ats-and-underscores)
 
 (message "End of tkb-experimental.el")
 ;;; end of tkb-experimental.el
