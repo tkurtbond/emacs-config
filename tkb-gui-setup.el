@@ -39,6 +39,9 @@
 	("inconsolata" "-outline-Inconsolata-medium-r-normal-normal-17-127-96-96-c-*-iso8859-1" 55)
 
 	("Go Mono" ,@(cond
+                      ((>= (display-pixel-height) 2280)
+                       ;; Retina display probably, so use smaller font
+                       '("-*-Go Mono-normal-normal-normal-*-17-*-*-*-m-0-iso10646-1" 56))
                       ((>= (display-pixel-height) 2160)
                        '("-*-Go Mono-normal-normal-normal-*-20-*-*-*-m-0-iso10646-1" 58))
                       ((> (display-pixel-height) 1080)
