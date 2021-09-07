@@ -186,6 +186,7 @@
 (load-file "~/lib/emacs/tkb/tkb-time-expansion.el")
 (load-file "~/lib/emacs/tkb/tkb-time-expansion-keys.el")
 (load-file "~/lib/emacs/tkb/tkb-status-reports.el")
+(load-file "~/lib/emacs/tkb/tkb-blog.el")
 
 
 ;;(setq epg-gpg-program "gpg2") ; on macOS with homebrew it's gpg.
