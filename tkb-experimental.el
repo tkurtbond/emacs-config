@@ -2087,7 +2087,7 @@ REPEAT is how many times to repeat the roll."
   (yank))
 (tkb-keys ((kbd "C-c k y") #'t:yank-lined))
 
-(load-file "~/lib/emacs/tkb/arrows/arrows.el")
+(load-file "~/lib/emacs/arrows/arrows.el") ;my port of cl-arrows
 
 (defun tkb-sanitize-for-filename (string)
   "Clean up characters in STRING that aren't good for filenames."
