@@ -19,6 +19,14 @@
     (kill-region (point) (mark))
     (insert s*)))
 
+(defun tkb-unhex-current-kill ()
+  "Unhex url from current kill."
+  (interactive)
+  (let* ((s (current-kill 0))
+         (s (url-unhex-string s t)))
+    (kill-new s)))
+(tkb-keys ((kbd "C-c k U h") #'tkb-unhex-current-kill))
+
 (defun tkb-rst-print-subheads ()
   "Print the recommend underlines with levels for the underline characters
 recommended by the ReST quickref: http://tinyurl.com/47lkhk"
