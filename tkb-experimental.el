@@ -2170,7 +2170,7 @@ ring."
             ((kbd "C-c W W") 'define-word-at-point))
   (defadvice define-word (around tkb-around-define-word activate)
     "Dynamically bind tkb-define-word-word to the word passed in."
-    (let ()
+    (let ((url-request-extra-headers '(("User-Agent" . "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_5_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.63 Safari/537.36"))))
       (setq tkb-define-word-word word)
       ad-do-it
       (setq tkb-define-word-word nil)))
