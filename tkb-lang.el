@@ -242,6 +242,7 @@
 (loop for i in '(("\\.ec\\'" . c-mode)
                  ("\\.tr\\'" . nroff-mode)
                  ("\\.nr\\'" . nroff-mode)
+                 ("\\.roff\\'" . nroff-mode)
                  ("\\.mom\\'" . nroff-mode)
                  ("\\.stk\\'" . scheme-mode)
                  ("\\.ss\\'" . scheme-mode)
