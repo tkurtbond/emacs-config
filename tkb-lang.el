@@ -273,8 +273,28 @@
   (push '("\\.goo\\'" . goo-mode) auto-mode-alist)
   (autoload 'run-goo "goo-shell" nil t))
 
+(add-hook
+ 'js-mode-hook
+ (lambda ()
+   (define-key js-mode-map (kbd "C-x C-e") 'nodejs-repl-send-last-expression)
+   (define-key js-mode-map (kbd "C-c C-j") 'nodejs-repl-send-line)
+   (define-key js-mode-map (kbd "C-c C-r") 'nodejs-repl-send-region)
+   (define-key js-mode-map (kbd "C-c C-c") 'nodejs-repl-send-buffer)
+   (define-key js-mode-map (kbd "C-c C-l") 'tkb-nodejs-repl-load-file)
+   (define-key js-mode-map (kbd "C-c C-z") 'nodejs-repl-switch-to-repl)))
 
-(cl-case 'karl-landstrom
+(defun tkb-nodejs-repl-load-file (file)
+  "Load the file to the `nodejs-repl-process'"
+  (interactive (list (expand-file-name
+                      (read-file-name
+                       "Load file: " nil nil 'lambda
+                       (file-name-nondirectory (buffer-file-name))))))
+  (let ((proc (nodejs-repl--get-or-create-process)))
+    (comint-send-string proc (format ".load %s\n" file))))
+
+
+(cl-case 'none
+  ((none))                              ;just use the default js-mode
   ((steve-yegge)
    (autoload 'js2-mode "js2" nil t)
    (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode)))
