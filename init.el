@@ -135,11 +135,13 @@
 			ac-geiser geiser geiser-chez geiser-chibi geiser-chicken
                         geiser-guile geiser-racket
                         haskell-mode
+                        js-comint
                         julia-mode
                         magit
 			markdown-mode
 			;; moz ; Did I every really use this?
 			nim-mode
+                        nodejs-repl
 			projectile 
 			racket-mode
                         ;;+++
