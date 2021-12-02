@@ -2100,6 +2100,7 @@ REPEAT is how many times to repeat the roll."
 (defun tkb-sanitize-for-filename (string)
   "Clean up characters in STRING that aren't good for filenames."
   (->> string
+       (replace-regexp-in-string "&" "and")
        (replace-regexp-in-string "'" "")
        (replace-regexp-in-string "[^-.a-z0-9]+" "-")
        (replace-regexp-in-string "-+" "-")
@@ -2381,7 +2382,8 @@ and make it the current selection."
                         (let ((start 0)
                               (len (length s))
                               acc)
-                          (while (and (< start len) (string-match "\\([0-9a-z]+\\)" s start))
+                          (while (and (< start len)
+                                      (string-match "\\([0-9a-z]+\\)" s start))
                             (push (aref  s (match-beginning 1)) acc)
                             (when (and (< (match-end 1) len)
                                        (= ?@ (aref s (match-end 1))))
@@ -2393,6 +2395,51 @@ and make it the current selection."
       (message "%s" s)
       (kill-new s))))
 (global-set-key (kbd "C-c q") #'tkb-sanitize-ats-and-underscores)
+
+(defun tkb-count-pages (start end)
+  (interactive "r")
+  (let* ((words (count-words start end))
+         (pages (/ words 300.0)))
+    (message "Words: %f Pages: %f" words pages)
+    (cl-values words pages)))
+
+(defun tkb-try (point mark)
+  (interactive "r")
+  (message "point: %d mark: %d" point mark))
+
+(defun t:5-percent-xp (xp)
+  (interactive "NXP? ")
+  (let ((newxp (round (+ xp (* 0.05 xp)))))
+    (message "XP %d + 5%% = %d" xp newxp)
+    newxp))
+
+(defun t:10-percent-xp (xp)
+  (interactive "NXP? ")
+  (let ((newxp (round (+ xp (* 0.1 xp)))))
+    (message "XP %d + 5%% = %d" xp newxp)
+    newxp))
+
+(defun t:padleft (n)
+  (interactive "NWidth? ")
+  (let* ((s (cond ((< n 0)
+                   (setq n (abs n))
+                   (read-string "String? "))
+                  (t (gui-get-selection 'PRIMARY 'STRING))))
+         (s (s-pad-left n " " s)))
+    (message "|%s|" s)
+    (kill-new s)))
+
+;; https://stackoverflow.com/a/20577329
+(defun int-to-binary-string (i)
+  "convert an integer into it's binary representation in string format"
+  (let ((res ""))
+    (while (not (= i 0))
+      (setq res (concat (if (= 1 (logand i 1)) "1" "0") res))
+      (setq i (lsh i -1)))
+    (if (string= res "")
+        (setq res "0"))
+    res))
+
 
 (message "End of tkb-experimental.el")
 ;;; end of tkb-experimental.el

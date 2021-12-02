@@ -181,6 +181,7 @@
 (put 'when-in-hash 'scheme-indent-function 1)
 (put 'when-in-alist 'scheme-indent-function 1)
 (put 'bind 'scheme-indent-function 2)
+(put 'args:make-option 'scheme-indent-function 3)
 
 (when nil
 
