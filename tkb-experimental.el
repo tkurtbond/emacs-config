@@ -2040,14 +2040,24 @@ REPEAT is how many times to repeat the roll."
 
 (when-exec-found (e "chez") (setq geiser-chez-binary e))
 (setq geiser-default-implementation 'chicken) ;; not sure why this doesn't work.
-(eval-after-load "geiser-chicken"
-  '(defun geiser-chicken--external-help (id _module)
-     "Load chicken doc for ID into a buffer."
-     (let* ((version (geiser-chicken--version (geiser-chicken--binary)))
-            (major-version (car (split-string version "\\\."))))
-       (browse-url (format "http://localhost:7001/cdoc?q=%s&query-name=Look+up"
-                           id)))))
 
+(defalias 'tkb-saved-geiser-chicken--external-help
+  (symbol-function 'geiser-chicken--external-help))
+(defun tkb-local-geiser-chicken--external-help (id _module)
+  "Load chicken doc for ID into a buffer."
+  (let* ((version (geiser-chicken--version (geiser-chicken--binary)))
+         (major-version (car (split-string version "\\\."))))
+    (browse-url (format "http://localhost:7001/cdoc?q=%s&query-name=Look+up"
+                        id))))
+(defun tkb-switch-chickadee ()
+  (interactive)
+  (if (eq (symbol-function 'geiser-chicken--external-help)
+          (symbol-function 'tkb-saved-geiser-chicken--external-help))
+      (defalias 'geiser-chicken--external-help
+        'tkb-local-geiser-chicken--external-help)
+    (defalias 'geiser-chicken--external-help
+      'tkb-saved-geiser-chicken--external-help)))
+    
 (when-load-file "magit"
   :load
   (global-set-key (kbd "C-x M s") 'magit-status)
