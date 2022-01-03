@@ -2181,7 +2181,10 @@ ring."
             ((kbd "C-c W W") 'define-word-at-point))
   (defadvice define-word (around tkb-around-define-word activate)
     "Dynamically bind tkb-define-word-word to the word passed in."
-    (let ((url-request-extra-headers '(("User-Agent" . "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_5_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.63 Safari/537.36"))))
+    (let (
+          ;;(url-request-extra-headers '(("User-Agent" . "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_5_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.63 Safari/537.36")))
+          (url-user-agent "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_5_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.63 Safari/537.36")
+          )
       (setq tkb-define-word-word word)
       ad-do-it
       (setq tkb-define-word-word nil)))
@@ -2449,6 +2452,17 @@ and make it the current selection."
     (if (string= res "")
         (setq res "0"))
     res))
+
+(defun fahrenheit-to (f)
+  (interactive "NFahrenheit?")
+  (let* ((c (* (/ 5.0 9.0) (- f 32.0)))
+         (k (+ 273.15 (* (/ 5.0 9.0) (- f 32.0))))
+         (result (format "%6.2f℉ %6.2f℃ %6.2fK" f c k)))
+    (message "%s" result)
+    result))
+    
+
+
 
 
 (message "End of tkb-experimental.el")
