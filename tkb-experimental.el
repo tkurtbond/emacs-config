@@ -64,6 +64,17 @@ recommended by the ReST quickref: http://tinyurl.com/47lkhk"
   (message "file: %s" (locate-file filename load-path (get-load-suffixes))))
 
 (when t					; Using org-capture now.
+  (progn                                ; Config for mobile org
+    ;; Set to the location of your Org files on your local system
+    (setq org-directory "~/Org")
+    (eval-after-load "org-mobile"
+      '(progn 
+         ;; Set to the name of the file where new notes will be stored
+         (setq org-mobile-inbox-for-pull "~/Org/flagged.org")
+         ;; Set to <your Dropbox root directory>/MobileOrg.
+         (setq org-mobile-directory "~/Dropbox/Apps/MobileOrg")
+         (push "~/Org" org-mobile-files))))
+  ;;
   (tkb-keys ((kbd "C-c k o c") #'org-capture))
   (setq org-capture-templates
         '(("X" "EXPERIMENT" entry
