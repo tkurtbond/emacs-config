@@ -267,6 +267,8 @@ time, to get the time to be finished."
     ("VAXCon"	 "VAX Conversion")
     ("WVHTCFBill" "WVHTCF Billable")
     ("Breck"     "Breckenridge")
+    ("Migration" "New System Migration")
+    ("PersProg"  "Personal Programming Projects")
     ))
 
 (defvar t:old-time nil)
