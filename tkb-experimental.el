@@ -75,46 +75,58 @@ recommended by the ReST quickref: http://tinyurl.com/47lkhk"
          (setq org-mobile-directory "~/Dropbox/Apps/MobileOrg")
          (push "~/Org" org-mobile-files))))
   ;;
+  (defconst tkb-org-journal (expand-file-name "~/current/org/journal.org"))
+  (defconst tkb-org-contacts (expand-file-name "~/current/org/contacts.org"))
+  (defconst tkb-org-health (expand-file-name "~/current/org/health.org"))
+  (defconst tkb-org-notes (expand-file-name "~/current/org/notes.org"))
+  (defconst tkb-org-rpg (expand-file-name "~/current/org/rpg.org"))
+  (defconst tkb-org-tasks (expand-file-name "~/current/org/tasks.org"))
+  (defconst tkb-org-video (expand-file-name "~/current/org/video.org"))
+  (defconst tkb-org-mpl-journal (expand-file-name "~/job/MPL/Org/journal.org"))
+  (defconst tkb-org-mhst-journal (expand-file-name "~/job/MPL/MHST/Org/mhst-journal.org"))
+  (defconst tkb-org-mpl-contacts (expand-file-name "~/job/MPL/Org/contacts.org"))
+  (defconst tkb-org-mpl-notes (expand-file-name "~/job/MPL/Org/notes.org"))
+  (defconst tkb-org-mpl-tasks (expand-file-name "~/job/MPL/Org/tasks.org"))
   (tkb-keys ((kbd "C-c k o c") #'org-capture))
   (setq org-capture-templates
         `(("X" "EXPERIMENT" entry
            (file+olp+datetree ,(expand-file-name "~/current/org/loud-experiment.org"))
            "*** %^{Title} %U\n  %i\n  %?\n")
           ("j" "Journal" entry
-           (file+headline ,(expand-file-name "~/current/org/journal.org") "Journal")
+           (file+headline ,tkb-org-journal "Journal")
            "* %^{Title} %U\n  %i\n  %?\n")
           ("c" "Contacts Log" entry
-           (file+headline ,(expand-file-name "~/current/org/contacts.org") "Contacts")
+           (file+headline ,tkb-org-contacts "Contacts")
            "* %^{Title} %U\n  %i\n  %?\n")
           ("h" "Health" entry
-           (file+headline ,(expand-file-name "~/current/org/health.org") "Health")
+           (file+headline ,tkb-org-health "Health")
            "* %^{Title} %U\n  %i\n  %?\n")
           ("n" "Notes" entry
-           (file+headline ,(expand-file-name "~/current/org/notes.org") "Notes")
+           (file+headline ,tkb-org-notes "Notes")
            "\n\n* %^{Title} %U\n  %i\n  %?\n  %a\n\n")
           ("r" "RPG" entry
-           (file+headline ,(expand-file-name "~/current/org/rpg.org") "RPG")
+           (file+headline ,tkb-org-rpg "RPG")
            "\n\n* %^{Title} %U\n  %i\n  %?\n  %a\n\n")
           ("t" "Tasks" entry
-           (file+headline ,(expand-file-name "~/current/org/tasks.org") "Tasks")
+           (file+headline ,tkb-org-tasks "Tasks")
            "* TODO %^{Title} %U\n  %i\n  %?\n  %a\n")
           ("v" "Video" entry
-           (file+headline ,(expand-file-name "~/current/org/video.org") "Video")
+           (file+headline ,tkb-org-video "Video")
            "* TODO %^{Title} %U\n  %^C%i%?\n")
           ("J" "MPL Journal" entry
-           (file+headline ,(expand-file-name "~/job/MPL/Org/journal.org") "MPL Journal")
+           (file+headline ,tkb-org-mpl-journal "MPL Journal")
            "* %^{Title} %U\n  %i\n  %?\n")
           ("M" "MHST Journal" entry
-           (file+headline ,(expand-file-name "~/job/MPL/MHST/Org/mhst-journal.org") "MHST Journal")
+           (file+headline ,tkb-org-mhst-journal "MHST Journal")
            "* %^{Title} %U\n  %i\n  %?\n")
           ("C" "MPL Contacts Log" entry
-           (file+headline ,(expand-file-name "~/job/MPL/Org/contacts.org") "MPL Contacts")
+           (file+headline ,tkb-org-mpl-contacts "MPL Contacts")
            "* %^{Title} %U\n  %i\n  %?\n")
           ("N" "MPL Notes" entry
-           (file+headline ,(expand-file-name "~/job/MPL/Org/notes.org") "MPL Notes")
+           (file+headline ,tkb-org-mpl-notes "MPL Notes")
            "\n\n* %^{Title} %U\n  %i\n  %?\n  %a\n\n")
           ("T" "MPL Tasks" entry
-           (file+headline ,(expand-file-name "~/job/MPL/Org/tasks.org") "MPL Tasks")
+           (file+headline ,tkb-org-mpl-tasks "MPL Tasks")
            "* TODO %^{Title} %U\n  %i\n  %?\n  %a\n")))
   (tkb-keys ((kbd "C-c k o C-c") #'org-ctrl-c-ctrl-c))
   (tkb-check-bindings (list (kbd "C-c k o C-c")))
