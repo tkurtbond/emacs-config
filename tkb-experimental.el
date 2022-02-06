@@ -77,44 +77,44 @@ recommended by the ReST quickref: http://tinyurl.com/47lkhk"
   ;;
   (tkb-keys ((kbd "C-c k o c") #'org-capture))
   (setq org-capture-templates
-        '(("X" "EXPERIMENT" entry
-           (file+olp+datetree "/Users/tkb/current/org/loud-experiment.org")
+        `(("X" "EXPERIMENT" entry
+           (file+olp+datetree ,(expand-file-name "~/current/org/loud-experiment.org"))
            "*** %^{Title} %U\n  %i\n  %?\n")
           ("j" "Journal" entry
-           (file+headline "/Users/tkb/current/org/journal.org" "Journal")
+           (file+headline ,(expand-file-name "~/current/org/journal.org") "Journal")
            "* %^{Title} %U\n  %i\n  %?\n")
           ("c" "Contacts Log" entry
-           (file+headline "/Users/tkb/current/org/contacts.org" "Contacts")
+           (file+headline ,(expand-file-name "~/current/org/contacts.org") "Contacts")
            "* %^{Title} %U\n  %i\n  %?\n")
           ("h" "Health" entry
-           (file+headline "/Users/tkb/current/org/health.org" "Health")
+           (file+headline ,(expand-file-name "~/current/org/health.org") "Health")
            "* %^{Title} %U\n  %i\n  %?\n")
           ("n" "Notes" entry
-           (file+headline "/Users/tkb/current/org/notes.org" "Notes")
+           (file+headline ,(expand-file-name "~/current/org/notes.org") "Notes")
            "\n\n* %^{Title} %U\n  %i\n  %?\n  %a\n\n")
           ("r" "RPG" entry
-           (file+headline "/Users/tkb/current/org/rpg.org" "RPG")
+           (file+headline ,(expand-file-name "~/current/org/rpg.org") "RPG")
            "\n\n* %^{Title} %U\n  %i\n  %?\n  %a\n\n")
           ("t" "Tasks" entry
-           (file+headline "/Users/tkb/current/org/tasks.org" "Tasks")
+           (file+headline ,(expand-file-name "~/current/org/tasks.org") "Tasks")
            "* TODO %^{Title} %U\n  %i\n  %?\n  %a\n")
           ("v" "Video" entry
-           (file+headline "/Users/tkb/current/org/video.org" "Video")
+           (file+headline ,(expand-file-name "~/current/org/video.org") "Video")
            "* TODO %^{Title} %U\n  %^C%i%?\n")
           ("J" "MPL Journal" entry
-           (file+headline "/Users/tkb/job/MPL/Org/journal.org" "MPL Journal")
+           (file+headline ,(expand-file-name "~/job/MPL/Org/journal.org") "MPL Journal")
            "* %^{Title} %U\n  %i\n  %?\n")
           ("M" "MHST Journal" entry
-           (file+headline "/Users/tkb/job/MPL/MHST/Org/mhst-journal.org" "MHST Journal")
+           (file+headline ,(expand-file-name "~/job/MPL/MHST/Org/mhst-journal.org") "MHST Journal")
            "* %^{Title} %U\n  %i\n  %?\n")
           ("C" "MPL Contacts Log" entry
-           (file+headline "/Users/tkb/job/MPL/Org/contacts.org" "MPL Contacts")
+           (file+headline ,(expand-file-name "~/job/MPL/Org/contacts.org") "MPL Contacts")
            "* %^{Title} %U\n  %i\n  %?\n")
           ("N" "MPL Notes" entry
-           (file+headline "/Users/tkb/job/MPL/Org/notes.org" "MPL Notes")
+           (file+headline ,(expand-file-name "~/job/MPL/Org/notes.org") "MPL Notes")
            "\n\n* %^{Title} %U\n  %i\n  %?\n  %a\n\n")
           ("T" "MPL Tasks" entry
-           (file+headline "/Users/tkb/job/MPL/Org/tasks.org" "MPL Tasks")
+           (file+headline ,(expand-file-name "~/job/MPL/Org/tasks.org") "MPL Tasks")
            "* TODO %^{Title} %U\n  %i\n  %?\n  %a\n")))
   (tkb-keys ((kbd "C-c k o C-c") #'org-ctrl-c-ctrl-c))
   (tkb-check-bindings (list (kbd "C-c k o C-c")))
