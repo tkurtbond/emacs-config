@@ -88,10 +88,16 @@ recommended by the ReST quickref: http://tinyurl.com/47lkhk"
   (defconst tkb-org-mpl-notes (expand-file-name "~/job/MPL/Org/notes.org"))
   (defconst tkb-org-mpl-tasks (expand-file-name "~/job/MPL/Org/tasks.org"))
   (tkb-keys ((kbd "C-c k o c") #'org-capture))
+  ;; Remember this for later:
+  ;; (setf (--> "b" (assoc it org-capture-templates) (assoc 'file+olp it) (nth 2 it)) "2021")
   (setq org-capture-templates
         `(("X" "EXPERIMENT" entry
            (file+olp+datetree ,(expand-file-name "~/current/org/loud-experiment.org"))
            "*** %^{Title} %U\n  %i\n  %?\n")
+          ("b" "Add book about to read" entry
+           (file+olp ,(expand-file-name "~/Repos/tkb-org/Books/read.org")
+                     ,(format-time-string "%Y") "Read")
+           "*** : %c" :prepend t)
           ("j" "Journal" entry
            (file+headline ,tkb-org-journal "Journal")
            "* %^{Title} %U\n  %i\n  %?\n")
