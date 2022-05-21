@@ -90,6 +90,20 @@ recommended by the ReST quickref: http://tinyurl.com/47lkhk"
   (tkb-keys ((kbd "C-c k o c") #'org-capture))
   ;; Remember this for later:
   ;; (setf (--> "b" (assoc it org-capture-templates) (assoc 'file+olp it) (nth 2 it)) "2021")
+
+  (defvar tkb-org-year (format-time-string "%Y")
+    "The year the current emacs session was started, for use with org-capture.")
+  (defun tkb-org-capture-advice-update-year (&optional goto keys)
+    "Update ‘tkb-org-year’ and update the entry for adding a book in 
+‘org-capture-templates’ to use the new value."
+    (let ((new-year (format-time-string "%Y")))
+      (unless (string-equal tkb-org-year new-year)
+        (setf tkb-org-year new-year)
+        (setf (--> "b" (assoc it org-capture-templates)
+                   (assoc 'file+olp it) (nth 2 it))
+              tkb-org-year))))
+  (advice-add 'org-capture :before #'tkb-org-capture-advice-update-year)
+  
   (setq org-capture-templates
         `(("X" "EXPERIMENT" entry
            (file+olp+datetree ,(expand-file-name "~/current/org/loud-experiment.org"))
