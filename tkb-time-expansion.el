@@ -183,7 +183,7 @@ if END is a dash, use the current time instead."
   (message "prefix: %S current-buffer: %S" insert-intervals (current-buffer))
   (let* ((time-intervals (sexp-at-point)))
     (t:total-intervals-2 time-intervals insert-intervals)))
-
+(tkb-keys ((kbd "C-c k s T") #'t:show-total-intervals))
 
 (defun t:time-remaining (total-needed total-worked start)
   (interactive "nTotal Needed: \nnTotal Worked: \nsStart: ")
