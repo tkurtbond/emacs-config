@@ -142,6 +142,7 @@
 			;; moz ; Did I every really use this?
 			nim-mode
                         nodejs-repl
+                        oberon
 			projectile 
 			racket-mode
                         ;;+++
