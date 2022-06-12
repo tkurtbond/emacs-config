@@ -306,4 +306,11 @@
    (add-to-list 'auto-mode-alist '("\\.js\\'" . javascript-mode))))
 
 (add-to-list 'auto-mode-alist '("\\.md$" . markdown-mode))
+
+(add-to-list 'auto-mode-alist '("\\.def$" . oberon-mode))
+(add-to-list 'auto-mode-alist '("\\.obn$" . oberon-mode))
+(add-to-list 'auto-mode-alist '("\\.Mod$" . oberon-mode))
+(eval-after-load "oberon" '(setq oberon-indent-level 2))
+
+;;(add-to-list 'auto-mode-alist '("\\.Mod$" . oberon-mode))
 ;;; end of tkb-lang.el

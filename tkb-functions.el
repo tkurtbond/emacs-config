@@ -50,8 +50,8 @@ or at the column specified by the prefix arg."
 
 (defun tkb-insert-buffer-filename (prefix)
   "Insert the filename part of the buffer filename, or the whole filename
-if a prefix greater than 1 is specified (remember C-u by itself is 4,
-or the filename part without an extension)."
+if a prefix greater than 1 is specified (remember C-u by itself is 4),
+or the filename part without an extension if the prefix is less than 0."
   (interactive "p")
   (insert (if (> prefix 1)
               (buffer-file-name)
