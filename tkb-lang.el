@@ -312,5 +312,15 @@
 (add-to-list 'auto-mode-alist '("\\.Mod$" . oberon-mode))
 (eval-after-load "oberon" '(setq oberon-indent-level 2))
 
+
+(when-load-file "modula3"
+  (autoload 'modula-3-mode "modula3")
+  (setq auto-mode-alist
+        (append '(("\\.ig$" . modula-3-mode)
+                  ("\\.mg$" . modula-3-mode)
+                  ("\\.i3$" . modula-3-mode)
+                  ("\\.m3$" . modula-3-mode))
+                auto-mode-alist)))
+
 ;;(add-to-list 'auto-mode-alist '("\\.Mod$" . oberon-mode))
 ;;; end of tkb-lang.el
