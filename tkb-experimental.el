@@ -88,8 +88,6 @@ recommended by the ReST quickref: http://tinyurl.com/47lkhk"
   (defconst tkb-org-mpl-notes (expand-file-name "~/job/MPL/Org/notes.org"))
   (defconst tkb-org-mpl-tasks (expand-file-name "~/job/MPL/Org/tasks.org"))
   (tkb-keys ((kbd "C-c k o c") #'org-capture))
-  ;; Remember this for later:
-  ;; (setf (--> "b" (assoc it org-capture-templates) (assoc 'file+olp it) (nth 2 it)) "2021")
 
   (defvar tkb-org-year (format-time-string "%Y")
     "The year the current emacs session was started, for use with org-capture.")
