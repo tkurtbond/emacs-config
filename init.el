@@ -14,6 +14,85 @@
 
 (setq line-move-visual nil)
 
+(unless (version< emacs-version "24.1.1")
+  ;; Error:
+  ;; Failed to verify signature archive-contents.sig:
+  ;; No public key for 066DAFCB81E42C40 created at 2019-10-29T17:10:02-0400 using RSA
+  ;; Resolved by: https://www.reddit.com/r/emacs/comments/aug9in/failed_to_verify_signature_archivecontentssig/
+  (setq package-check-signature nil)
+  ;; Error:
+  ;; Debugger entered--Lisp error: (file-error "https://elpa.gnu.org/packages/archive-contents" "Bad Request")
+  ;; signal(file-error ("https://elpa.gnu.org/packages/archive-contents" "Bad Request"))  
+  ;; Resolved by: https://www.reddit.com/r/emacs/comments/cdei4p/failed_to_download_gnu_archive_bad_request/
+  (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
+
+  (require 'package)
+  (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
+  (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
+  ;; (package-initialize) ;; done in '~/.emacs'.
+
+  (let ((tkb-packages '(
+			;; installing ada-mode using package-install
+			;; says its already installed because
+			;; ada-mode.el comes with emacs; so installing
+			;; a newer version only works from the
+			;; list-packages buffer.
+			;; ada-mode ; not currently using
+			;; ada-ref-man ; not currently using
+			;; Not using because of markup minimization making
+			;; markup unusable.
+			;;adoc-mode
+			auctex
+			caml
+                        cask
+                        cask-mode
+                        caskxy
+			cider
+			clojure-mode
+			clojure-quick-repls
+			clojure-snippets
+                        dante           ; For Haskell
+                        dash
+                        define-word
+			docbook
+			;;elscreen ; Did I ever really use this?
+			f
+			fuel
+			ac-geiser geiser geiser-chez geiser-chibi geiser-chicken
+                        geiser-guile geiser-racket
+                        haskell-mode
+                        js-comint
+                        julia-mode
+                        magit
+			markdown-mode
+			;; moz ; Did I every really use this?
+			nim-mode
+                        nodejs-repl
+                        oberon
+			projectile 
+			racket-mode
+                        ;;+++
+                        ;; These are available both from gnu and melpa,
+                        ;; so install manually.
+                        ;; realgud
+                        ;; realgud-lldb
+                        ;;---
+			;; regex-tool ; not currently using
+                        s
+                        unicode-fonts
+			use-package ;; too strict?
+			wanderlust ;; apparently using again.
+                        yaml-mode
+                        w3m
+			)))
+    (unless (cl-every #'package-installed-p tkb-packages)
+      (package-refresh-contents))
+    (dolist (p tkb-packages)
+      (unless (package-installed-p p)
+	(package-install p)))
+    (load "s.el")                       ;because it's autoloads didn't work
+    ))
+
 (add-hook 'dired-load-hook
           (lambda ()
             (load "dired-x")))
@@ -87,85 +166,6 @@
 (when window-system
   (add-hook 'after-init-hook
 	    (lambda () (load "~/lib/emacs/tkb/tkb-gui-setup"))))
-
-(unless (version< emacs-version "24.1.1")
-  ;; Error:
-  ;; Failed to verify signature archive-contents.sig:
-  ;; No public key for 066DAFCB81E42C40 created at 2019-10-29T17:10:02-0400 using RSA
-  ;; Resolved by: https://www.reddit.com/r/emacs/comments/aug9in/failed_to_verify_signature_archivecontentssig/
-  (setq package-check-signature nil)
-  ;; Error:
-  ;; Debugger entered--Lisp error: (file-error "https://elpa.gnu.org/packages/archive-contents" "Bad Request")
-  ;; signal(file-error ("https://elpa.gnu.org/packages/archive-contents" "Bad Request"))  
-  ;; Resolved by: https://www.reddit.com/r/emacs/comments/cdei4p/failed_to_download_gnu_archive_bad_request/
-  (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
-
-  (require 'package)
-  (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
-  (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
-  ;; (package-initialize) ;; done in '~/.emacs'.
-
-  (let ((tkb-packages '(
-			;; installing ada-mode using package-install
-			;; says its already installed because
-			;; ada-mode.el comes with emacs; so installing
-			;; a newer version only works from the
-			;; list-packages buffer.
-			;; ada-mode ; not currently using
-			;; ada-ref-man ; not currently using
-			;; Not using because of markup minimization making
-			;; markup unusable.
-			;;adoc-mode
-			auctex
-			caml
-                        cask
-                        cask-mode
-                        caskxy
-			cider
-			clojure-mode
-			clojure-quick-repls
-			clojure-snippets
-                        dante           ; For Haskell
-                        dash
-                        define-word
-			docbook
-			;;elscreen ; Did I ever really use this?
-			f
-			fuel
-			ac-geiser geiser geiser-chez geiser-chibi geiser-chicken
-                        geiser-guile geiser-racket
-                        haskell-mode
-                        js-comint
-                        julia-mode
-                        magit
-			markdown-mode
-			;; moz ; Did I every really use this?
-			nim-mode
-                        nodejs-repl
-                        oberon
-			projectile 
-			racket-mode
-                        ;;+++
-                        ;; These are available both from gnu and melpa,
-                        ;; so install manually.
-                        ;; realgud
-                        ;; realgud-lldb
-                        ;;---
-			;; regex-tool ; not currently using
-                        s
-                        unicode-fonts
-			use-package ;; too strict?
-			wanderlust ;; apparently using again.
-                        yaml-mode
-                        w3m
-			)))
-    (unless (every #'package-installed-p tkb-packages)
-      (package-refresh-contents))
-    (dolist (p tkb-packages)
-      (unless (package-installed-p p)
-	(package-install p)))
-    (load "s.el")                       ;because it's autoloads didn't work
-    ))
 
 ;; wanderlust
 (autoload 'wl-user-agent-compose "wl-draft" nil t)
