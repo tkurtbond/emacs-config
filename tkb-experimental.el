@@ -2131,11 +2131,9 @@ REPEAT is how many times to repeat the roll."
   :load
   (global-set-key (kbd "C-x M s") 'magit-status)
   (when (version< emacs-version "27.0")
-    (when (fboundp 'global-magit-file-mode)
-      (global-magit-file-mode))
-    (when (boundp 'magit-file-mode-map)
-      (define-key magit-file-mode-map
-        (kbd "C-x M g") 'magit-file-dispatch))))
+    (global-magit-file-mode)
+    (define-key magit-file-mode-map
+      (kbd "C-x M g") 'magit-file-dispatch)))
 
 (add-hook 'markdown-mode-hook 'flyspell-mode)
 
