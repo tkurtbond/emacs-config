@@ -2552,14 +2552,16 @@ and make it the current selection."
                (car (split-string (system-name) "\\." t))
                " ")))
 
-(let ((userathost (concat" " (user-login-name) "@"
+(let ((user-at-host (concat" " (user-login-name) "@"
                          (car (split-string (system-name) "\\." t))
                          " ")))
-  (when (string-equal (user-login-name) "root")
+  (if (string-equal (user-login-name) "root")
     ;; Make it obvious if the user is root.
-    (put-text-property 0 (length userathost) 'face
-                       'font-lock-warning-face userathost))
-  (setq global-mode-string userathost))
+    (put-text-property 0 (length user-at-host) 'face
+                       'error user-at-host)
+    (put-text-property 0 (length user-at-host) 'face
+                       'success user-at-host))
+  (setq global-mode-string user-at-host))
 
 (message "End of tkb-experimental.el")
 ;;; end of tkb-experimental.el
