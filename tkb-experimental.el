@@ -2539,7 +2539,27 @@ and make it the current selection."
     
 
 
+(when nil
+  ;; This is not the way to do it.
+  (let ((pos (memq 'mode-line-modes mode-line-format)))
+    (setcdr pos (cons (string-join (list (user-login-name) "@"
+                                         (car (split-string (system-name) "\\." t))
+                                         " "))
+                      (cdr pos))))
+  ;; Nor is this.
+  (setq global-mode-string
+        (concat" " (user-login-name) "@"
+               (car (split-string (system-name) "\\." t))
+               " ")))
 
+(let ((userathost (concat" " (user-login-name) "@"
+                         (car (split-string (system-name) "\\." t))
+                         " ")))
+  (when (string-equal (user-login-name) "root")
+    ;; Make it obvious if the user is root.
+    (put-text-property 0 (length userathost) 'face
+                       'font-lock-warning-face userathost))
+  (setq global-mode-string userathost))
 
 (message "End of tkb-experimental.el")
 ;;; end of tkb-experimental.el
