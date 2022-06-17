@@ -902,7 +902,12 @@ over 40 is morbidly obese, over 50 is super morbidly obese."
              '(font-lock-comment-face sgml-doctype-face))
        ;;(set-face-foreground 'font-lock-comment-face "cyan")
        ;;'sgml-doctype-face "cyan")
-       (message "!!!cyan rules!!!"))))
+       (message "!!!cyan rules!!!")))
+  (eval-after-load "magit-diff"
+    '(progn
+       (set-face-foreground 'magit-diff-added-highlight "purple")
+       (set-face-foreground 'magit-diff-added "blue")
+       )))
 
 (when nil
   (progn
