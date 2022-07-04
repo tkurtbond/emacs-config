@@ -2563,5 +2563,14 @@ and make it the current selection."
                        'success user-at-host))
   (setq global-mode-string user-at-host))
 
+(global-set-key (kbd "C-c i k") 'string-inflection-kebab-case)
+(global-set-key (kbd "C-c i C") 'string-inflection-capital-underscore)
+(global-set-key (kbd "C-c i u") 'string-inflection-underscore)
+(global-set-key (kbd "C-c i U") 'string-inflection-upcase)
+(global-set-key (kbd "C-c i c") 'string-inflection-camelcase)
+(global-set-key (kbd "C-c i l") 'string-inflection-lower-camelcase)
+(global-set-key (kbd "C-c i j") 'string-inflection-java-style-cycle)
+(global-set-key (kbd "C-c i n") 'string-inflection-cycle)
+
 (message "End of tkb-experimental.el")
 ;;; end of tkb-experimental.el

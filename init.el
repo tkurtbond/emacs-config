@@ -79,6 +79,7 @@
                         ;;---
 			;; regex-tool ; not currently using
                         s
+                        string-inflection
                         unicode-fonts
 			use-package ;; too strict?
 			wanderlust ;; apparently using again.
