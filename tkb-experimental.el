@@ -2572,5 +2572,41 @@ and make it the current selection."
 (global-set-key (kbd "C-c i j") 'string-inflection-java-style-cycle)
 (global-set-key (kbd "C-c i n") 'string-inflection-cycle)
 
+;; Adapt to the vishap oberon compiler's error message format.
+(progn
+  (setq vishap-oberon-compilation-error-alist
+        '((vishap-oberon-file "^\\(\\w+\\.\\(Mod\\|obn\\|ob2\\)\\)  Compiling"
+                              1 nil nil 0)
+          (vishap-oberon-line "^\\s-+\\([0-9]+\\):"
+                              nil 1 nil 2 nil)))
+
+  (eval-after-load "compile"
+    '(progn
+       (setq compilation-error-regexp-alist
+             (cons 'vishap-oberon-file
+                   (cons 'vishap-oberon-line compilation-error-regexp-alist)))
+       (setq compilation-error-regexp-alist-alist
+             (append compilation-error-regexp-alist-alist
+                     vishap-oberon-compilation-error-alist))))
+
+  (defun update-for-vishap-oberon-compilation-error-alist ()
+    "Use this when you change `vishap-oberon-compilation-error-alist'."
+    (interactive)
+    (loop for item in vishap-oberon-compilation-error-alist
+          do (progn
+               (print (format "set to: %S\n" (cdr item)))
+               (print (format "before: %S\n"
+                              (-> (assoc (car item)
+                                         compilation-error-regexp-alist-alist)
+                                  (cdr))))
+               (setf (-> (assoc (car item)
+                                compilation-error-regexp-alist-alist)
+                         (cdr))
+                     (cdr item))
+               (print (format "after:  %S\n" (-> (assoc (car item)
+                                                        compilation-error-regexp-alist-alist)
+                                                 (cdr))))
+               ))))
+
 (message "End of tkb-experimental.el")
 ;;; end of tkb-experimental.el
