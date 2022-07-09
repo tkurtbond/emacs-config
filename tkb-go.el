@@ -6,7 +6,7 @@
  ;; (go-guru-hl-identifier-mode) ; Enable highlighting.
 
  ;; (define-key ac-mode-map (kbd "M-TAB") 'auto-complete)
- (setq gofmt-command "goimports")
+ ;(setq gofmt-command "goimports")
 
  (add-hook 'before-save-hook 'gofmt-before-save)
 
@@ -19,7 +19,7 @@
 
  (add-hook 'go-mode-hook
 	   '(lambda ()
-	      (flycheck-mode)
+	      ;;(flycheck-mode) ;; This is causing "suspicious state" problem.
 	      (local-set-key (kbd "M-.") 'godef-jump)
 	      (local-set-key (kbd "C-c C-k") 'godoc)
 	      (local-set-key (kbd "C-c C-g") 'go-goto-imports)
