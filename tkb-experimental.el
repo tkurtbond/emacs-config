@@ -107,7 +107,7 @@ recommended by the ReST quickref: http://tinyurl.com/47lkhk"
            (file+olp+datetree ,(expand-file-name "~/current/org/loud-experiment.org"))
            "*** %^{Title} %U\n  %i\n  %?\n")
           ("b" "Add book about to read" entry
-           (file+olp ,(expand-file-name "~/Repos/tkb-org/Books/read.org")
+           (file+olp ,(expand-file-name "~/Repos/tkb-notes/Books/read.org")
                      ,(format-time-string "%Y") "Read")
            "*** : %c" :prepend t)
           ("j" "Journal" entry
