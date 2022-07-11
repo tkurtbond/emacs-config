@@ -322,5 +322,9 @@
                   ("\\.m3$" . modula-3-mode))
                 auto-mode-alist)))
 
+(when-load-file "ada-mode"
+  (autoload 'ada-mode "ada-mode"))
+
+
 ;;(add-to-list 'auto-mode-alist '("\\.Mod$" . oberon-mode))
 ;;; end of tkb-lang.el
