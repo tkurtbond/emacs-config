@@ -38,7 +38,7 @@
 			;; a newer version only works from the
 			;; list-packages buffer.
 			;; ada-mode ; not currently using
-			;; ada-ref-man ; not currently using
+			ada-ref-man ; not currently using
 			;; Not using because of markup minimization making
 			;; markup unusable.
 			;;adoc-mode
