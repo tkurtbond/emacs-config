@@ -323,7 +323,23 @@
                 auto-mode-alist)))
 
 (when-load-file "ada-mode"
-  (autoload 'ada-mode "ada-mode"))
+  (autoload 'ada-mode "ada-mode")
+  (push ".ali" completion-ignored-extensions)
+  (when nil ;; not yet implemented
+    (require 'thingatpt)
+    (define-thing-chars tkb-ada-identifier "[:alnum:]_.")
+    (defun tkb-find-ada-spec ()
+      (interactive)
+      (let* ((id (thing-at-point 'tkb-ada-identifier))
+             (filename (concat id ".ads"))
+             ;; filename with dashes
+             ;; krunched name
+             )
+        ;; Look for 
+      
+        ))))
+
+
 
 
 ;;(add-to-list 'auto-mode-alist '("\\.Mod$" . oberon-mode))
