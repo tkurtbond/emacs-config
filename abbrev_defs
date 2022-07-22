@@ -1,67 +1,93 @@
-(define-abbrev-table 'sql-mode-abbrev-table '(
-    ("sel" ("select") nil 0)
-    ("proc" ("procedure") nil 0)
-    ("del" ("delete") nil 0)
-    ("upd" ("update") nil 0)
-    ("ins" ("insert") nil 0)
-    ("cr" ("create") nil 0)
-    ("func" ("function") nil 0)
-    ))
-
-(define-abbrev-table 'comint-mode-abbrev-table '(
-    ))
-
-(define-abbrev-table 'c-mode-abbrev-table '(
-    ("bpu" "begin_pasteboard_update" nil 5)
-    ("gv" "get_value" nil 44)
-    ("sss" "stat = set_symbol (s, tbuf, symbol_table);" nil 52)
-    ("rcp" "return_cursor_pos" nil 4)
-    ("st" "symbol_table" nil 2)
-    ("sda" "scroll_display_area" nil 6)
-    ("ss" "set_symbol" nil 0)
-    ("sdsr" "set_display_scrolling_region" nil 7)
-    ))
-
-(define-abbrev-table 'sdcl-mode-abbrev-table '(
-    ("wse" "write sys$error" nil 5)
-    ("wso" "write sys$output" nil 6)
-    ))
-
-(define-abbrev-table 'icon-mode-abbrev-table '(
-    ))
-
-(define-abbrev-table 'basic-mode-abbrev-table '(
-    ("call putstr(codef, level," "cps" nil 0)
-    ("cpl" "call putline(codef)" nil 24)
-    ("opts" "option type = explicit, constant type = integer, &
-        size = integer long, size = real double" nil 4)
-    ("prog" "program
-end program" nil 1)
-    ("proc" "sub ()
-end sub" nil 1)
+;;-*-coding: utf-8;-*-
+(define-abbrev-table 'basic-mode-abbrev-table
+  '(
+    ("call putstr(codef, level," "cps" nil :count 0)
+    ("cpl" "call putline(codef)" nil :count 24)
+    ("cps" "call putstr(codef, level," nil :count 20)
     ("func" "function ()
-end function" nil 1)
-    ("cps" "call putstr(codef, level," nil 20)
-    ))
+end function" nil :count 1)
+    ("opts" "option type = explicit, constant type = integer, &
+        size = integer long, size = real double" nil :count 4)
+    ("proc" "sub ()
+end sub" nil :count 1)
+    ("prog" "program
+end program" nil :count 1)
+   ))
 
-(define-abbrev-table 'occur-mode-abbrev-table '(
-    ))
+(define-abbrev-table 'c-mode-abbrev-table
+  '(
+    ("bpu" "begin_pasteboard_update" nil :count 5)
+    ("gv" "get_value" nil :count 44)
+    ("rcp" "return_cursor_pos" nil :count 4)
+    ("sda" "scroll_display_area" nil :count 6)
+    ("sdsr" "set_display_scrolling_region" nil :count 7)
+    ("ss" "set_symbol" nil :count 0)
+    ("sss" "stat = set_symbol (s, tbuf, symbol_table);" nil :count 52)
+    ("st" "symbol_table" nil :count 2)
+   ))
 
-(define-abbrev-table 'text-mode-abbrev-table '(
-    ))
+(define-abbrev-table 'oberon-mode-abbrev-table
+  '(
+    ("array" "ARRAY" indent-according-to-mode :count 0)
+    ("begin" "BEGIN" indent-according-to-mode :count 0)
+    ("boolean" "BOOLEAN" indent-according-to-mode :count 0)
+    ("by" "BY" indent-according-to-mode :count 0)
+    ("case" "CASE" indent-according-to-mode :count 0)
+    ("char" "CHAR" indent-according-to-mode :count 0)
+    ("const" "CONST" indent-according-to-mode :count 0)
+    ("div" "DIV" indent-according-to-mode :count 0)
+    ("do" "DO" indent-according-to-mode :count 0)
+    ("else" "ELSE" indent-according-to-mode :count 0)
+    ("elsif" "ELSIF" indent-according-to-mode :count 0)
+    ("end" "END" indent-according-to-mode :count 0)
+    ("exit" "EXIT" indent-according-to-mode :count 0)
+    ("false" "FALSE" indent-according-to-mode :count 0)
+    ("for" "FOR" indent-according-to-mode :count 0)
+    ("if" "IF" indent-according-to-mode :count 0)
+    ("import" "IMPORT" indent-according-to-mode :count 0)
+    ("in" "IN" indent-according-to-mode :count 0)
+    ("integer" "INTEGER" indent-according-to-mode :count 0)
+    ("is" "IS" indent-according-to-mode :count 0)
+    ("longint" "LONGINT" indent-according-to-mode :count 0)
+    ("longreal" "LONGREAL" indent-according-to-mode :count 0)
+    ("loop" "LOOP" indent-according-to-mode :count 0)
+    ("mod" "MOD" indent-according-to-mode :count 0)
+    ("module" "MODULE" indent-according-to-mode :count 0)
+    ("nil" "NIL" indent-according-to-mode :count 0)
+    ("of" "OF" indent-according-to-mode :count 0)
+    ("or" "OR" indent-according-to-mode :count 0)
+    ("pointer" "POINTER" indent-according-to-mode :count 0)
+    ("procedure" "PROCEDURE" indent-according-to-mode :count 0)
+    ("real" "REAL" indent-according-to-mode :count 0)
+    ("record" "RECORD" indent-according-to-mode :count 0)
+    ("repeat" "REPEAT" indent-according-to-mode :count 0)
+    ("return" "RETURN" indent-according-to-mode :count 0)
+    ("set" "SET" indent-according-to-mode :count 0)
+    ("shortint" "SHORTINT" indent-according-to-mode :count 0)
+    ("then" "THEN" indent-according-to-mode :count 0)
+    ("to" "TO" indent-according-to-mode :count 0)
+    ("true" "TRUE" indent-according-to-mode :count 0)
+    ("type" "TYPE" indent-according-to-mode :count 0)
+    ("until" "UNTIL" indent-according-to-mode :count 0)
+    ("var" "VAR" indent-according-to-mode :count 0)
+    ("while" "WHILE" indent-according-to-mode :count 0)
+    ("with" "WITH" indent-according-to-mode :count 0)
+   ))
 
-(define-abbrev-table 'lisp-interaction-mode-abbrev-table '(
-    ))
+(define-abbrev-table 'sdcl-mode-abbrev-table
+  '(
+    ("wse" "write sys$error" nil :count 5)
+    ("wso" "write sys$output" nil :count 6)
+   ))
 
-(define-abbrev-table 'emacs-lisp-mode-abbrev-table '(
-    ))
-
-(define-abbrev-table 'lisp-mode-abbrev-table '(
-    ))
-
-(define-abbrev-table 'fundamental-mode-abbrev-table '(
-    ))
-
-(define-abbrev-table 'global-abbrev-table '(
-    ))
+(define-abbrev-table 'sql-mode-abbrev-table
+  '(
+    ("cr" ("create") nil :count 0)
+    ("del" ("delete") nil :count 0)
+    ("func" ("function") nil :count 0)
+    ("ins" ("insert") nil :count 0)
+    ("proc" ("procedure") nil :count 0)
+    ("sel" ("select") nil :count 0)
+    ("upd" ("update") nil :count 0)
+   ))
 
