@@ -182,8 +182,6 @@
 
 
 
-(load "~/lib/emacs/tkb/tkb-go.el")
-
 (put 'set-goal-column 'disabled nil)
 
 
