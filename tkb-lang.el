@@ -325,9 +325,31 @@
 (when-load-file "ada-mode"
   (autoload 'ada-mode "ada-mode")
   (push ".ali" completion-ignored-extensions)
+  (defconst tkb-adaincludes-directory
+    (file-name-as-directory
+     "/opt/gcc-11.2.0/lib/gcc/x86_64-apple-darwin15/11.2.0/adainclude"))
   (when nil ;; not yet implemented
     (require 'thingatpt)
+    (define-thing-chars tkb-ada-filename ".[:alnum:]_-")
     (define-thing-chars tkb-ada-identifier "[:alnum:]_.")
+    (defun tkb-find-adainclude ()
+      (interactive)
+      (let* ((filename (thing-at-point 'tkb-ada-filename))
+             (pathname (string-join (list tkb-adaincludes-directory
+                                          filename))))
+        (message "%s" pathname)))
+    (defun tkb-find-adainclude-file (filename)
+      (interactive "sAda Include Filename: ")
+      (let ((pathname (string-join (list tkb-adaincludes-directory filename))))
+        (find-file-read-only pathname)))
+
+    (defun x ()
+      (interactive)
+      (skip-chars-backward ".[:alnum:]_-")
+      (if (looking-at "\\([.[:alnum:]_-]+\\):\\([0-9]+\\)")
+          (message "%s:%s" (match-string 1) (match-string 2)))
+      )
+             
     (defun tkb-find-ada-spec ()
       (interactive)
       (let* ((id (thing-at-point 'tkb-ada-identifier))
