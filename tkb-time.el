@@ -80,7 +80,7 @@ and return the encoded time."
   (interactive)
   (let ((ampm (downcase (substring (format-time-string "%p" time) 0 1))))
     (let ((c (aref ampm 0)))
-      (assert (member c '(?a ?p))
+      (cl-assert (member c '(?a ?p))
 	      t "get-ampm: '%c' is not 'a' or 'p' - is locale weird?" c)
       ampm)))
 

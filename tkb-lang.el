@@ -241,7 +241,7 @@
 				  ("\\.pm\\'" . perl-mode)
 				  )
 			        auto-mode-alist)))
-(loop for i in '(("\\.ec\\'" . c-mode)
+(cl-loop for i in '(("\\.ec\\'" . c-mode)
                  ("\\.tr\\'" . nroff-mode)
                  ("\\.nr\\'" . nroff-mode)
                  ("\\.roff\\'" . nroff-mode)
@@ -278,13 +278,13 @@
 
 (add-hook
  'js-mode-hook
- (lambda ()
-   (define-key js-mode-map (kbd "C-x C-e") 'nodejs-repl-send-last-expression)
-   (define-key js-mode-map (kbd "C-c C-j") 'nodejs-repl-send-line)
-   (define-key js-mode-map (kbd "C-c C-r") 'nodejs-repl-send-region)
-   (define-key js-mode-map (kbd "C-c C-c") 'nodejs-repl-send-buffer)
-   (define-key js-mode-map (kbd "C-c C-l") 'tkb-nodejs-repl-load-file)
-   (define-key js-mode-map (kbd "C-c C-z") 'nodejs-repl-switch-to-repl)))
+ #'(lambda ()
+     (define-key js-mode-map (kbd "C-x C-e") 'nodejs-repl-send-last-expression)
+     (define-key js-mode-map (kbd "C-c C-j") 'nodejs-repl-send-line)
+     (define-key js-mode-map (kbd "C-c C-r") 'nodejs-repl-send-region)
+     (define-key js-mode-map (kbd "C-c C-c") 'nodejs-repl-send-buffer)
+     (define-key js-mode-map (kbd "C-c C-l") 'tkb-nodejs-repl-load-file)
+     (define-key js-mode-map (kbd "C-c C-z") 'nodejs-repl-switch-to-repl)))
 
 (defun tkb-nodejs-repl-load-file (file)
   "Load the file to the `nodejs-repl-process'"
@@ -381,12 +381,12 @@
     '(substitute-key-definition 'go-import-add 'helm-go-package go-mode-map))
 
   (add-hook 'go-mode-hook
-	    '(lambda ()
-	       ;;(flycheck-mode) ;; This is causing "suspicious state" problem.
-	       (local-set-key (kbd "M-.") 'godef-jump)
-	       (local-set-key (kbd "C-c C-k") 'godoc)
-	       (local-set-key (kbd "C-c C-g") 'go-goto-imports)
-	       (local-set-key (kbd "C-c C-r") 'go-remove-unused-imports)))
+	    #'(lambda ()
+	        ;;(flycheck-mode) ;; This is causing "suspicious state" problem.
+	        (local-set-key (kbd "M-.") 'godef-jump)
+	        (local-set-key (kbd "C-c C-k") 'godoc)
+	        (local-set-key (kbd "C-c C-g") 'go-goto-imports)
+	        (local-set-key (kbd "C-c C-r") 'go-remove-unused-imports)))
   (defun tkb-go-hook ()
     (setq indent-tabs-mode t)             ;probably go-mode does this itself.
     (setq tab-width 3))

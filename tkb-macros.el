@@ -311,7 +311,7 @@ be followed by the name of a keymap."
 	  finally return 
 	  `(eval-after-load "tkb-keys-menus.el"
 	     '(progn
-		(multiple-value-bind (existing-bindings msg)
+		(cl-multiple-value-bind (existing-bindings msg)
 		    (tkb-check-bindings ',keys ',funs ,(if (list keymap)
 							    keymap nil))
 		  (when (or (not existing-bindings)
@@ -330,7 +330,7 @@ are already bound:\n" msg "Rebind them? "))))
 	 ([f2] #'boguser)))
       (eval-after-load "tkb-keys-menus.el"
 	'(progn
-	   (multiple-value-bind
+	   (cl-multiple-value-bind
 	       (bindings msg)
 	       (tkb-check-bindings
 		'([f1]
