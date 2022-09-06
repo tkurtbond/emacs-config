@@ -101,7 +101,7 @@ prefix is less than 0."
         (aset ns n c)
         (aset ns (+ n 1) c)
         (aset ns (+ n 2) c))
-      (incf i))
+      (cl-incf i))
     (insert ns)))
 
 

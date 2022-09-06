@@ -62,7 +62,7 @@
   (require 'cl-lib)
   
   ;; need to do something with display-pixel-height
-  (destructuring-bind (tag tkb-default-font tkb-default-height)
+  (cl-destructuring-bind (tag tkb-default-font tkb-default-height)
       (assoc-string (if prefix
 			(completing-read "Font? " tkb-fonts)
 		      (if nil "dejavu-13pt" "Go Mono"))

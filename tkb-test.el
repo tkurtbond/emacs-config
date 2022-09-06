@@ -28,7 +28,7 @@ if EXPECTED-ERROR is signaled; otherwise report failure."
   `(let ((form ',form)
 	 (expected ',expected)
 	 (buf (get-buffer-create "*Test-Messages*")))
-     (incf test-id)
+     (cl-incf test-id)
      (prog1
 	 (condition-case err
 	     (let ((result ,form))
