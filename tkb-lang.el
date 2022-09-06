@@ -243,7 +243,7 @@
 				  ("\\.pm\\'" . perl-mode)
 				  )
 			        auto-mode-alist)))
-(loop for i in '(("\\.ec\\'" . c-mode)
+(cl-loop for i in '(("\\.ec\\'" . c-mode)
                  ("\\.tr\\'" . nroff-mode)
                  ("\\.nr\\'" . nroff-mode)
                  ("\\.roff\\'" . nroff-mode)
@@ -280,13 +280,13 @@
 
 (add-hook
  'js-mode-hook
- (lambda ()
-   (define-key js-mode-map (kbd "C-x C-e") 'nodejs-repl-send-last-expression)
-   (define-key js-mode-map (kbd "C-c C-j") 'nodejs-repl-send-line)
-   (define-key js-mode-map (kbd "C-c C-r") 'nodejs-repl-send-region)
-   (define-key js-mode-map (kbd "C-c C-c") 'nodejs-repl-send-buffer)
-   (define-key js-mode-map (kbd "C-c C-l") 'tkb-nodejs-repl-load-file)
-   (define-key js-mode-map (kbd "C-c C-z") 'nodejs-repl-switch-to-repl)))
+ #'(lambda ()
+     (define-key js-mode-map (kbd "C-x C-e") 'nodejs-repl-send-last-expression)
+     (define-key js-mode-map (kbd "C-c C-j") 'nodejs-repl-send-line)
+     (define-key js-mode-map (kbd "C-c C-r") 'nodejs-repl-send-region)
+     (define-key js-mode-map (kbd "C-c C-c") 'nodejs-repl-send-buffer)
+     (define-key js-mode-map (kbd "C-c C-l") 'tkb-nodejs-repl-load-file)
+     (define-key js-mode-map (kbd "C-c C-z") 'nodejs-repl-switch-to-repl)))
 
 (defun tkb-nodejs-repl-load-file (file)
   "Load the file to the `nodejs-repl-process'"
@@ -324,5 +324,75 @@
                   ("\\.m3$" . modula-3-mode))
                 auto-mode-alist)))
 
-;;(add-to-list 'auto-mode-alist '("\\.Mod$" . oberon-mode))
+(when-load-file "ada-mode"
+  (autoload 'ada-mode "ada-mode")
+  (push ".ali" completion-ignored-extensions)
+  (defconst tkb-adaincludes-directory
+    (file-name-as-directory
+     "/opt/gcc-11.2.0/lib/gcc/x86_64-apple-darwin15/11.2.0/adainclude"))
+  (when nil ;; not yet implemented
+    (require 'thingatpt)
+    (define-thing-chars tkb-ada-filename ".[:alnum:]_-")
+    (define-thing-chars tkb-ada-identifier "[:alnum:]_.")
+    (defun tkb-find-adainclude ()
+      (interactive)
+      (let* ((filename (thing-at-point 'tkb-ada-filename))
+             (pathname (string-join (list tkb-adaincludes-directory
+                                          filename))))
+        (message "%s" pathname)))
+    (defun tkb-find-adainclude-file (filename)
+      (interactive "sAda Include Filename: ")
+      (let ((pathname (string-join (list tkb-adaincludes-directory filename))))
+        (find-file-read-only pathname)))
+
+    (defun x ()
+      (interactive)
+      (skip-chars-backward ".[:alnum:]_-")
+      (if (looking-at "\\([.[:alnum:]_-]+\\):\\([0-9]+\\)")
+          (message "%s:%s" (match-string 1) (match-string 2)))
+      )
+             
+    (defun tkb-find-ada-spec ()
+      (interactive)
+      (let* ((id (thing-at-point 'tkb-ada-identifier))
+             (filename (concat id ".ads"))
+             ;; filename with dashes
+             ;; krunched name
+             )
+        ;; Look for 
+      
+        ))))
+
+(use-package
+  go-mode :ensure t
+  :config
+  (use-package go-guru :ensure t)
+
+  ;; (go-guru-hl-identifier-mode) ; Enable highlighting.
+
+  ;; (define-key ac-mode-map (kbd "M-TAB") 'auto-complete)
+                                        ;(setq gofmt-command "goimports")
+
+  (add-hook 'before-save-hook 'gofmt-before-save)
+
+  ;; Running M-x golint will run golint on the current file. For more
+  ;; usage, see Compilation-Mode:
+  ;; http://www.gnu.org/software/emacs/manual/html_node/emacs/Compilation-Mode.html
+
+  (eval-after-load 'go-mode
+    '(substitute-key-definition 'go-import-add 'helm-go-package go-mode-map))
+
+  (add-hook 'go-mode-hook
+	    #'(lambda ()
+	        ;;(flycheck-mode) ;; This is causing "suspicious state" problem.
+	        (local-set-key (kbd "M-.") 'godef-jump)
+	        (local-set-key (kbd "C-c C-k") 'godoc)
+	        (local-set-key (kbd "C-c C-g") 'go-goto-imports)
+	        (local-set-key (kbd "C-c C-r") 'go-remove-unused-imports)))
+  (defun tkb-go-hook ()
+    (setq indent-tabs-mode t)             ;probably go-mode does this itself.
+    (setq tab-width 3))
+  (add-hook 'go-mode-hook #'tkb-go-hook)
+  )
+
 ;;; end of tkb-lang.el

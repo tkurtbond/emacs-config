@@ -107,7 +107,7 @@ recommended by the ReST quickref: http://tinyurl.com/47lkhk"
            (file+olp+datetree ,(expand-file-name "~/current/org/loud-experiment.org"))
            "*** %^{Title} %U\n  %i\n  %?\n")
           ("b" "Add book about to read" entry
-           (file+olp ,(expand-file-name "~/Repos/tkb-org/Books/read.org")
+           (file+olp ,(expand-file-name "~/Repos/tkb-notes/Books/read.org")
                      ,(format-time-string "%Y") "Read")
            "*** : %c" :prepend t)
           ("j" "Journal" entry
@@ -337,10 +337,10 @@ and add a log entry to it."
          (colors (list fg bg))
          (x (cadr (member colors tkb-color-list))))
     (if x
-        (destructuring-bind (nfg nbg) x
+        (cl-destructuring-bind (nfg nbg) x
           (set-frame-parameter nil 'foreground-color nfg)
           (set-frame-parameter nil 'background-color nbg))
-      (destructuring-bind (nfg nbg) (car tkb-color-list)
+      (cl-destructuring-bind (nfg nbg) (car tkb-color-list)
          (set-frame-parameter nil 'foreground-color nfg)
          (set-frame-parameter nil 'background-color nbg)))))
 
@@ -603,7 +603,7 @@ where the \"FILE\" is optional and the \".\" can also be a \",\"."
                                           "%f%s"
                                         "%d%s")
                                       duration unit))))
-    (destructuring-bind (hi lo ms) time
+    (cl-destructuring-bind (hi lo ms) time
       (let ((s (+ hi lo))
             (x "")
             (d nil)
@@ -733,10 +733,10 @@ if it is a unicode character."
 
   (define-minor-mode tkb-smart-unicode-mode
     "Toggle smart unicode punctuation" nil " ♻⚔☣☥☸◉⅙✽☮" ; "✘▧▧⚅☑☢☹☺♠♥♦♣♨"
-    '(("\"" . unicode-smart-double-quote)
-      ("'"  . unicode-smart-single-quote)
-      ("-"  . unicode-smart-hyphen)
-      ("."  . unicode-smart-period)))
+    :keymap '(("\"" . unicode-smart-double-quote)
+              ("'"  . unicode-smart-single-quote)
+              ("-"  . unicode-smart-hyphen)
+              ("."  . unicode-smart-period)))
 
   (defadvice unicode-smart-hyphen (after tkb-after-unicode-smart-hyphen last
                                          activate compile)
@@ -2011,7 +2011,7 @@ Goes backward if ARG is negative; goes to end of buffer if CHAR not found."
 (defun d4   () (1+ (random   4)))
 (defun d6   (num-dice)
   (interactive "p")
-  (loop for i from 1 to num-dice
+  (cl-loop for i from 1 to num-dice
         for roll = (1+ (random   6)) then (1+ (random   6))
         collect roll into rolls
         sum roll into result
@@ -2395,7 +2395,7 @@ themselves.  (The reverse of `fill-paragraph', \
 (defun tkb-average-1D-to-14D-with-wild-die ()
   (interactive)
   (with-output-to-temp-buffer "*OpenD6 dice codes with averages*"
-    (loop for i from 1 to 14
+    (cl-loop for i from 1 to 14
           for avg = (tkb-mini-six-wild-roll-average i)
           then (tkb-mini-six-wild-roll-average i)
           do (princ (format "%dD with the wild die averages %g\n" i avg)))))
@@ -2480,7 +2480,7 @@ inkscape."
   ;; Abandoned for tkb-sanitize-ats-and-underscores.
   (interactive)
   (let* ((s (substring-no-properties (gui-get-selection 'PRIMARY 'STRING)))
-         (s (loop for c across s
+         (s (cl-loop for c across s
                   with x = '()
                   if (or (<= ?A c ?Z) (= c ?@)) collect c into x
                   finally return (concat x))))
@@ -2586,6 +2586,51 @@ and make it the current selection."
     (put-text-property 0 (length user-at-host) 'face
                        'success user-at-host))
   (setq global-mode-string user-at-host))
+
+(global-set-key (kbd "C-c i k") 'string-inflection-kebab-case)
+(global-set-key (kbd "C-c i C") 'string-inflection-capital-underscore)
+(global-set-key (kbd "C-c i u") 'string-inflection-underscore)
+(global-set-key (kbd "C-c i U") 'string-inflection-upcase)
+(global-set-key (kbd "C-c i c") 'string-inflection-camelcase)
+(global-set-key (kbd "C-c i l") 'string-inflection-lower-camelcase)
+(global-set-key (kbd "C-c i j") 'string-inflection-java-style-cycle)
+(global-set-key (kbd "C-c i n") 'string-inflection-cycle)
+
+;; Adapt to the vishap oberon compiler's error message format.
+(progn
+  (setq vishap-oberon-compilation-error-alist
+        '((vishap-oberon-file "^\\(\\w+\\.\\(Mod\\|obn\\|ob2\\)\\)  Compiling"
+                              1 nil nil 0)
+          (vishap-oberon-line "^\\s-+\\([0-9]+\\):"
+                              nil 1 nil 2 nil)))
+
+  (eval-after-load "compile"
+    '(progn
+       (setq compilation-error-regexp-alist
+             (cons 'vishap-oberon-file
+                   (cons 'vishap-oberon-line compilation-error-regexp-alist)))
+       (setq compilation-error-regexp-alist-alist
+             (append compilation-error-regexp-alist-alist
+                     vishap-oberon-compilation-error-alist))))
+
+  (defun update-for-vishap-oberon-compilation-error-alist ()
+    "Use this when you change `vishap-oberon-compilation-error-alist'."
+    (interactive)
+    (cl-loop for item in vishap-oberon-compilation-error-alist
+          do (progn
+               (print (format "set to: %S\n" (cdr item)))
+               (print (format "before: %S\n"
+                              (-> (assoc (car item)
+                                         compilation-error-regexp-alist-alist)
+                                  (cdr))))
+               (setf (-> (assoc (car item)
+                                compilation-error-regexp-alist-alist)
+                         (cdr))
+                     (cdr item))
+               (print (format "after:  %S\n" (-> (assoc (car item)
+                                                        compilation-error-regexp-alist-alist)
+                                                 (cdr))))
+               ))))
 
 (message "End of tkb-experimental.el")
 ;;; end of tkb-experimental.el

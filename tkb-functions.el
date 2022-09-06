@@ -101,7 +101,7 @@ prefix is less than 0."
         (aset ns n c)
         (aset ns (+ n 1) c)
         (aset ns (+ n 2) c))
-      (incf i))
+      (cl-incf i))
     (insert ns)))
 
 
@@ -306,4 +306,12 @@ Goes backward if ARG is negative; error if CHAR not found."
   (interactive)
   (message "%s" (text-properties-at (point))))
 
+(defun tkb-find-in-path (path to-find)
+  (let ((path (tkb-path-get path)))
+    (catch 'checking
+      (while path
+        (let* ((directory (car path))
+               (filename (concat (file-name-as-directory directory) to-find)))
+          (if (file-exists-p filename) (throw 'checking filename)))
+        (pop path)))))
 ;;; end of tkb-functions.el

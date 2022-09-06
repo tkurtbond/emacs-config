@@ -24,7 +24,7 @@ WARNING: Doesn't handle seconds."
                       0.0))
           (ampm     (aref (match-string 4 s) 0)))
       (cond ((and (char-equal ampm ?p) (< hour 12))
-             (incf hour 12))
+             (cl-incf hour 12))
             ((and (char-equal ampm ?a) (= 12 hour))
              (setq hour 0)))
       (+ hour fraction)))
@@ -101,7 +101,7 @@ WARNING: Doesn't handle seconds."
 		sum (let* ((end (t:match-time b))
 			   (beg (t:match-time a))
 			   (dif (- end beg)))
-		      (incf (gethash (if c (car c) nil) tab 0.0) dif)
+		      (cl-incf (gethash (if c (car c) nil) tab 0.0) dif)
 		      (when print-intervals
 			(princ (format "   %-6s to %-6s = %9f%s\n"
 				       a b dif (if c (format " (%s)" (car c))
@@ -155,8 +155,9 @@ if END is a dash, use the current time instead."
 				    (t:match-time end*)))
 			     (beg (t:match-time beg*))
 			     (dif (- end beg)))
-			(incf (gethash (if comments (car comments) nil)
-				       tab 0.0) dif)
+			(cl-incf (gethash (if comments (car comments) nil)
+				          tab 0.0)
+                                 dif)
 			(push (format "%-8s to %-8s = %9f%s\n"
 				      beg* end* dif
 				      (if comments
@@ -193,7 +194,7 @@ if END is a dash, use the current time instead."
          (h (truncate e))
          (.m (- e h))
          (m (round (* .m 60))))
-    (destructuring-bind (sec min hour day month year dow dst zone)
+    (cl-destructuring-bind (sec min hour day month year dow dst zone)
 	(decode-time (current-time))
       (let ((time (encode-time 0 m h day month year zone)))
 	(message "%s = %s (delta: %f)"
@@ -213,7 +214,7 @@ if END is a dash, use the current time instead."
 	(setq end (read-string (format "End   %d: " i)))
 	(when (empty-string-p end) (throw 'done nil))
 	(push (list beg end) intervals)
-	(incf i)))
+	(cl-incf i)))
     (t:time-remaining total-needed (t:total-intervals intervals)  start)))
 
 (defun t:time-remaining2 (hours-needed intervals start)
@@ -229,7 +230,7 @@ time, to get the time to be finished."
 			    (setq end (read-string (format "End   %d: " i)))
 			    (when (empty-string-p end) (throw 'done intervals))
 			    (push (list beg end) intervals)
-			    (incf i)))))
+			    (cl-incf i)))))
 		     (read-string "Last Start: ")))
   (t:time-remaining hours-needed (t:total-intervals intervals) start))
 

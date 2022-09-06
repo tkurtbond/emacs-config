@@ -140,7 +140,7 @@ Warning: Call this only after having matched tkb-time-interval-rx."
     (let* ((beg  (+ (* beg-hour 60) beg-min))
 	   (end  (+ (* end-hour 60) end-min)))
       ;; FIXME: Does this handle 11:30p to 1a???
-      (when (<= end beg) (incf end (* 24 60)))
+      (when (<= end beg) (cl-incf end (* 24 60)))
       (let* ((dur  (- end beg))
 	     (h-mm (tkb-m-to-h-mm dur))
 	     (h    (tkb-m-to-h dur)))
@@ -169,7 +169,7 @@ Warning: Call this only after having matched tkb-time-interval-rx."
   (interactive)
   (if (not (looking-at tkb-time-interval-rx))
       (message "No time interval here.")
-    (destructuring-bind (duration h-mm hours) (tkb-get-duration)
+    (cl-destructuring-bind (duration h-mm hours) (tkb-get-duration)
       (message "%s or %s hours" h-mm hours))))
 
 
@@ -185,7 +185,7 @@ line."
 	  (beginning-of-line)
 	  (not (search-forward-regexp tkb-time-interval-rx e nil)))
 	(message "No time interval on this line.")
-      (destructuring-bind (duration h-mm hours) (tkb-get-duration)
+      (cl-destructuring-bind (duration h-mm hours) (tkb-get-duration)
 	(let* ((formatted-duration (format "%s or %s hours" h-mm hours)))
 	  (save-excursion
 	    (beginning-of-line)

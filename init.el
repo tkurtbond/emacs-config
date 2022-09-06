@@ -38,7 +38,7 @@
 			;; a newer version only works from the
 			;; list-packages buffer.
 			;; ada-mode ; not currently using
-			;; ada-ref-man ; not currently using
+			ada-ref-man ; not currently using
 			;; Not using because of markup minimization making
 			;; markup unusable.
 			;;adoc-mode
@@ -79,6 +79,7 @@
                         ;;---
 			;; regex-tool ; not currently using
                         s
+                        string-inflection
                         unicode-fonts
 			use-package ;; too strict?
 			wanderlust ;; apparently using again.
@@ -180,8 +181,6 @@
       'mail-send-hook))
 
 
-
-(load "~/lib/emacs/tkb/tkb-go.el")
 
 (put 'set-goal-column 'disabled nil)
 
