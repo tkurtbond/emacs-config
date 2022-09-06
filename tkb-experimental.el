@@ -1826,8 +1826,11 @@ Goes backward if ARG is negative; error if CHAR not found."
   (setq insert-directory-program gls))
 
 (defun tkb-path-get (&optional env-variable)
-  (let ((env-variable (if env-variable env-variable "PATH")))
-    (split-string (getenv env-variable) ":")))
+  (let* ((env-variable (if env-variable env-variable "PATH"))
+         (parts (getenv env-variable)))
+    (if parts
+        (split-string parts ":")
+      "")))
 
 (defun tkb-path-set (path-elements &optional env-variable)
   (let ((env-variable (if env-variable env-variable "PATH")))
@@ -1888,24 +1891,45 @@ Goes backward if ARG is negative; error if CHAR not found."
      `(define-key ,map ,key ',func))
     (funcall name t)))
 
-(defun tkb-save-path ()
-  (interactive)
-  (let* ((s (buffer-substring-no-properties (point-min) (point-max)))
-         (path (-remove (lambda (path-element)
-                          (string-match "^[ \t]*$" path-element))
-                        (s-split "\n" s))))
-    (kill-buffer-and-window)
-    (message "Setting PATH to \"%s\"" (tkb-path-set path "PATH"))))
+(progn
+  ;; There has got to be a better way to pass the name of path variable to use.
+  (defvar tkb-edit-path-path-var nil
+    "Name of path variable to edit.")
 
-(defun tkb-edit-path ()
-  (interactive)
-  (let ((path (tkb-path-get "PATH"))
-        (buf (get-buffer-create "*Editing-PATH*")))
-    (pop-to-buffer buf '(display-buffer-pop-up-window))
-    (delete-region (point-min) (point-max))
-    (cl-loop for dir in path do (progn (insert dir) (insert "\n")))
-    (buffer-local-set-key (kbd "C-c C-c") 'tkb-save-path)
-    (message "Use C-c C-c to finish and set your path, or C-x k to abort.")))
+  (defun tkb-save-path ()
+    (interactive)
+    (let* ((path-var (if tkb-edit-path-path-var
+                         tkb-edit-path-path-var
+                       "PATH"))
+           (s (buffer-substring-no-properties (point-min) (point-max)))
+           (path (-remove (lambda (path-element)
+                            (string-match "^[ \t]*$" path-element))
+                          (s-split "\n" s))))
+      (kill-buffer-and-window)
+      (message "Setting path \"%s\" to \"%s\"" tkb-edit-path-path-var
+               (tkb-path-set path tkb-edit-path-path-var))
+      (setq tkb-edit-path-path-var nil)))
+
+  (defun tkb-not-save-path ()
+    (interactive)
+    (kill-buffer-and-window)
+    (setq tkb-edit-path-path-var nil))
+
+  (defun tkb-edit-path (prefix)
+    (interactive "P")
+    (let* ((path-var (if prefix
+                         (read-string "Path variable? ")
+                       "PATH"))
+           (path (tkb-path-get path-var))
+           (buf (get-buffer-create "*Editing-PATH*")))
+      (setq tkb-edit-path-path-var path-var)
+      (pop-to-buffer buf '(display-buffer-pop-up-window))
+      (delete-region (point-min) (point-max))
+      (cl-loop for dir in path do (progn (insert dir) (insert "\n")))
+      (buffer-local-set-key (kbd "C-c C-c") 'tkb-save-path)
+      (buffer-local-set-key (kbd "C-c C-k") 'tkb-not-save-path)
+      (message "Use C-c C-c to finish and set your path, or C-c C-k to abort.")))
+  )
 
 (defun tkb-prepend-to-path (directory env-variable)
   "Read a directory into DIRECTORY and if prefix arg in ENV-VARIABLE is
