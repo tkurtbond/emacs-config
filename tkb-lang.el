@@ -30,9 +30,11 @@
 (when nil 
   ;; (setq open-paren-in-column-0-is-defun-start nil) ; didn't work.
   (defun tkb-beginning-of-defun-function (&optional arg)
+    ;; No, it messes up end-of-defun. :-(
     (interactive)
     (re-search-backward "^[ \t]*\\s(def"))
-  (setq beginning-of-defun-function #'tkb-beginning-of-defun-function))
+  (setq beginning-of-defun-function #'tkb-beginning-of-defun-function)
+  )
 
 ;; I found these useful when working with the meta parsing technique in
 ;; Common Lisp.
@@ -185,9 +187,9 @@
 ;;(put 'args:make-option 'scheme-indent-function 3)
 
 (when nil
-
   (defun tkb-beginning-of-defun (&optional arg)
     ;; This is crude, but I think it works ok.
+    ;; No, it messes up end-of-defun. :-(
     (interactive "p")
     (unless arg (setq arg 1))
     (if (< arg 0)
