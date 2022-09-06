@@ -1133,6 +1133,11 @@ over 40 is morbidly obese, over 50 is super morbidly obese."
     (kill-new (file-name-base buffer-file-name)))
   (tkb-keys ((kbd "C-c b b") #'tkb-copy-buffer-basename))
 
+  (defun tkb-insert-buffer-basename ()
+    (interactive)
+    (insert (file-name-base buffer-file-name)))
+  (tkb-keys ((kbd "C-c b B") #'tkb-insert-buffer-basename))
+
   )
 
 (defun tkb-lower-to-register (register start end)
