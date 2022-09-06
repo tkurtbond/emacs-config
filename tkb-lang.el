@@ -325,7 +325,9 @@
 (when-load-file "ada-mode"
   (autoload 'ada-mode "ada-mode")
   (push ".ali" completion-ignored-extensions)
+  (setq ada-label-indent -3)            ; I want the same level as ada-indent.
   (defconst tkb-adaincludes-directory
+    ;; Really should check for various directories across different OSes???
     (file-name-as-directory
      "/opt/gcc-11.2.0/lib/gcc/x86_64-apple-darwin15/11.2.0/adainclude"))
   (when nil ;; not yet implemented
