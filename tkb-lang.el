@@ -326,6 +326,7 @@
 
 (when-load-file "ada-mode"
   (autoload 'ada-mode "ada-mode")
+  (add-to-list 'auto-mode-alist '("\\.gpr$" . ada-mode))
   (push ".ali" completion-ignored-extensions)
   (setq ada-label-indent -3)            ; I want the same level as ada-indent.
   (defconst tkb-adaincludes-directory
