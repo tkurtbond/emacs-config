@@ -103,6 +103,7 @@
 (global-set-key (kbd "C-c d p") 'tkb-insert-date)
 (global-set-key (kbd "C-c d P") #'tkb-kill-date)
 (global-set-key (kbd "C-c d t") #'tkb-insert-time)
+(global-set-key (kbd "C-c d T") #'tkb-insert-24hour-time)
 
 (global-set-key (kbd "C-c DEL") 'backward-delete-char-untabify)
 (global-set-key (kbd "C-c g") 'goto-line)

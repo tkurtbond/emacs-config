@@ -95,6 +95,12 @@ and return the encoded time."
   (interactive)
   (insert (tkb-time)))
 
+(defun tkb-insert-24hour-time ()
+  "Insert the twenty-four hour current time, in \"HH:MM\" format."
+  (interactive)
+  (insert (format-time-string "%H:%M"))))
+  
+
 
 
 (defun date ()
