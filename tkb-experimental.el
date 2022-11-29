@@ -2638,5 +2638,14 @@ and make it the current selection."
                                                  (cdr))))
                ))))
 
+(defvar tkb-w-map (make-sparse-keymap))
+(global-set-key (kbd "C-c w") tkb-w-map)      ; Right now just asking various what questions.
+(defun what-column ()
+  "Display what column the cursor is in."
+  (interactive)
+  (message "Current Column: %d" (current-column)))
+(define-key tkb-w-map "c" 'what-column)
+(define-key tkb-w-map "l" 'what-line)
+
 (message "End of tkb-experimental.el")
 ;;; end of tkb-experimental.el

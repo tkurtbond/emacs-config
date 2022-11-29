@@ -136,7 +136,7 @@
 (global-set-key (kbd "C-c U") 'ucs-insert)
 (global-set-key (kbd "C-c u") 'tkb-insert-user-name)
 (global-set-key (kbd "C-c L") 'tkb-insert-login-name)
-(global-set-key (kbd "C-c w") 'what-line)
+;; (global-set-key (kbd "C-c w") 'what-line) ;; now in tkb-experimental.el in the tkb-w-map.
 (global-set-key (kbd "C-c x") 'tkb-get-clipboard)
 (global-set-key (kbd "C-c W o") 'tkb-eww-open-file-at-point)
 (defun tkb-eww-open-file-at-point ()
