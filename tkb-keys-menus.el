@@ -131,6 +131,7 @@
 (global-set-key (kbd "C-c k w") 'whitespace-cleanup)
 ;;(global-set-key (kbd "C-c m") 'compile) ; now used for stuff relating to mail
 (global-set-key (kbd "C-c o") 'overwrite-mode)
+(global-set-key (kbd "C-c O") 'delete-blank-lines)
 (global-set-key (kbd "C-c r") 'tkb-count-region)
 (global-set-key (kbd "C-c t") 'tkb-find-next-tag)
 (global-set-key (kbd "C-c U") 'ucs-insert)
