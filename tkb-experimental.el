@@ -52,6 +52,13 @@ recommended by the ReST quickref: http://tinyurl.com/47lkhk"
     (select-frame frame)))
 (tkb-keys ((kbd "C-c A") 'tkb-select-frame))
 
+(defun tkb-show-frame-size-and-position ()
+  (interactive)
+  (destructuring-bind (x-offset . y-offset) (frame-position)
+    (let ((height (frame-height))
+          (width  (frame-width)))
+      (message "%dx%d at %d,%d" width height x-offset y-offset))))
+
 (defun tkb-load-file ()
   "Load the current file into emacs lisp"
   (interactive)
