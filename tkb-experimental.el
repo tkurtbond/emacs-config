@@ -2097,6 +2097,9 @@ REPEAT is how many times to repeat the roll."
                           ("sI" . [?☛])
                           ("sp" . [?¶]) ; pilcrow
                           ("ss" . [?§]) ; SECTION SIGN in Unicode; also silcrow
+                          ("sF" . [?℉]) ; Degrees Fahrenheit
+                          ("sC" . [?℃]) ; Degrees Centigrade
+                          ("sD" . [?°]) ; Degree sign
                           ;; Fractions
                           ("5/8" . [?⅝])
                           ("4/5" . [?⅘])
