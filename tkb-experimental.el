@@ -52,6 +52,13 @@ recommended by the ReST quickref: http://tinyurl.com/47lkhk"
     (select-frame frame)))
 (tkb-keys ((kbd "C-c A") 'tkb-select-frame))
 
+(defun tkb-show-frame-size-and-position ()
+  (interactive)
+  (destructuring-bind (x-offset . y-offset) (frame-position)
+    (let ((height (frame-height))
+          (width  (frame-width)))
+      (message "%dx%d at %d,%d" width height x-offset y-offset))))
+
 (defun tkb-load-file ()
   "Load the current file into emacs lisp"
   (interactive)
@@ -1117,7 +1124,14 @@ over 40 is morbidly obese, over 50 is super morbidly obese."
     (let* ((fn (buffer-file-name))
            (fn (if whole fn (file-name-nondirectory fn))))
       (kill-new (downcase fn))))
-  (tkb-keys ((kbd "C-c b F") #'tkb-copy-downcase-buffer-file-name))
+  (tkb-keys ((kbd "C-c b D") #'tkb-copy-downcase-buffer-file-name))
+  (defun tkb-copy-upcase-buffer-file-name (whole)
+    (interactive "P")
+    (message "whole: %s numeric: %d" whole (prefix-numeric-value whole))
+    (let* ((fn (buffer-file-name))
+           (fn (if whole fn (file-name-nondirectory fn))))
+      (kill-new (upcase fn))))
+  (tkb-keys ((kbd "C-c b U") #'tkb-copy-upcase-buffer-file-name))
 
   (defun tkb-copy-buffer-name ()
     (interactive)
@@ -2090,6 +2104,9 @@ REPEAT is how many times to repeat the roll."
                           ("sI" . [?☛])
                           ("sp" . [?¶]) ; pilcrow
                           ("ss" . [?§]) ; SECTION SIGN in Unicode; also silcrow
+                          ("sF" . [?℉]) ; Degrees Fahrenheit
+                          ("sC" . [?℃]) ; Degrees Centigrade
+                          ("sD" . [?°]) ; Degree sign
                           ;; Fractions
                           ("5/8" . [?⅝])
                           ("4/5" . [?⅘])
@@ -2637,6 +2654,15 @@ and make it the current selection."
                                                         compilation-error-regexp-alist-alist)
                                                  (cdr))))
                ))))
+
+(defvar tkb-w-map (make-sparse-keymap))
+(global-set-key (kbd "C-c w") tkb-w-map)      ; Right now just asking various what questions.
+(defun what-column ()
+  "Display what column the cursor is in."
+  (interactive)
+  (message "Current Column: %d" (current-column)))
+(define-key tkb-w-map "c" 'what-column)
+(define-key tkb-w-map "l" 'what-line)
 
 (message "End of tkb-experimental.el")
 ;;; end of tkb-experimental.el

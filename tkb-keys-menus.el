@@ -103,6 +103,7 @@
 (global-set-key (kbd "C-c d p") 'tkb-insert-date)
 (global-set-key (kbd "C-c d P") #'tkb-kill-date)
 (global-set-key (kbd "C-c d t") #'tkb-insert-time)
+(global-set-key (kbd "C-c d T") #'tkb-insert-24hour-time)
 
 (global-set-key (kbd "C-c DEL") 'backward-delete-char-untabify)
 (global-set-key (kbd "C-c g") 'goto-line)
@@ -130,12 +131,13 @@
 (global-set-key (kbd "C-c k w") 'whitespace-cleanup)
 ;;(global-set-key (kbd "C-c m") 'compile) ; now used for stuff relating to mail
 (global-set-key (kbd "C-c o") 'overwrite-mode)
+(global-set-key (kbd "C-c O") 'delete-blank-lines)
 (global-set-key (kbd "C-c r") 'tkb-count-region)
 (global-set-key (kbd "C-c t") 'tkb-find-next-tag)
 (global-set-key (kbd "C-c U") 'ucs-insert)
 (global-set-key (kbd "C-c u") 'tkb-insert-user-name)
 (global-set-key (kbd "C-c L") 'tkb-insert-login-name)
-(global-set-key (kbd "C-c w") 'what-line)
+;; (global-set-key (kbd "C-c w") 'what-line) ;; now in tkb-experimental.el in the tkb-w-map.
 (global-set-key (kbd "C-c x") 'tkb-get-clipboard)
 (global-set-key (kbd "C-c W o") 'tkb-eww-open-file-at-point)
 (defun tkb-eww-open-file-at-point ()
