@@ -2275,12 +2275,12 @@ ring."
 
 (defun tkb-insert-post-fragment ()
   "Insert a fragment into the current, defaulting to
-~/nikola/newblog/fragments/post.rst."
+~/Repos/tkurtbond.github.io/fragments/post.rst."
   (interactive)
   (let ((filename (expand-file-name
                    (read-file-name
                     "Post Fragment? "
-                    "~/nikola/newblog/fragments/" nil nil
+                    "~/Repos/tkurtbond.github.io/fragments/" nil nil
                     "post.rst"))))
     (insert-file-contents filename)))
 (global-set-key (kbd "C-c i p") 'tkb-insert-post-fragment)
