@@ -248,6 +248,7 @@
                  ("\\.nr\\'" . nroff-mode)
                  ("\\.roff\\'" . nroff-mode)
                  ("\\.mom\\'" . nroff-mode)
+                 ("\\.sld\\'" . scheme-mode)
                  ("\\.stk\\'" . scheme-mode)
                  ("\\.ss\\'" . scheme-mode)
                  ("\\.perl\\'" . perl-mode)
