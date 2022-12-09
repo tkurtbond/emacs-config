@@ -196,11 +196,29 @@
         (dotimes (_ (- arg)) (re-search-forward "^[ \t]\\s(def"))
       (dotimes (_ arg) (re-search-backward "^[ \t]*\\s(def"))))
 
+  (defun tkb-beginning-of-defun (&optional arg)
+    (interactive "p")
+    (unless arg (setq arg 1))
+    (cond ((< arg 0)
+           ;; Don't know what to do.
+           (end-of-defun (- arg)))
+          (t
+           (dotimes (_ arg)
+             (re-search-backward "^[ \t]*(\\(define\\|module\\)")))))
+
+
   (defun tkb-scheme-mode-hook ()
     (interactive)
     (setq-local beginning-of-defun-function #'tkb-beginning-of-defun))
 
-  (add-hook 'scheme-mode-hook #'tkb-scheme-mode-hook))
+  (add-hook 'scheme-mode-hook #'tkb-scheme-mode-hook)
+
+
+  (when nil
+
+    (setq beginning-of-defun-function (lambda nil 
+                                        (re-search-backward "^[ \t]*(define")))
+    ))
 
 ;; For Emacs lisp
 (put 'eval-after-load 'lisp-indent-function 1)
