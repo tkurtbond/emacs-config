@@ -1283,10 +1283,11 @@ Not under a window system, so you can't ispell the selection")))))
                         (error "Aborted send")))))
           (set-marker end-of-headers nil)))))
   (add-hook 'message-send-hook 'check-attachments-attached)
-  (defun tkb-messsage-header-setup-hook ()
-    (goto-char (point-max))
-    (insert "BCC: tkurtbond@gmail.com\n"))
-  (setq message-header-setup-hook #'tkb-messsage-header-setup-hook))
+  (when nil 
+    (defun tkb-messsage-header-setup-hook ()
+      (goto-char (point-max))
+      (insert "BCC: tkurtbond@gmail.com\n"))
+    (setq message-header-setup-hook #'tkb-messsage-header-setup-hook)))
 
 (when t
   (defun tkb-zap-to-char (arg char)
