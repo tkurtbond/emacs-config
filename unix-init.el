@@ -80,7 +80,7 @@
   (add-to-list 'load-path tkb-emacs-dir))
 
 (cl-loop for d across ["~/lib/emacs/others" "~/lib/emacs/others/misc"
-                       "~/lib/emacs/others/ada-mode"]
+                       "~/lib/emacs/others/old-ada-mode"]
       do (progn
 	   (when-directory (o (expand-file-name d))
 	     (message "adding %s to load-path" o)
