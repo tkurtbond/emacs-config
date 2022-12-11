@@ -2095,8 +2095,9 @@ REPEAT is how many times to repeat the roll."
                           ("Gf" . [?♀])  ; female sign
                           ("GM" . [?⚣])  ; male homosexuality
                           ("GF" . [?⚢])  ; female homosexuality
-                          ("Gb" . [?⚥])  ; male & female, transgender
+                          ("Gb" . [?⚥])  ; male & female, both
                           ("Ga" . [?⚪])  ; agender, sexless
+                          ("Gt" . [?⚧])  ; transgender
                           ;; Symbols
                           ("sc" . [?✓]) ; CHECK MARK in Unicode.
                           ("si" . [?∞]) ; infinity
