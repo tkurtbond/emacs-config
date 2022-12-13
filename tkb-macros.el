@@ -213,11 +213,11 @@ the first form of BODY is :load) and execute the forms in BODY."
 	    (locate-library ,filename)))
        (cond
 	(,varname
-	 (message "Found %s in load-path" ,filename)
 	 ,@(cond ((eq (car body) ':load)
 		 `((load-library ,varname) ,@(cdr body)))
 		(t
-		 `,body)))
+		 `,body))
+         (message "Found %s in load-path" ,filename))
 	(t
 	 (message "Did NOT find %s in load-path" ,filename))))))
 (put 'when-load-file 'lisp-indent-function 1)
