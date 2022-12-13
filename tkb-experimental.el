@@ -1436,15 +1436,11 @@ Goes backward if ARG is negative; error if CHAR not found."
 ;; on tiled, tabbing window managers like ion.)
 (setq ediff-window-setup-function 'ediff-setup-windows-plain)
 
-(when nil
-  ;; We don't have gforth.el installed now.
-
+(when-load-file "gforth.el"
   (autoload 'forth-mode "gforth")
-  (setq auto-mode-alist (cons '("\\.fs\\'" . forth-mode)
-                              auto-mode-alist))
+  (add-to-list 'auto-mode-alist '("\\.fs\\'" . forth-mode))
   (autoload 'forth-block-mode "gforth")
-  (setq auto-mode-alist (cons '("\\.fb\\'" . forth-block-mode)
-                              auto-mode-alist))
+  (add-to-list 'auto-mode-alist '("\\.fb\\'" . forth-block-mode))
   (add-hook 'forth-mode-hook (function (lambda ()
                                          ;; customize variables here:
                                          (setq forth-indent-level 4)
