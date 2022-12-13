@@ -52,13 +52,6 @@ recommended by the ReST quickref: http://tinyurl.com/47lkhk"
     (select-frame frame)))
 (tkb-keys ((kbd "C-c A") 'tkb-select-frame))
 
-(defun tkb-show-frame-size-and-position ()
-  (interactive)
-  (destructuring-bind (x-offset . y-offset) (frame-position)
-    (let ((height (frame-height))
-          (width  (frame-width)))
-      (message "%dx%d at %d,%d" width height x-offset y-offset))))
-
 (defun tkb-load-file ()
   "Load the current file into emacs lisp"
   (interactive)
@@ -70,168 +63,175 @@ recommended by the ReST quickref: http://tinyurl.com/47lkhk"
   (interactive "M")
   (message "file: %s" (locate-file filename load-path (get-load-suffixes))))
 
-(when t					; Using org-capture now.
-  (progn                                ; Config for mobile org
-    ;; Set to the location of your Org files on your local system
-    (setq org-directory "~/Org")
-    (setq org-adapt-indentation t)
-    (eval-after-load "org-mobile"
-      '(progn 
-         ;; Set to the name of the file where new notes will be stored
-         (setq org-mobile-inbox-for-pull "~/Org/flagged.org")
-         ;; Set to <your Dropbox root directory>/MobileOrg.
-         (setq org-mobile-directory "~/Dropbox/Apps/MobileOrg")
-         (push "~/Org" org-mobile-files))))
-  ;;
-  (defconst tkb-org-journal (expand-file-name "~/current/org/journal.org"))
-  (defconst tkb-org-contacts (expand-file-name "~/current/org/contacts.org"))
-  (defconst tkb-org-health (expand-file-name "~/current/org/health.org"))
-  (defconst tkb-org-notes (expand-file-name "~/current/org/notes.org"))
-  (defconst tkb-org-rpg (expand-file-name "~/current/org/rpg.org"))
-  (defconst tkb-org-tasks (expand-file-name "~/current/org/tasks.org"))
-  (defconst tkb-org-video (expand-file-name "~/current/org/video.org"))
-  (defconst tkb-org-mpl-journal (expand-file-name "~/job/MPL/Org/journal.org"))
-  (defconst tkb-org-mhst-journal (expand-file-name "~/job/MPL/MHST/Org/mhst-journal.org"))
-  (defconst tkb-org-mpl-contacts (expand-file-name "~/job/MPL/Org/contacts.org"))
-  (defconst tkb-org-mpl-notes (expand-file-name "~/job/MPL/Org/notes.org"))
-  (defconst tkb-org-mpl-tasks (expand-file-name "~/job/MPL/Org/tasks.org"))
-  (tkb-keys ((kbd "C-c k o c") #'org-capture))
+(progn   ;; org-mode stuff.
+  (when t                               ; Using org-capture now.
+    (progn                              ; Config for mobile org
+      ;; Set to the location of your Org files on your local system
+      (setq org-directory "~/Org")
+      (eval-after-load "org-mobile"
+        '(progn 
+           ;; Set to the name of the file where new notes will be stored
+           (setq org-mobile-inbox-for-pull "~/Org/flagged.org")
+           ;; Set to <your Dropbox root directory>/MobileOrg.
+           (setq org-mobile-directory "~/Dropbox/Apps/MobileOrg")
+           (push "~/Org" org-mobile-files))))
+    ;;
+    (defconst tkb-org-journal (expand-file-name "~/current/org/journal.org"))
+    (defconst tkb-org-contacts (expand-file-name "~/current/org/contacts.org"))
+    (defconst tkb-org-health (expand-file-name "~/current/org/health.org"))
+    (defconst tkb-org-notes (expand-file-name "~/current/org/notes.org"))
+    (defconst tkb-org-rpg (expand-file-name "~/current/org/rpg.org"))
+    (defconst tkb-org-tasks (expand-file-name "~/current/org/tasks.org"))
+    (defconst tkb-org-video (expand-file-name "~/current/org/video.org"))
+    (defconst tkb-org-mpl-journal (expand-file-name "~/job/MPL/Org/journal.org"))
+    (defconst tkb-org-mhst-journal (expand-file-name "~/job/MPL/MHST/Org/mhst-journal.org"))
+    (defconst tkb-org-mpl-contacts (expand-file-name "~/job/MPL/Org/contacts.org"))
+    (defconst tkb-org-mpl-notes (expand-file-name "~/job/MPL/Org/notes.org"))
+    (defconst tkb-org-mpl-tasks (expand-file-name "~/job/MPL/Org/tasks.org"))
+    (tkb-keys ((kbd "C-c k o c") #'org-capture))
 
-  (defvar tkb-org-year (format-time-string "%Y")
-    "The year the current emacs session was started, for use with org-capture.")
-  (defun tkb-org-capture-advice-update-year (&optional goto keys)
-    "Update ‘tkb-org-year’ and update the entry for adding a book in 
+    (defvar tkb-org-year (format-time-string "%Y")
+      "The year the current emacs session was started, for use with org-capture.")
+    (defun tkb-org-capture-advice-update-year (&optional goto keys)
+      "Update ‘tkb-org-year’ and update the entry for adding a book in 
 ‘org-capture-templates’ to use the new value."
-    (let ((new-year (format-time-string "%Y")))
-      (unless (string-equal tkb-org-year new-year)
-        (setf tkb-org-year new-year)
-        (setf (--> "b" (assoc it org-capture-templates)
-                   (assoc 'file+olp it) (nth 2 it))
-              tkb-org-year))))
-  (advice-add 'org-capture :before #'tkb-org-capture-advice-update-year)
+      (let ((new-year (format-time-string "%Y")))
+        (unless (string-equal tkb-org-year new-year)
+          (setf tkb-org-year new-year)
+          (setf (--> "b" (assoc it org-capture-templates)
+                     (assoc 'file+olp it) (nth 2 it))
+                tkb-org-year))))
+    (advice-add 'org-capture :before #'tkb-org-capture-advice-update-year)
   
-  (setq org-capture-templates
-        `(("X" "EXPERIMENT" entry
-           (file+olp+datetree ,(expand-file-name "~/current/org/loud-experiment.org"))
-           "*** %^{Title} %U\n  %i\n  %?\n")
-          ("b" "Add book about to read" entry
-           (file+olp ,(expand-file-name "~/Repos/tkb-notes/Books/read.org")
-                     ,(format-time-string "%Y") "Read")
-           "*** : %c" :prepend t)
-          ("j" "Journal" entry
-           (file+headline ,tkb-org-journal "Journal")
-           "* %^{Title} %U\n  %i\n  %?\n")
-          ("c" "Contacts Log" entry
-           (file+headline ,tkb-org-contacts "Contacts")
-           "* %^{Title} %U\n  %i\n  %?\n")
-          ("h" "Health" entry
-           (file+headline ,tkb-org-health "Health")
-           "* %^{Title} %U\n  %i\n  %?\n")
-          ("n" "Notes" entry
-           (file+headline ,tkb-org-notes "Notes")
-           "\n\n* %^{Title} %U\n  %i\n  %?\n  %a\n\n")
-          ("r" "RPG" entry
-           (file+headline ,tkb-org-rpg "RPG")
-           "\n\n* %^{Title} %U\n  %i\n  %?\n  %a\n\n")
-          ("t" "Tasks" entry
-           (file+headline ,tkb-org-tasks "Tasks")
-           "* TODO %^{Title} %U\n  %i\n  %?\n  %a\n")
-          ("v" "Video" entry
-           (file+headline ,tkb-org-video "Video")
-           "* TODO %^{Title} %U\n  %^C%i%?\n")
-          ("J" "MPL Journal" entry
-           (file+headline ,tkb-org-mpl-journal "MPL Journal")
-           "* %^{Title} %U\n  %i\n  %?\n")
-          ("M" "MHST Journal" entry
-           (file+headline ,tkb-org-mhst-journal "MHST Journal")
-           "* %^{Title} %U\n  %i\n  %?\n")
-          ("C" "MPL Contacts Log" entry
-           (file+headline ,tkb-org-mpl-contacts "MPL Contacts")
-           "* %^{Title} %U\n  %i\n  %?\n")
-          ("N" "MPL Notes" entry
-           (file+headline ,tkb-org-mpl-notes "MPL Notes")
-           "\n\n* %^{Title} %U\n  %i\n  %?\n  %a\n\n")
-          ("T" "MPL Tasks" entry
-           (file+headline ,tkb-org-mpl-tasks "MPL Tasks")
-           "* TODO %^{Title} %U\n  %i\n  %?\n  %a\n")))
-  ;;(defvar tkb-org-files-map (make-sparse-keymap))
-  (define-prefix-command 'tkb-org-files-map)
-  (global-set-key (kbd "C-C k o F") 'tkb-org-files-map)
-  (tkb-keys ((kbd "C-c k o C-c") #'org-ctrl-c-ctrl-c)
-            ((kbd "C-c k o F j") #'(lambda () (interactive)
-                                     (find-file tkb-org-journal)))
-            ((kbd "C-c k o F c") #'(lambda () (interactive)
-                                     (find-file tkb-org-contacts)))
-            ((kbd "C-c k o F h") #'(lambda () (interactive)
-                                     (find-file tkb-org-health)))
-            ((kbd "C-c k o F n") #'(lambda () (interactive)
-                                     (find-file tkb-org-notes)))
-            ((kbd "C-c k o F r") #'(lambda () (interactive)
-                                     (find-file tkb-org-rpg)))
-            ((kbd "C-c k o F t") #'(lambda () (interactive)
-                                     (find-file tkb-org-tasks)))
-            ((kbd "C-c k o F v") #'(lambda () (interactive)
-                                     (find-file tkb-org-video)))
-            ((kbd "C-c k o F J") #'(lambda () (interactive)
-                                     (find-file tkb-org-mpl-journal)))
-            ((kbd "C-c k o F M") #'(lambda () (interactive)
-                                     (find-file tkb-org-mhst-journal)))
-            ((kbd "C-c k o F C") #'(lambda () (interactive)
-                                     (find-file tkb-org-mpl-contacts)))
-            ((kbd "C-c k o F N") #'(lambda () (interactive)
-                                     (find-file tkb-org-mpl-notes)))
-            ((kbd "C-c k o F T") #'(lambda () (interactive)
-                                     (find-file tkb-org-mpl-tasks)))
-            )
-  (tkb-check-bindings (list (kbd "C-c k o C-c")))
+    (setq org-capture-templates
+          `(("X" "EXPERIMENT" entry
+             (file+olp+datetree ,(expand-file-name "~/current/org/loud-experiment.org"))
+             "*** %^{Title} %U\n  %i\n  %?\n")
+            ("b" "Add book about to read" entry
+             (file+olp ,(expand-file-name "~/Repos/tkb-notes/Books/read.org")
+                       ,(format-time-string "%Y") "Read")
+             "*** : %c" :prepend t)
+            ("j" "Journal" entry
+             (file+headline ,tkb-org-journal "Journal")
+             "* %^{Title} %U\n  %i\n  %?\n")
+            ("c" "Contacts Log" entry
+             (file+headline ,tkb-org-contacts "Contacts")
+             "* %^{Title} %U\n  %i\n  %?\n")
+            ("h" "Health" entry
+             (file+headline ,tkb-org-health "Health")
+             "* %^{Title} %U\n  %i\n  %?\n")
+            ("n" "Notes" entry
+             (file+headline ,tkb-org-notes "Notes")
+             "\n\n* %^{Title} %U\n  %i\n  %?\n  %a\n\n")
+            ("r" "RPG" entry
+             (file+headline ,tkb-org-rpg "RPG")
+             "\n\n* %^{Title} %U\n  %i\n  %?\n  %a\n\n")
+            ("t" "Tasks" entry
+             (file+headline ,tkb-org-tasks "Tasks")
+             "* TODO %^{Title} %U\n  %i\n  %?\n  %a\n")
+            ("v" "Video" entry
+             (file+headline ,tkb-org-video "Video")
+             "* TODO %^{Title} %U\n  %^C%i%?\n")
+            ("J" "MPL Journal" entry
+             (file+headline ,tkb-org-mpl-journal "MPL Journal")
+             "* %^{Title} %U\n  %i\n  %?\n")
+            ("M" "MHST Journal" entry
+             (file+headline ,tkb-org-mhst-journal "MHST Journal")
+             "* %^{Title} %U\n  %i\n  %?\n")
+            ("C" "MPL Contacts Log" entry
+             (file+headline ,tkb-org-mpl-contacts "MPL Contacts")
+             "* %^{Title} %U\n  %i\n  %?\n")
+            ("N" "MPL Notes" entry
+             (file+headline ,tkb-org-mpl-notes "MPL Notes")
+             "\n\n* %^{Title} %U\n  %i\n  %?\n  %a\n\n")
+            ("T" "MPL Tasks" entry
+             (file+headline ,tkb-org-mpl-tasks "MPL Tasks")
+             "* TODO %^{Title} %U\n  %i\n  %?\n  %a\n")))
+    ;;(defvar tkb-org-files-map (make-sparse-keymap))
+    (define-prefix-command 'tkb-org-files-map)
+    (global-set-key (kbd "C-C k o F") 'tkb-org-files-map)
+    (tkb-keys ((kbd "C-c k o C-c") #'org-ctrl-c-ctrl-c)
+              ((kbd "C-c k o F j") #'(lambda () (interactive)
+                                       (find-file tkb-org-journal)))
+              ((kbd "C-c k o F c") #'(lambda () (interactive)
+                                       (find-file tkb-org-contacts)))
+              ((kbd "C-c k o F h") #'(lambda () (interactive)
+                                       (find-file tkb-org-health)))
+              ((kbd "C-c k o F n") #'(lambda () (interactive)
+                                       (find-file tkb-org-notes)))
+              ((kbd "C-c k o F r") #'(lambda () (interactive)
+                                       (find-file tkb-org-rpg)))
+              ((kbd "C-c k o F t") #'(lambda () (interactive)
+                                       (find-file tkb-org-tasks)))
+              ((kbd "C-c k o F v") #'(lambda () (interactive)
+                                       (find-file tkb-org-video)))
+              ((kbd "C-c k o F J") #'(lambda () (interactive)
+                                       (find-file tkb-org-mpl-journal)))
+              ((kbd "C-c k o F M") #'(lambda () (interactive)
+                                       (find-file tkb-org-mhst-journal)))
+              ((kbd "C-c k o F C") #'(lambda () (interactive)
+                                       (find-file tkb-org-mpl-contacts)))
+              ((kbd "C-c k o F N") #'(lambda () (interactive)
+                                       (find-file tkb-org-mpl-notes)))
+              ((kbd "C-c k o F T") #'(lambda () (interactive)
+                                       (find-file tkb-org-mpl-tasks)))
+              )
+    (tkb-check-bindings (list (kbd "C-c k o C-c")))
 
-  (defun tkb-find-org-log-file ()
-    "Look in the current directory or its parents for a file named *-log.org
+    (defun tkb-find-org-log-file ()
+      "Look in the current directory or its parents for a file named *-log.org
 and return it."
-    ;; So I can us M-x tkb-find-file-org-log and not bring up the debugger on the
-    ;; call to error when testing.
-    (interactive)
-    (let ((default-directory default-directory)
-          (original-directory default-directory)
-          log-files)
-      (while (not (setq log-files (file-expand-wildcards "*-log.org" t)))
-        (cd "..")
-        (when (string-equal default-directory "/")
-          (error "unable to find *-log.org starting at %s"
-                 original-directory)))
-      (car log-files)))
+      ;; So I can us M-x tkb-find-file-org-log and not bring up the debugger on the
+      ;; call to error when testing.
+      (interactive)
+      (let ((default-directory default-directory)
+            (original-directory default-directory)
+            log-files)
+        (while (not (setq log-files (file-expand-wildcards "*-log.org" t)))
+          (cd "..")
+          (when (string-equal default-directory "/")
+            (error "unable to find *-log.org starting at %s"
+                   original-directory)))
+        (car log-files)))
 
-  (defun tkb-find-file-org-log ()
-    "Look in the current directory or its parents for a file named *-log.org
+    (defun tkb-find-file-org-log ()
+      "Look in the current directory or its parents for a file named *-log.org
 and switch to a buffer visiting it."
-    (interactive)
-    (let* ((org-file (tkb-find-org-log-file)))
-      (find-file org-file)))
-  (tkb-keys ((kbd "C-c k o f") #'tkb-find-file-org-log))
-  ;; (defalias 'x #'tkb-find-file-org-log)
+      (interactive)
+      (let* ((org-file (tkb-find-org-log-file)))
+        (find-file org-file)))
+    (tkb-keys ((kbd "C-c k o f") #'tkb-find-file-org-log))
+    ;; (defalias 'x #'tkb-find-file-org-log)
 
-  (defun tkb-add-org-log ()
-    "Look in the current directory or its parents for a file named *-log.org
+    (defun tkb-add-org-log ()
+      "Look in the current directory or its parents for a file named *-log.org
 and add a log entry to it."
-    (interactive)
-    (let* ((org-file (tkb-find-org-log-file))
-           (org-capture-templates
-            `(("l" "Log" entry (file+headline ,org-file "Log")
-               "* %^{Title} %U\n  %i\n  %?\n"))))
-      (org-capture)))
-  (tkb-keys ((kbd "C-c k o l") #'tkb-add-org-log)))
+      (interactive)
+      (let* ((org-file (tkb-find-org-log-file))
+             (org-capture-templates
+              `(("l" "Log" entry (file+headline ,org-file "Log")
+                 "* %^{Title} %U\n  %i\n  %?\n"))))
+        (org-capture)))
+    (tkb-keys ((kbd "C-c k o l") #'tkb-add-org-log)))
 
-(progn
-  ;; See Info: (org)Activation.
-  ;; The following lines are always needed.  Choose your own keys.
-  (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
-  (tkb-keys ((kbd "C-c k o s") #'org-store-link)
-            ((kbd "C-c k o a") #'org-agenda))
-  (add-hook 'org-mode-hook 'turn-on-font-lock))	; org-mode buffers only
+  (progn
+    ;; See Info: (org)Activation.
+    ;; The following lines are always needed.  Choose your own keys.
+    (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
+    (tkb-keys ((kbd "C-c k o s") #'org-store-link)
+              ((kbd "C-c k o a") #'org-agenda))
+    (add-hook 'org-mode-hook 'turn-on-font-lock)) ; org-mode buffers only
 
-(setq org-use-sub-superscripts '{}
-      org-export-with-sub-superscripts '{})
-(tkb-keys ((kbd "C-c k o TAB") #'org-global-cycle))
+  ;; Noticed TAB didn't indent body text past stars starting around
+  ;; end of 2022-08?  GNU Emacs 28.1 (build 1,
+  ;; x86_64-redhat-linux-gnu, GTK+ Version 3.24.34, cairo version
+  ;; 1.17.6) of 2022-07-15.  Org mode version 9.5.2
+  ;; (release_9.5.2-25-gaf6f12 @ /usr/share/emacs/28.1/lisp/org/).
+  (setq org-adapt-indentation t)
+  
+  (setq org-use-sub-superscripts '{}
+        org-export-with-sub-superscripts '{})
+  (tkb-keys ((kbd "C-c k o TAB") #'org-global-cycle)))
 
 (defun tkb-toggle-trailing-whitespace-display ()
   (interactive)
@@ -1124,14 +1124,7 @@ over 40 is morbidly obese, over 50 is super morbidly obese."
     (let* ((fn (buffer-file-name))
            (fn (if whole fn (file-name-nondirectory fn))))
       (kill-new (downcase fn))))
-  (tkb-keys ((kbd "C-c b D") #'tkb-copy-downcase-buffer-file-name))
-  (defun tkb-copy-upcase-buffer-file-name (whole)
-    (interactive "P")
-    (message "whole: %s numeric: %d" whole (prefix-numeric-value whole))
-    (let* ((fn (buffer-file-name))
-           (fn (if whole fn (file-name-nondirectory fn))))
-      (kill-new (upcase fn))))
-  (tkb-keys ((kbd "C-c b U") #'tkb-copy-upcase-buffer-file-name))
+  (tkb-keys ((kbd "C-c b F") #'tkb-copy-downcase-buffer-file-name))
 
   (defun tkb-copy-buffer-name ()
     (interactive)
@@ -1147,11 +1140,6 @@ over 40 is morbidly obese, over 50 is super morbidly obese."
     (interactive)
     (kill-new (file-name-base buffer-file-name)))
   (tkb-keys ((kbd "C-c b b") #'tkb-copy-buffer-basename))
-
-  (defun tkb-insert-buffer-basename ()
-    (interactive)
-    (insert (file-name-base buffer-file-name)))
-  (tkb-keys ((kbd "C-c b B") #'tkb-insert-buffer-basename))
 
   )
 
@@ -1283,11 +1271,10 @@ Not under a window system, so you can't ispell the selection")))))
                         (error "Aborted send")))))
           (set-marker end-of-headers nil)))))
   (add-hook 'message-send-hook 'check-attachments-attached)
-  (when nil 
-    (defun tkb-messsage-header-setup-hook ()
-      (goto-char (point-max))
-      (insert "BCC: tkurtbond@gmail.com\n"))
-    (setq message-header-setup-hook #'tkb-messsage-header-setup-hook)))
+  (defun tkb-messsage-header-setup-hook ()
+    (goto-char (point-max))
+    (insert "BCC: tkurtbond@gmail.com\n"))
+  (setq message-header-setup-hook #'tkb-messsage-header-setup-hook))
 
 (when t
   (defun tkb-zap-to-char (arg char)
@@ -1436,11 +1423,15 @@ Goes backward if ARG is negative; error if CHAR not found."
 ;; on tiled, tabbing window managers like ion.)
 (setq ediff-window-setup-function 'ediff-setup-windows-plain)
 
-(when-load-file "gforth.el"
+(when nil
+  ;; We don't have gforth.el installed now.
+
   (autoload 'forth-mode "gforth")
-  (add-to-list 'auto-mode-alist '("\\.fs\\'" . forth-mode))
+  (setq auto-mode-alist (cons '("\\.fs\\'" . forth-mode)
+                              auto-mode-alist))
   (autoload 'forth-block-mode "gforth")
-  (add-to-list 'auto-mode-alist '("\\.fb\\'" . forth-block-mode))
+  (setq auto-mode-alist (cons '("\\.fb\\'" . forth-block-mode)
+                              auto-mode-alist))
   (add-hook 'forth-mode-hook (function (lambda ()
                                          ;; customize variables here:
                                          (setq forth-indent-level 4)
@@ -1843,11 +1834,8 @@ Goes backward if ARG is negative; error if CHAR not found."
   (setq insert-directory-program gls))
 
 (defun tkb-path-get (&optional env-variable)
-  (let* ((env-variable (if env-variable env-variable "PATH"))
-         (parts (getenv env-variable)))
-    (if parts
-        (split-string parts ":")
-      "")))
+  (let ((env-variable (if env-variable env-variable "PATH")))
+    (split-string (getenv env-variable) ":")))
 
 (defun tkb-path-set (path-elements &optional env-variable)
   (let ((env-variable (if env-variable env-variable "PATH")))
@@ -1908,45 +1896,24 @@ Goes backward if ARG is negative; error if CHAR not found."
      `(define-key ,map ,key ',func))
     (funcall name t)))
 
-(progn
-  ;; There has got to be a better way to pass the name of path variable to use.
-  (defvar tkb-edit-path-path-var nil
-    "Name of path variable to edit.")
-
-  (defun tkb-save-path ()
-    (interactive)
-    (let* ((path-var (if tkb-edit-path-path-var
-                         tkb-edit-path-path-var
-                       "PATH"))
-           (s (buffer-substring-no-properties (point-min) (point-max)))
-           (path (-remove (lambda (path-element)
-                            (string-match "^[ \t]*$" path-element))
-                          (s-split "\n" s))))
-      (kill-buffer-and-window)
-      (message "Setting path \"%s\" to \"%s\"" tkb-edit-path-path-var
-               (tkb-path-set path tkb-edit-path-path-var))
-      (setq tkb-edit-path-path-var nil)))
-
-  (defun tkb-not-save-path ()
-    (interactive)
+(defun tkb-save-path ()
+  (interactive)
+  (let* ((s (buffer-substring-no-properties (point-min) (point-max)))
+         (path (-remove (lambda (path-element)
+                          (string-match "^[ \t]*$" path-element))
+                        (s-split "\n" s))))
     (kill-buffer-and-window)
-    (setq tkb-edit-path-path-var nil))
+    (message "Setting PATH to \"%s\"" (tkb-path-set path "PATH"))))
 
-  (defun tkb-edit-path (prefix)
-    (interactive "P")
-    (let* ((path-var (if prefix
-                         (read-string "Path variable? ")
-                       "PATH"))
-           (path (tkb-path-get path-var))
-           (buf (get-buffer-create "*Editing-PATH*")))
-      (setq tkb-edit-path-path-var path-var)
-      (pop-to-buffer buf '(display-buffer-pop-up-window))
-      (delete-region (point-min) (point-max))
-      (cl-loop for dir in path do (progn (insert dir) (insert "\n")))
-      (buffer-local-set-key (kbd "C-c C-c") 'tkb-save-path)
-      (buffer-local-set-key (kbd "C-c C-k") 'tkb-not-save-path)
-      (message "Use C-c C-c to finish and set your path, or C-c C-k to abort.")))
-  )
+(defun tkb-edit-path ()
+  (interactive)
+  (let ((path (tkb-path-get "PATH"))
+        (buf (get-buffer-create "*Editing-PATH*")))
+    (pop-to-buffer buf '(display-buffer-pop-up-window))
+    (delete-region (point-min) (point-max))
+    (cl-loop for dir in path do (progn (insert dir) (insert "\n")))
+    (buffer-local-set-key (kbd "C-c C-c") 'tkb-save-path)
+    (message "Use C-c C-c to finish and set your path, or C-x k to abort.")))
 
 (defun tkb-prepend-to-path (directory env-variable)
   "Read a directory into DIRECTORY and if prefix arg in ENV-VARIABLE is
@@ -2091,9 +2058,8 @@ REPEAT is how many times to repeat the roll."
                           ("Gf" . [?♀])  ; female sign
                           ("GM" . [?⚣])  ; male homosexuality
                           ("GF" . [?⚢])  ; female homosexuality
-                          ("Gb" . [?⚥])  ; male & female, both
+                          ("Gb" . [?⚥])  ; male & female, transgender
                           ("Ga" . [?⚪])  ; agender, sexless
-                          ("Gt" . [?⚧])  ; transgender
                           ;; Symbols
                           ("sc" . [?✓]) ; CHECK MARK in Unicode.
                           ("si" . [?∞]) ; infinity
@@ -2102,9 +2068,6 @@ REPEAT is how many times to repeat the roll."
                           ("sI" . [?☛])
                           ("sp" . [?¶]) ; pilcrow
                           ("ss" . [?§]) ; SECTION SIGN in Unicode; also silcrow
-                          ("sF" . [?℉]) ; Degrees Fahrenheit
-                          ("sC" . [?℃]) ; Degrees Centigrade
-                          ("sD" . [?°]) ; Degree sign
                           ;; Fractions
                           ("5/8" . [?⅝])
                           ("4/5" . [?⅘])
@@ -2273,12 +2236,12 @@ ring."
 
 (defun tkb-insert-post-fragment ()
   "Insert a fragment into the current, defaulting to
-~/Repos/tkurtbond.github.io/fragments/post.rst."
+~/nikola/newblog/fragments/post.rst."
   (interactive)
   (let ((filename (expand-file-name
                    (read-file-name
                     "Post Fragment? "
-                    "~/Repos/tkurtbond.github.io/fragments/" nil nil
+                    "~/nikola/newblog/fragments/" nil nil
                     "post.rst"))))
     (insert-file-contents filename)))
 (global-set-key (kbd "C-c i p") 'tkb-insert-post-fragment)
@@ -2652,15 +2615,6 @@ and make it the current selection."
                                                         compilation-error-regexp-alist-alist)
                                                  (cdr))))
                ))))
-
-(defvar tkb-w-map (make-sparse-keymap))
-(global-set-key (kbd "C-c w") tkb-w-map)      ; Right now just asking various what questions.
-(defun what-column ()
-  "Display what column the cursor is in."
-  (interactive)
-  (message "Current Column: %d" (current-column)))
-(define-key tkb-w-map "c" 'what-column)
-(define-key tkb-w-map "l" 'what-line)
 
 (message "End of tkb-experimental.el")
 ;;; end of tkb-experimental.el
