@@ -2096,6 +2096,7 @@ REPEAT is how many times to repeat the roll."
                           ("Gt" . [?⚧])  ; transgender
                           ;; Symbols
                           ("sc" . [?✓]) ; CHECK MARK in Unicode.
+                          ("sd" . [?Δ]) ; GREEK CAPITAL LETTER DELTA
                           ("si" . [?∞]) ; infinity
                           ("sl" . [?◊]) ; lozenge
                           ("st" . [?▶]) ; black right pointing triangle
