@@ -2663,5 +2663,13 @@ and make it the current selection."
 (define-key tkb-w-map "c" 'what-column)
 (define-key tkb-w-map "l" 'what-line)
 
+
+(defun tkb-toggle-groff-git ()
+  (interactive)
+  (let ((groff-git-info "/usr/local/sw/versions/groff/git/share/info"))
+    (if (member groff-git-info Info-directory-list)
+        (delete groff-git-info Info-directory-list)
+      (add-to-list 'Info-directory-list groff-git-info))))
+
 (message "End of tkb-experimental.el")
 ;;; end of tkb-experimental.el
