@@ -107,7 +107,9 @@
       ;;(set-frame-parameter nil 'height tkb-default-height)
       (set-frame-parameter nil 'font tkb-default-font)
       (set-frame-parameter nil 'top tkb-default-top)
-      (set-frame-parameter nil 'left tkb-default-left))))
+      (set-frame-parameter nil 'left tkb-default-left)
+      (message "(%d,%d) with %s" tkb-default-left tkb-default-top
+               tkb-default-font))))
 
 (tkb-initial-font-and-size nil)
 
