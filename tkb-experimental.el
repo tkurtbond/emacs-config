@@ -2159,6 +2159,9 @@ REPEAT is how many times to repeat the roll."
   )
 
 (when-exec-found (e "chez") (setq geiser-chez-binary e))
+(when-exec-found (e "chicken-csi")
+  (setq geiser-chicken-binary e)
+  (message "geiser-chicken-binary is %s" geiser-chicken-binary))
 (setq geiser-default-implementation 'chicken) ;; not sure why this doesn't work.
 
 (defalias 'tkb-saved-geiser-chicken--external-help
