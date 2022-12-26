@@ -44,9 +44,9 @@
 			;;adoc-mode
 			auctex
 			caml
-                        cask
-                        cask-mode
-                        caskxy
+                        ;; cask
+                        ;; cask-mode
+                        ;; caskxy
 			cider
 			clojure-mode
 			clojure-quick-repls
