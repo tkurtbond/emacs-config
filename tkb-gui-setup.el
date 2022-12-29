@@ -75,7 +75,7 @@
 	    (otherwise 20)))
     (set-frame-font tkb-default-font)
 
-    (setq tkb-default-left 50)
+    (setq tkb-default-left 5)
 
     (let* ((dh (display-pixel-height))
 	   (ch (frame-char-height))
