@@ -82,9 +82,10 @@
                         string-inflection
                         unicode-fonts
 			use-package ;; too strict?
+                        visual-fill-column
 			wanderlust ;; apparently using again.
-                        yaml-mode
                         w3m
+                        yaml-mode
 			)))
     (unless (cl-every #'package-installed-p tkb-packages)
       (package-refresh-contents))
