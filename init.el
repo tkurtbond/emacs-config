@@ -56,6 +56,7 @@
                         define-word
 			docbook
 			;;elscreen ; Did I ever really use this?
+                        elpher
 			f
 			fuel
 			ac-geiser geiser geiser-chez geiser-chibi geiser-chicken
