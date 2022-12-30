@@ -2692,5 +2692,12 @@ and make it the current selection."
         (delete groff-git-info Info-directory-list)
       (add-to-list 'Info-directory-list groff-git-info))))
 
+(defun tkb-find-file-hook ()
+  (when (and (stringp buffer-file-name)
+             (string-match "\\.gmi\\'" buffer-file-name))
+    (visual-line-mode 1)))
+
+(add-hook 'find-file-hook #'tkb-find-file-hook)
+
 (message "End of tkb-experimental.el")
 ;;; end of tkb-experimental.el
