@@ -2104,7 +2104,8 @@ REPEAT is how many times to repeat the roll."
                           ("sp" . [?¶]) ; pilcrow
                           ("ss" . [?§]) ; SECTION SIGN in Unicode; also silcrow
                           ("sF" . [?℉]) ; Degrees Fahrenheit
-                          ("sC" . [?℃]) ; Degrees Centigrade
+                          ("sC" . [?℃]) ; Degrees Centigrade/Celsius
+                          ("sK" . [?K]) ; Degrees Kelvin
                           ("sD" . [?°]) ; Degree sign
                           ;; Fractions
                           ("5/8" . [?⅝])
@@ -2579,13 +2580,30 @@ and make it the current selection."
     res))
 
 (defun fahrenheit-to (f)
-  (interactive "NFahrenheit?")
+  (interactive "NFahrenheit? ")
   (let* ((c (* (/ 5.0 9.0) (- f 32.0)))
          (k (+ 273.15 (* (/ 5.0 9.0) (- f 32.0))))
-         (result (format "%6.2f℉ %6.2f℃ %6.2fK" f c k)))
+         (result (format "%6.2f℉ is %6.2f℃ and %6.2fK" f c k)))
     (message "%s" result)
     result))
-    
+
+
+(defun kelvin-to (k)
+  (interactive "NKelvin? ")
+  (let* ((f (+ (* 1.8 (- k 273)) 32))
+         (c (- k 273))
+         (result (format "%6.2fK is %6.2f℃ and %6.2f℉" k c f)))
+    (message "%s" result)
+    result))
+
+(defun celsius-to (c)
+  (interactive "NCelsius? ")
+  (let* ((f (+ (* 1.8 c) 32))
+         (k (+ c 273))
+         (result (format "%6.2f℃ is %6.2f℉ and %6.2fK" c f k)))
+    (message "%s" result)
+    result))
+
 
 
 (when nil
