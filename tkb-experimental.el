@@ -645,6 +645,7 @@ where the \"FILE\" is optional and the \".\" can also be a \",\"."
          (princ (format "%s\n" (fmt-duration delta)) timebuf)))))
 
 (defun tkb-blog (title tags category date &optional title-prefix no-increment)
+  ;; This is obsolete.
   "Create a blog entry, prompting for various values and creating the
 appropriate directory structure."
   ;;(interactive "sTitle: \nsTags: \nDCategory: \nsDate: ")
@@ -2695,7 +2696,27 @@ and make it the current selection."
 (defun tkb-find-file-hook ()
   (when (and (stringp buffer-file-name)
              (string-match "\\.gmi\\'" buffer-file-name))
-    (visual-line-mode 1)))
+    (visual-line-mode 1)
+    (auto-fill-mode -1)))
+
+(defvar tkb-microblog-repo "~/Repos/microblog"
+  "Location of the git repository for my microblog.")
+
+(defun tkb-microblog (other-window-p)
+  "Create a Gemtext document for the current day in my microblog."
+  (interactive "P")
+  (let* ((date (format-time-string "%F"))
+         (gemtext-filename (concat date ".gmi"))
+         (html-filename (concat date ".html"))
+         (microblog-directory (f-join tkb-microblog-repo "gmi" "blog"))
+         (gemtext-pathname (f-join microblog-directory gemtext-filename))
+         (blog-index-pathname (f-join microblog-directory "blog.gmi")))
+    (if other-window-p
+        (find-file-other-window gemtext-pathname)
+      (find-file gemtext-pathname))
+    (let ((buf (find-file-noselect blog-index-pathname)))
+      )))
+  
 
 (add-hook 'find-file-hook #'tkb-find-file-hook)
 
