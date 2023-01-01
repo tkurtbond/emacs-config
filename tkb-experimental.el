@@ -2699,26 +2699,50 @@ and make it the current selection."
     (visual-line-mode 1)
     (auto-fill-mode -1)))
 
+(add-hook 'find-file-hook #'tkb-find-file-hook)
+
 (defvar tkb-microblog-repo "~/Repos/microblog"
   "Location of the git repository for my microblog.")
 
-(defun tkb-microblog (other-window-p)
+(defun tkb-microblog (specify-date-p microblog-title)
   "Create a Gemtext document for the current day in my microblog."
-  (interactive "P")
+  (interactive "P\nsMicroblog title? ")
   (let* ((date (format-time-string "%F"))
-         (gemtext-filename (concat date ".gmi"))
-         (html-filename (concat date ".html"))
+         (date (if specify-date-p
+                   (format-time-string
+                    "%F" (iso8601-parse-date (read-string "Date? " date)))
+                   date))
+         (filename date)
+         ;; I thought about doing this:
+         ;;(filename (concat date "-"
+         ;;                  (tkb-sanitize-for-filename microblog-title)))
+         ;; but decided I only wanted one blog file for a day, so the title
+         ;; shouldn't be in the name.
+         (gemtext-filename    (concat filename ".gmi"))
+         (html-filename       (concat filename ".html"))
          (microblog-directory (f-join tkb-microblog-repo "gmi" "blog"))
-         (gemtext-pathname (f-join microblog-directory gemtext-filename))
-         (blog-index-pathname (f-join microblog-directory "blog.gmi")))
-    (if other-window-p
-        (find-file-other-window gemtext-pathname)
-      (find-file gemtext-pathname))
-    (let ((buf (find-file-noselect blog-index-pathname)))
-      )))
-  
-
-(add-hook 'find-file-hook #'tkb-find-file-hook)
+         (gemtext-pathname    (f-join microblog-directory gemtext-filename))
+         (blog-index-pathname (f-join microblog-directory "blog.gmi"))
+         (already-exists-p    (f-exists-p gemtext-pathname)))
+    (find-file gemtext-pathname)
+    (cond
+     (already-exists-p
+      (goto-char (point-max))
+      (beginning-of-line)
+      (unless (looking-at "^[ \t]*$")
+        (insert "\n"))
+      (insert "\n## " microblog-title "\n"))
+     (t
+      (let ((buf (find-file-noselect blog-index-pathname)))
+        (save-excursion
+          (with-current-buffer buf
+            (if (re-search-forward "^=>" nil t)
+                (beginning-of-line))
+            (insert "=> " html-filename " " date ": " microblog-title
+                    "\n")
+            (save-buffer)))
+        (insert "# " date ": " microblog-title))))))
+      
 
 (message "End of tkb-experimental.el")
 ;;; end of tkb-experimental.el
