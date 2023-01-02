@@ -2697,6 +2697,7 @@ and make it the current selection."
   (when (and (stringp buffer-file-name)
              (string-match "\\.gmi\\'" buffer-file-name))
     (visual-line-mode 1)
+    (flyspell-mode 1)
     (auto-fill-mode -1)))
 
 (add-hook 'find-file-hook #'tkb-find-file-hook)
@@ -2707,11 +2708,13 @@ and make it the current selection."
 (defun tkb-microblog (specify-date-p microblog-title)
   "Create a Gemtext document for the current day in my microblog."
   (interactive "P\nsMicroblog title? ")
-  (let* ((date (format-time-string "%F"))
+  (let* ((title-sep " - ")
+         (date (format-time-string "%F"))
          (date (if specify-date-p
                    (format-time-string
                     "%F" (iso8601-parse-date (read-string "Date? " date)))
-                   date))
+                 date))
+         (time (format-time-string "%H:%M %Z"))
          (filename date)
          ;; I thought about doing this:
          ;;(filename (concat date "-"
@@ -2730,18 +2733,21 @@ and make it the current selection."
       (goto-char (point-max))
       (beginning-of-line)
       (unless (looking-at "^[ \t]*$")
+        (end-of-line)
         (insert "\n"))
-      (insert "\n## " microblog-title "\n"))
+      (insert "\n## " time title-sep microblog-title "\n"))
      (t
       (let ((buf (find-file-noselect blog-index-pathname)))
         (save-excursion
           (with-current-buffer buf
+            ;; Save it in the blog index, blog.gmi
             (if (re-search-forward "^=>" nil t)
                 (beginning-of-line))
-            (insert "=> " html-filename " " date ": " microblog-title
+            (insert "=> " html-filename " " date " " time
+                    title-sep microblog-title
                     "\n")
             (save-buffer)))
-        (insert "# " date ": " microblog-title))))))
+        (insert "# " date " " time title-sep microblog-title))))))
       
 
 (message "End of tkb-experimental.el")
