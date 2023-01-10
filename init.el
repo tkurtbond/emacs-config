@@ -93,7 +93,8 @@
     (dolist (p tkb-packages)
       (unless (package-installed-p p)
 	(package-install p)))
-    (load "s.el")                       ;because it's autoloads didn't work
+    (load "s.el")                  ; Because its autoloads didn't work.
+    (load "f.el")                  ; Ditto.
     ))
 
 (add-hook 'dired-load-hook
