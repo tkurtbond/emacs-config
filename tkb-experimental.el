@@ -2705,6 +2705,10 @@ and make it the current selection."
 (defvar tkb-microblog-repo "~/Repos/microblog"
   "Location of the git repository for my microblog.")
 
+(unless (fboundp 'iso8601-parse-date)
+  ;; Cry and wail!!!
+  (load-library "tkb-iso8601"))
+
 (defun tkb-get-iso8601-date ()
   (interactive)
   (let* ((default-date-string (format-time-string "%F"))
@@ -2715,6 +2719,23 @@ and make it the current selection."
     (setf (caddr date) 0)
     date))
 
+(defun tkb-dont-do-that ()
+  (interactive)
+  (message "Don't DO that!  It hurts!")
+  (beep))
+
+(defvar tkb-gmi-minor-mode-map (make-sparse-keymap)
+  "Keymap while tkb-gmi-minor-mode is active.")
+
+(define-minor-mode tkb-gmi-minor-mode
+  "Minor mode to simulate buffer local keybindings."
+  :init-value nil
+  :lighter " GMI"
+  tkb-gmi-minor-mode-map)
+(define-key tkb-gmi-minor-mode-map (kbd "M-q") 'tkb-dont-do-that)
+
+(add-to-list 'auto-mode-alist '("\\.gmi\\'" . tkb-gmi-minor-mode))
+
 (defun tkb-microblog (specify-date-p)
   "Create a Gemtext document for the current day in my microblog.  A prefix
 argument of - just opens the blog entry for the currrent day without adding
@@ -2722,6 +2743,9 @@ to it.  Any other prefix argument prompts for the date to use for the blog
 entry instead."
   (interactive "P")
   (message "specify-date-p: %S" specify-date-p)
+  (when (and specify-date-p (not (eq specify-date-p '-)))
+    (message "If you are TIME TRAVELLING you may have fix the blog index yourself!")
+    (beep))
   (let* ((title-sep " - ")
          (date (if (and specify-date-p (not (eq specify-date-p '-)))
                    (encode-time (tkb-get-iso8601-date))
