@@ -57,8 +57,9 @@ recommended by the ReST quickref: http://tinyurl.com/47lkhk"
                                         frame)
                           into frames finally return frames))
          (frame (x-popup-menu t `("Pick a frame" ("frames" ,@frames)))))
-    (raise-frame frame)
-    (select-frame frame)))
+    (when frame
+      (raise-frame frame)
+      (select-frame frame))))
 (tkb-keys ((kbd "C-c A") 'tkb-select-frame-popup))
 
 (defun tkb-show-frame-size-and-position ()
