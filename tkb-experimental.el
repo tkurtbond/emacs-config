@@ -2703,5 +2703,15 @@ and make it the current selection."
         (delete groff-git-info Info-directory-list)
       (add-to-list 'Info-directory-list groff-git-info))))
 
+
+(defun tkb-open-nikola-post ()
+  (interactive)
+  (if (looking-at "\\.\\(/[0-9]+/[0-9]+/[0-9]+/.*\\)\\.rst ")
+      (let* ((fragment (match-string-no-properties 1))
+             (url (concat "http://0.0.0.0:8000/posts" fragment)))
+        (browse-url url))
+    (message "Huh.  No match.  Did you run the grep-find in the posts directory")))
+(tkb-keys ((kbd "C-c k N") 'tkb-open-nikola-post))
+
 (message "End of tkb-experimental.el")
 ;;; end of tkb-experimental.el
