@@ -12,8 +12,7 @@
 (defvar tkb-microblog-repo "~/Repos/microblog"
   "Location of the git repository for my microblog.")
 
-(unless (fboundp 'iso8601-parse-date)
-  ;; Cry and wail!!!
+(unless (fboundp 'iso8601-parse-date)                         ; Cry and wail!!!
   (load-library "tkb-iso8601"))
 
 (defun tkb-get-iso8601-date ()
