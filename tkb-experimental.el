@@ -2706,7 +2706,10 @@ and make it the current selection."
 
 (defun tkb-open-nikola-post ()
   (interactive)
-  (if (looking-at "\\.\\(/[0-9]+/[0-9]+/[0-9]+/.*\\)\\.rst ")
+  ;; Apparently, emacs doesn't like raw ASCII NUL characters in a file when
+  ;; you load it.  It doesn't care about it when you C-x C-e and expression....
+  (if (looking-at (concat "\\.\\(/[0-9]+/[0-9]+/[0-9]+/.*\\)\\.rst"
+                          (char-to-string 0)))
       (let* ((fragment (match-string-no-properties 1))
              (url (concat "http://0.0.0.0:8000/posts" fragment)))
         (browse-url url))
