@@ -42,6 +42,12 @@
 
 (add-to-list 'auto-mode-alist '("\\.gmi\\'" . tkb-gmi-minor-mode))
 
+(defun tkb-microblog-subblogs ()
+  (interactive)
+  (let* ((microblog-directory (f-join tkb-microblog-repo "gmi" "blog"))
+         (subblogs (directory-files microblog-directory nil "blog-.*.gmi")))
+    subblogs))
+  
 (defun tkb-microblog (specify-date-p)
   "Create a Gemtext document for the current day in my microblog.  A prefix
 argument of - just opens the blog entry for the currrent day without adding
@@ -49,23 +55,20 @@ to it.  Any other prefix argument prompts for the date to use for the blog
 entry instead."
   (interactive "P")
   (message "specify-date-p: %S" specify-date-p)
-  (when (and specify-date-p (not (eq specify-date-p '-)))
-    (message "If you are TIME TRAVELLING you may have fix the blog index yourself!")
-    (beep))
+  (when specify-date-p
+    (unless (y-or-n-p "If you are TIME TRAVELLING you may have fix the blog index yourself! Ok?")
+      (user-error "You refused to accept responsibility for TIME TRAVELLING, so we're quitting!"))) 
   (let* ((title-sep " - ")
-         (date (if (and specify-date-p (not (eq specify-date-p '-)))
+         (date (if specify-date-p
                    (encode-time (tkb-get-iso8601-date))
                  (current-time)))
+         (microblog-title (read-string "Microblog title? "))
          (date-string (format-time-string "%F" date))
          (year-string (format-time-string "%Y" date))
          (time-string (format-time-string "%H:%M %Z"))
          (dirname year-string)
-         (filename date-string)
-         ;; I thought about doing this:
-         ;;(filename (concat date "-"
-         ;;                  (tkb-sanitize-for-filename microblog-title)))
-         ;; but decided I only wanted one blog file for a day, so the title
-         ;; shouldn't be in the name.
+         (filename (concat date-string "-"
+                           (tkb-sanitize-for-filename microblog-title)))
          (gemtext-filename    (concat filename ".gmi"))
          (html-filename       (concat filename ".html"))
          (relative-html-filename (f-join dirname html-filename))
@@ -74,31 +77,30 @@ entry instead."
          (gemtext-pathname    (f-join microblog-entry-directory
                                       gemtext-filename))
          (blog-index-pathname (f-join microblog-directory "blog.gmi"))
-         (already-exists-p    (f-exists-p gemtext-pathname)))
+         (already-exists-p    (f-exists-p gemtext-pathname))
+         (indexes (cons "blog.gmi"
+                        (completing-read-multiple "Subblogs? "
+                                                  (tkb-microblog-subblogs)))))
     (unless (f-exists-p microblog-entry-directory)
       (make-directory microblog-entry-directory t))
     (find-file gemtext-pathname)
-
-    (unless (and specify-date-p (eq specify-date-p '-))
-      (let ((microblog-title (read-string "Microblog title? ")))
-        (cond
-         (already-exists-p
-          (goto-char (point-max))
-          (beginning-of-line)
-          (unless (looking-at "^[ \t]*$")
-            (end-of-line)
-            (insert "\n"))
-          (insert "\n## " time-string title-sep microblog-title "\n\n"))
-         (t
-          (let ((buf (find-file-noselect blog-index-pathname)))
-            (save-excursion
-              (with-current-buffer buf
-                ;; Save it in the blog index, blog.gmi
-                (if (re-search-forward "^=>" nil t)
-                    (beginning-of-line))
-                (insert "=> " relative-html-filename " " date-string " "
-                        time-string title-sep microblog-title "\n")
-                (save-buffer)))
-            (insert "# " date-string " " time-string title-sep
-                    microblog-title))))))))
+    (insert "# " date-string " " time-string title-sep
+            microblog-title "\n")
+    (cl-flet ((add-to-index (index-filename)
+                (let* ((index-file (f-join microblog-directory index-filename))
+                       (buf (find-file-noselect index-file)))
+                  (save-excursion
+                    (with-current-buffer buf
+                      (unless (f-exists-p index-file)
+                        (let ((category (capitolize
+                                         (cadr (string-split index-filename
+                                                             "[.-]")))))
+                          (insert "# " category "\n\n")))
+                      (if (re-search-forward "^=>" nil t) ; If there are entries
+                          (beginning-of-line)             ; add the new one there.
+                        (goto-char (point-max))) ; Otherwise, add it at the end of the buffer.
+                      (insert "=> " relative-html-filename " " date-string " "
+                              time-string title-sep microblog-title "\n")
+                      (save-buffer))))))
+      (cl-loop for index in indexes do (add-to-index index)))))
 ;;; end of tkb-microblog.el
