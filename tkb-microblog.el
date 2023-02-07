@@ -115,6 +115,7 @@ entry instead."
                                                                                index-filename)
                                                                  (match-string 1 index-filename))))))
                             (insert "# " category "\n\n")))
+                        (goto-char (point-min))
                         (if (re-search-forward "^=>" nil t) ; If there are entries
                             (beginning-of-line) ; add the new one there.
                           (goto-char (point-max))) ; Otherwise, add it at the end of the buffer.
