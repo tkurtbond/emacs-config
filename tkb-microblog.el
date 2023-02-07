@@ -89,6 +89,8 @@ entry instead."
            (gemtext-filename          (concat filename ".gmi"))
            (html-filename             (concat filename ".html"))
            (relative-html-filename    (f-join dirname html-filename))
+           (relative-gemtext-filename (f-join dirname gemtext-filename))
+           (site-index-filename       (f-join tkb-microblog-repo "gmi" "index.gmi"))
            (microblog-directory       (f-join tkb-microblog-repo "gmi" "blog"))
            (microblog-entry-directory (f-join microblog-directory dirname))
            (gemtext-pathname          (f-join microblog-entry-directory
@@ -117,12 +119,20 @@ entry instead."
                                                                  (match-string 1 index-filename))))))
                             (insert "# " category "\n\n")
                             ;; ??? Need to insert a link to the new blog index into the main site index as well.
+                            (let ((site-index-buf (find-file-noselect site-index-filename))
+                                  (relative-index-filename (f-join "blog" index-filename)))
+                              (with-current-buffer site-index-buf
+                                (goto-char (point-max))
+                                (unless (looking-at "^")
+                                  (insert "\n"))
+                                (insert "=> " relative-index-filename " " category "\n")
+                                (save-buffer)))
                             ))
                         (goto-char (point-min))
                         (if (re-search-forward "^=>" nil t) ; If there are entries
                             (beginning-of-line) ; add the new one there.
                           (goto-char (point-max))) ; Otherwise, add it at the end of the buffer.
-                        (insert "=> " relative-html-filename " " date-string " "
+                        (insert "=> " relative-gemtext-filename " " date-string " "
                                 time-string title-sep microblog-title "\n")
                         (save-buffer))))))
         (cl-loop for sub-blog-filename in sub-blog-filenames do (add-to-index sub-blog-filename)))
