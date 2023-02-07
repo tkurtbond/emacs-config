@@ -84,7 +84,8 @@ entry instead."
            (time-string               (format-time-string "%H:%M %Z"))
            (dirname                   year-string)
            (filename                  (concat date-string "-"
-                                              (tkb-sanitize-for-filename microblog-title)))
+                                              (tkb-sanitize-for-filename
+                                               microblog-title t)))
            (gemtext-filename          (concat filename ".gmi"))
            (html-filename             (concat filename ".html"))
            (relative-html-filename    (f-join dirname html-filename))
@@ -114,7 +115,9 @@ entry instead."
                                              "[-_.]" " "  (progn (string-match "^blog-\\(.+\\)\\.gmi$"
                                                                                index-filename)
                                                                  (match-string 1 index-filename))))))
-                            (insert "# " category "\n\n")))
+                            (insert "# " category "\n\n")
+                            ;; ??? Need to insert a link to the new blog index into the main site index as well.
+                            ))
                         (goto-char (point-min))
                         (if (re-search-forward "^=>" nil t) ; If there are entries
                             (beginning-of-line) ; add the new one there.

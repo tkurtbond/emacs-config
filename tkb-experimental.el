@@ -2244,18 +2244,21 @@ REPEAT is how many times to repeat the roll."
 
 (load-file "~/lib/emacs/arrows/arrows.el") ;my port of cl-arrows
 
-(defun tkb-sanitize-for-filename (string)
+(defun tkb-sanitize-for-filename (string &optional down)
   "Clean up characters in STRING that aren't good for filenames."
-  (->> string
-       (replace-regexp-in-string "&" "and")
-       (replace-regexp-in-string "'" "")
-       (replace-regexp-in-string "[^-.a-z0-9]+" "-")
-       (replace-regexp-in-string "-+" "-")
-       (replace-regexp-in-string "-\\." ".")
-       (replace-regexp-in-string "\\.-" ".")
-       (replace-regexp-in-string "\\.+" ".")
-       (replace-regexp-in-string "^-+" "")
-       (replace-regexp-in-string "-+$" "")))
+  (cl-flet ((maybe-down (s)
+              (if down (downcase s) s)))
+    (->> string
+         (replace-regexp-in-string "&" "and")
+         (replace-regexp-in-string "'" "")
+         (replace-regexp-in-string "[^-.a-z0-9]+" "-")
+         (replace-regexp-in-string "-+" "-")
+         (replace-regexp-in-string "-\\." ".")
+         (replace-regexp-in-string "\\.-" ".")
+         (replace-regexp-in-string "\\.+" ".")
+         (replace-regexp-in-string "^-+" "")
+         (replace-regexp-in-string "-+$" "")
+         (maybe-down))))
 
 (defun tkb-sanitize-kill-for-filename (string)
   "Clean up characters that aren't good for filenames in the top of the kill
