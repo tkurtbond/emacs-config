@@ -42,7 +42,7 @@
 
 (add-to-list 'auto-mode-alist '("\\.gmi\\'" . tkb-gmi-minor-mode))
 
-(defun tkb-microblog-subblogs ()
+(defun tkb-microblog-sub-blogs ()
   (interactive)
   (let* ((microblog-directory (f-join tkb-microblog-repo "gmi" "blog"))
          (subblogs (directory-files microblog-directory nil "blog-.*.gmi")))
@@ -57,50 +57,71 @@ entry instead."
   (message "specify-date-p: %S" specify-date-p)
   (when specify-date-p
     (unless (y-or-n-p "If you are TIME TRAVELLING you may have fix the blog index yourself! Ok?")
-      (user-error "You refused to accept responsibility for TIME TRAVELLING, so we're quitting!"))) 
-  (let* ((title-sep " - ")
-         (date (if specify-date-p
-                   (encode-time (tkb-get-iso8601-date))
-                 (current-time)))
-         (microblog-title (read-string "Microblog title? "))
-         (date-string (format-time-string "%F" date))
-         (year-string (format-time-string "%Y" date))
-         (time-string (format-time-string "%H:%M %Z"))
-         (dirname year-string)
-         (filename (concat date-string "-"
-                           (tkb-sanitize-for-filename microblog-title)))
-         (gemtext-filename    (concat filename ".gmi"))
-         (html-filename       (concat filename ".html"))
-         (relative-html-filename (f-join dirname html-filename))
-         (microblog-directory (f-join tkb-microblog-repo "gmi" "blog"))
-         (microblog-entry-directory (f-join microblog-directory dirname))
-         (gemtext-pathname    (f-join microblog-entry-directory
-                                      gemtext-filename))
-         (blog-index-pathname (f-join microblog-directory "blog.gmi"))
-         (already-exists-p    (f-exists-p gemtext-pathname))
-         (indexes (cons "blog.gmi"
-                        (completing-read-multiple "Subblogs? "
-                                                  (tkb-microblog-subblogs)))))
-    (unless (f-exists-p microblog-entry-directory)
-      (make-directory microblog-entry-directory t))
-    (find-file gemtext-pathname)
-    (insert "# " date-string " " time-string title-sep
-            microblog-title "\n")
-    (cl-flet ((add-to-index (index-filename)
-                (let* ((index-file (f-join microblog-directory index-filename))
-                       (buf (find-file-noselect index-file)))
-                  (save-excursion
-                    (with-current-buffer buf
-                      (unless (f-exists-p index-file)
-                        (let ((category (capitolize
-                                         (cadr (string-split index-filename
-                                                             "[.-]")))))
-                          (insert "# " category "\n\n")))
-                      (if (re-search-forward "^=>" nil t) ; If there are entries
-                          (beginning-of-line)             ; add the new one there.
-                        (goto-char (point-max))) ; Otherwise, add it at the end of the buffer.
-                      (insert "=> " relative-html-filename " " date-string " "
-                              time-string title-sep microblog-title "\n")
-                      (save-buffer))))))
-      (cl-loop for index in indexes do (add-to-index index)))))
+      (user-error "You refused to accept responsibility for TIME TRAVELLING, so we're quitting!")))
+  (cl-labels ((get-category (sublog)
+                (let ((index (string-match "^blog-\\(.+\\)\\.gmi$" sublog)))
+                  (if index
+                      (match-string 1 sublog)
+                    nil)))
+              (get-categories (sub-blogs)
+                (loop for sub-blog in sub-blogs
+                      collect (get-category sub-blog)))
+              (get-index-filenames (indexes lookup)
+                (mapcar (lambda (index)
+                          (let ((filename (cdr (assoc index lookup))))
+                            (if filename
+                                filename
+                              (concat "blog-" index ".gmi"))))
+                        indexes)))
+                                          
+    (let* ((title-sep " - ")
+           (date                      (if specify-date-p
+                                          (encode-time (tkb-get-iso8601-date))
+                                        (current-time)))   
+           (microblog-title           (read-string "Microblog title? "))
+           (date-string               (format-time-string "%F" date))
+           (year-string               (format-time-string "%Y" date))
+           (time-string               (format-time-string "%H:%M %Z"))
+           (dirname                   year-string)
+           (filename                  (concat date-string "-"
+                                              (tkb-sanitize-for-filename microblog-title)))
+           (gemtext-filename          (concat filename ".gmi"))
+           (html-filename             (concat filename ".html"))
+           (relative-html-filename    (f-join dirname html-filename))
+           (microblog-directory       (f-join tkb-microblog-repo "gmi" "blog"))
+           (microblog-entry-directory (f-join microblog-directory dirname))
+           (gemtext-pathname          (f-join microblog-entry-directory
+                                              gemtext-filename))
+           (blog-index-pathname       (f-join microblog-directory "blog.gmi"))
+           (already-exists-p          (f-exists-p gemtext-pathname))
+           (sub-blogs                 (tkb-microblog-sub-blogs))
+           (categories                (get-categories sub-blogs))
+           (lookup                    (loop for sub-blog in sub-blogs for category in categories
+                                            collect (cons category sub-blog)))
+           (indexes                   (completing-read-multiple "Sub-Blogs? " categories))
+           (sub-blog-filenames        (cons "blog.gmi"
+                                            (get-index-filenames indexes lookup))))
+      (unless (f-exists-p microblog-entry-directory)
+        (make-directory microblog-entry-directory t))
+      (cl-flet ((add-to-index (index-filename)
+                  (let* ((index-file (f-join microblog-directory index-filename))
+                         (buf (find-file-noselect index-file)))
+                    (save-excursion
+                      (with-current-buffer buf
+                        (unless (f-exists-p index-file)
+                          (let* ((category (capitalize
+                                            (s-replace-regexp
+                                             "[-_.]" " "  (progn (string-match "^blog-\\(.+\\)\\.gmi$"
+                                                                               index-filename)
+                                                                 (match-string 1 index-filename))))))
+                            (insert "# " category "\n\n")))
+                        (if (re-search-forward "^=>" nil t) ; If there are entries
+                            (beginning-of-line) ; add the new one there.
+                          (goto-char (point-max))) ; Otherwise, add it at the end of the buffer.
+                        (insert "=> " relative-html-filename " " date-string " "
+                                time-string title-sep microblog-title "\n")
+                        (save-buffer))))))
+        (cl-loop for sub-blog-filename in sub-blog-filenames do (add-to-index sub-blog-filename)))
+      (find-file gemtext-pathname)
+      (insert "# " date-string " " time-string title-sep microblog-title "\n\n"))))
 ;;; end of tkb-microblog.el
