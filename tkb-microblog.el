@@ -81,7 +81,7 @@ entry instead."
            (microblog-title           (read-string "Microblog title? "))
            (date-string               (format-time-string "%F" date))
            (year-string               (format-time-string "%Y" date))
-           (time-string               (format-time-string "%H:%M %Z"))
+           (time-string               (format-time-string "%H:%M:%S %Z"))
            (dirname                   year-string)
            (filename                  (concat date-string "-"
                                               (tkb-sanitize-for-filename
