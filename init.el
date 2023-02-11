@@ -62,8 +62,10 @@
                         dash
                         define-word
 			docbook
-			;;elscreen ; Did I ever really use this?
+                        elfeed
+                        elfeed-org
                         elpher
+			;;elscreen ; Did I ever really use this?
 			f
 			fuel
 			ac-geiser geiser geiser-chez geiser-chibi geiser-chicken

@@ -2719,5 +2719,9 @@ and make it the current selection."
     (message "Huh.  No match.  Did you run the grep-find in the posts directory")))
 (tkb-keys ((kbd "C-c k N") 'tkb-open-nikola-post))
 
+(require 'elfeed-org)
+(setq rmh-elfeed-org-files (list "~/.elfeed/elfeed.org"))
+(elfeed-org)
+
 (message "End of tkb-experimental.el")
 ;;; end of tkb-experimental.el
