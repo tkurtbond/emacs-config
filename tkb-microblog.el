@@ -15,14 +15,14 @@
 (unless (fboundp 'iso8601-parse-date)                         ; Cry and wail!!!
   (load-library "tkb-iso8601"))
 
-(defun tkb-get-iso8601-date ()
+(defun tkb-get-iso8601-date-time ()
   (interactive)
-  (let* ((default-date-string (format-time-string "%F"))
-         (date (iso8601-parse-date
+  (let* ((default-date-string (format-time-string "%FT%H:%M:%S%z"))
+         (default-date-string (concat (substring default-date-string 0 22)
+                                      ":"
+                                      (substring default-date-string 22 24)))
+         (date (iso8601-parse
                 (read-string "Date? " default-date-string))))
-    (setf (car date) 0)
-    (setf (cadr date) 0)
-    (setf (caddr date) 0)
     date))
 
 (defun tkb-dont-do-that ()
@@ -76,7 +76,8 @@ entry instead."
                                           
     (let* ((title-sep " - ")
            (date                      (if specify-date-p
-                                          (encode-time (tkb-get-iso8601-date))
+                                          (encode-time
+                                           (tkb-get-iso8601-date-time))
                                         (current-time)))   
            (microblog-title           (read-string "Microblog title? "))
            (date-string               (format-time-string "%F" date))
