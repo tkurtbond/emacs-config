@@ -131,7 +131,7 @@ entry instead."
                                 (goto-char (point-max))
                                 (unless (looking-at "^")
                                   (insert "\n"))
-                                (insert "=> " relative-index-filename " " category "\n")
+                                (insert "=> " relative-index-filename " T. Kurt Bond's µBlog, " category " Sub-Blog\n")
                                 (save-buffer)))
                             ))
                         (goto-char (point-min))
