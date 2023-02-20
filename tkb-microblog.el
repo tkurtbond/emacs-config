@@ -5,7 +5,10 @@
              (string-match "\\.gmi\\'" buffer-file-name))
     (visual-line-mode 1)
     (flyspell-mode 1)
-    (auto-fill-mode -1)))
+    (auto-fill-mode -1)
+    (setq-local time-stamp-format "%Y-%02m-%02d %02H:%02M:%02S%:z"
+                time-stamp-start "^Updated:[ \t]+\\\\?"
+                time-stamp-end "\\\\?\n")))
 
 (add-hook 'find-file-hook #'tkb-find-file-hook)
 
@@ -17,10 +20,7 @@
 
 (defun tkb-get-iso8601-date-time ()
   (interactive)
-  (let* ((default-date-string (format-time-string "%FT%H:%M:%S%z"))
-         (default-date-string (concat (substring default-date-string 0 22)
-                                      ":"
-                                      (substring default-date-string 22 24)))
+  (let* ((default-date-string (format-time-string "%FT%H:%M:%S%:z"))
          (date (iso8601-parse
                 (read-string "Date? " default-date-string))))
     date))
@@ -29,6 +29,14 @@
   (interactive)
   (message "Don't DO that!  It hurts!")
   (beep))
+
+(defun tkb-gmi-insert-updated ()
+  (interactive)
+  (save-excursion
+    (goto-char (point-min))
+    (forward-line)
+    (insert "Updated: " (format-time-string "%F %H:%M:%S%:z")
+            "\n")))
 
 (defvar tkb-gmi-minor-mode-map (make-sparse-keymap)
   "Keymap while tkb-gmi-minor-mode is active.")
@@ -39,6 +47,7 @@
   :lighter " GMI"
   tkb-gmi-minor-mode-map)
 (define-key tkb-gmi-minor-mode-map (kbd "M-q") 'tkb-dont-do-that)
+(define-key tkb-gmi-minor-mode-map (kbd "C-c i u") 'tkb-gmi-insert-updated)
 
 (add-to-list 'auto-mode-alist '("\\.gmi\\'" . tkb-gmi-minor-mode))
 
@@ -82,10 +91,7 @@ entry instead."
            (microblog-title           (read-string "Microblog title? "))
            (date-string               (format-time-string "%F" date))
            (year-string               (format-time-string "%Y" date))
-           (tz-offset                 (format-time-string "%z"))
-           (tz-offset                 (concat (substring tz-offset 0 3)
-                                              ":"
-                                              (substring tz-offset 3 5)))
+           (tz-offset                 (format-time-string "%:z" date))
            (time-string               (concat (format-time-string "%H:%M:%S")
                                               tz-offset))
            (dirname                   year-string)
