@@ -566,6 +566,20 @@ where the \"FILE\" is optional and the \".\" can also be a \",\"."
       (ad-set-args 1 (symbol-value 'fork)))
     (message "tkb-advise-browse-url: bound: %S args: %S" (boundp 'fork) args)))
 
+(defun tkb-browse-url-eww (url &optional args)
+  "Invoke the eww browser (inside emacs) on URL.  It the optional second
+argument ARGS is true open in a new buffer."
+  (message "args: %S" args)
+  (eww url (and args 4)))
+
+(defun tkb-toggle-eww ()
+  (interactive)
+  (cond ((eq browse-url-browser-function 'browse-url-default-browser)
+         (message "Switching to EWW for opening URLs.")
+         (setq browse-url-browser-function #'tkb-browse-url-eww))
+        (t
+         (message "Switching to browser-url-default-browser for opening URLs.")
+         (setq browse-url-browser-function #'browse-url-default-browser))))
 
 (defun tkb-cleanup-title (title)
   (let ((s
