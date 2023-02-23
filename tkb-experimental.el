@@ -2737,5 +2737,10 @@ and make it the current selection."
 (setq rmh-elfeed-org-files (list "~/.elfeed/elfeed.org"))
 (elfeed-org)
 
+(use-package "skewer-mode"
+:config '(progn (add-hook 'js2-mode-hook 'skewer-mode)
+          (add-hook 'css-mode-hook 'skewer-css-mode)
+          (add-hook 'html-mode-hook 'skewer-html-mode)))
+
 (message "End of tkb-experimental.el")
 ;;; end of tkb-experimental.el

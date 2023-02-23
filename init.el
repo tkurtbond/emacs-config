@@ -89,6 +89,7 @@
                         ;;---
 			;; regex-tool ; not currently using
                         s
+                        skewer-mode
                         string-inflection
                         unicode-fonts
 			use-package ;; too strict?
