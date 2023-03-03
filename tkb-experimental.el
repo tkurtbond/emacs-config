@@ -2647,16 +2647,17 @@ and make it the current selection."
                (car (split-string (system-name) "\\." t))
                " ")))
 
-(let ((user-at-host (concat" " (user-login-name) "@"
-                         (car (split-string (system-name) "\\." t))
-                         " ")))
-  (if (string-equal (user-login-name) "root")
-    ;; Make it obvious if the user is root.
-    (put-text-property 0 (length user-at-host) 'face
-                       'error user-at-host)
-    (put-text-property 0 (length user-at-host) 'face
-                       'success user-at-host))
-  (setq global-mode-string user-at-host))
+(unless (getenv "EMACS_NO_MODE_STRING") ; mew blows up with this.
+  (let ((user-at-host (concat" " (user-login-name) "@"
+                             (car (split-string (system-name) "\\." t))
+                             " ")))
+    (if (string-equal (user-login-name) "root")
+        ;; Make it obvious if the user is root.
+        (put-text-property 0 (length user-at-host) 'face
+                           'error user-at-host)
+      (put-text-property 0 (length user-at-host) 'face
+                         'success user-at-host))
+    (setq global-mode-string user-at-host)))
 
 (global-set-key (kbd "C-c i k") 'string-inflection-kebab-case)
 (global-set-key (kbd "C-c i C") 'string-inflection-capital-underscore)
