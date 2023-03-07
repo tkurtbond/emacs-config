@@ -184,6 +184,7 @@
 (put 'when-in-alist 'scheme-indent-function 1)
 (put 'bind 'scheme-indent-function 2)
 (put 'bind-loop 'scheme-indent-function 2)
+(put 'submatch-named 'scheme-indent-function 1) ; For irregex SREs.
 ;; Hmm.  Not sure about this
 ;;(put 'args:make-option 'scheme-indent-function 3)
 
