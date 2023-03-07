@@ -203,6 +203,7 @@
 (load-file "~/lib/emacs/tkb/tkb-status-reports.el")
 (load-file "~/lib/emacs/tkb/tkb-blog.el")
 (load-file "~/Repos/microblog/emacs/tkb-microblog.el")
+(load-library "gemini-mode.el")
 
 
 ;;(setq epg-gpg-program "gpg2") ; on macOS with homebrew it's gpg.
