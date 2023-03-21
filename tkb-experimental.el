@@ -2743,5 +2743,7 @@ and make it the current selection."
           (add-hook 'css-mode-hook 'skewer-css-mode)
           (add-hook 'html-mode-hook 'skewer-html-mode)))
 
+(use-package "monky")
+
 (message "End of tkb-experimental.el")
 ;;; end of tkb-experimental.el
