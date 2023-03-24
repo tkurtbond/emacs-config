@@ -357,12 +357,17 @@ and add a log entry to it."
     (if x
         (cl-destructuring-bind (nfg nbg) x
           (set-frame-parameter nil 'foreground-color nfg)
-          (set-frame-parameter nil 'background-color nbg))
+          (set-frame-parameter nil 'background-color nbg)
+          (message "(%s %s" nfg nbg))
       (cl-destructuring-bind (nfg nbg) (car tkb-color-list)
          (set-frame-parameter nil 'foreground-color nfg)
-         (set-frame-parameter nil 'background-color nbg)))))
+         (set-frame-parameter nil 'background-color nbg)
+         (message "(%s %s" nfg nbg)))))
 
-
+(defun tkb-wheat ()
+  (interactive)
+  (set-frame-parameter nil 'foreground-color "black")
+  (set-frame-parameter nil 'background-color "wheat"))
 
 (defun nothing ()
   ;; Why did I need this???
