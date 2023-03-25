@@ -98,9 +98,9 @@
                         w3m
                         yaml-mode
 			)))
-    (unless (cl-every #'package-installed-p tkb-packages)
+    (unless (cl-every #'package-installed-p package-selected-packages)
       (package-refresh-contents))
-    (dolist (p tkb-packages)
+    (dolist (p package-selected-packages)
       (unless (package-installed-p p)
 	(package-install p)))
     (load "s.el")                  ; Because its autoloads didn't work.
