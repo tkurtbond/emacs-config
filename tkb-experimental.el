@@ -2745,5 +2745,9 @@ and make it the current selection."
 
 (use-package "monky")
 
+(with-eval-after-load "simple"
+  (define-key visual-line-mode-map (kbd "M-q") 'tkb-dont-do-that)
+  (message "Defined M-q in visual-line-mode-map"))
+
 (message "End of tkb-experimental.el")
 ;;; end of tkb-experimental.el
