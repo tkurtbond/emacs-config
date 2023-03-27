@@ -2662,7 +2662,7 @@ and make it the current selection."
                            'error user-at-host)
       (put-text-property 0 (length user-at-host) 'face
                          'success user-at-host))
-    (setq global-mode-string user-at-host)))
+    (setq global-mode-string (list user-at-host))))
 
 (global-set-key (kbd "C-c i k") 'string-inflection-kebab-case)
 (global-set-key (kbd "C-c i C") 'string-inflection-capital-underscore)
