@@ -88,18 +88,25 @@
       (message "nfh: %d" nfh)
       ;;(set-frame-height nil nfh)
       (set-frame-height nil tkb-default-height)
-      (setq tkb-default-frame-alist
-	    `((width . 80)
-	      (height . ,tkb-default-height)
-	      ;; (height . ,nfh)
-	      (top . ,tkb-default-top)
-	      (left . ,tkb-default-left)
-	      (font . ,tkb-default-font)
-	      ;; This makes things feel weird.
-	      ;; (minibuffer . nil)
-	      (background-color . "wheat")
-	      (foreground-color . "black")
-	      (cursor-color . "orange")))
+      (let ((alt-color (getenv "EMACS_ALT_COLOR"))
+            (color))
+        (if alt-color
+            (if (string-empty-p alt-color)
+                (setq color "khaki1")
+              (setq color alt-color))
+          (setq color "wheat"))
+        (setq tkb-default-frame-alist
+	      `((width . 80)
+	        (height . ,tkb-default-height)
+	        ;; (height . ,nfh)
+	        (top . ,tkb-default-top)
+	        (left . ,tkb-default-left)
+	        (font . ,tkb-default-font)
+	        ;; This makes things feel weird.
+	        ;; (minibuffer . nil)
+	        (background-color . ,color)
+	        (foreground-color . "black")
+	        (cursor-color . "orange")))
       (setq default-frame-alist
 	    (append default-frame-alist tkb-default-frame-alist))
       (setq initial-frame-alist default-frame-alist)
@@ -109,7 +116,7 @@
       (set-frame-parameter nil 'top tkb-default-top)
       (set-frame-parameter nil 'left tkb-default-left)
       (message "(%d,%d) with %s" tkb-default-left tkb-default-top
-               tkb-default-font))))
+               tkb-default-font)))))
 
 (tkb-initial-font-and-size nil)
 
