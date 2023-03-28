@@ -2750,6 +2750,11 @@ and make it the current selection."
 
 (use-package "monky")
 
+(defun tkb-dont-do-that ()
+  (interactive)
+  (message "Don't DO that!  It hurts!")
+  (beep))
+
 (with-eval-after-load "simple"
   (define-key visual-line-mode-map (kbd "M-q") 'tkb-dont-do-that)
   (message "Defined M-q in visual-line-mode-map"))
