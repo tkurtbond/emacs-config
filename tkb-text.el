@@ -5,8 +5,9 @@
 ;;; $Id: tkb-text.el 1.2 Tue, 09 May 2000 20:50:39 -0400 tkb $
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(when-exec-found "aspell"
-  (setq-default ispell-program-name "aspell"))
+(when-exec-found (p ["enchant-2" "aspell"])
+  (setq-default ispell-program-name p))
+
 
 ;; Plain text
 (defun tkb-renumber ()
