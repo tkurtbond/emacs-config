@@ -2137,6 +2137,7 @@ REPEAT is how many times to repeat the roll."
                           ("sC" . [?℃]) ; Degrees Centigrade/Celsius
                           ("sK" . [?K]) ; Degrees Kelvin
                           ("sD" . [?°]) ; Degree sign
+                          ("sx" . [?🗙]) ; Cancelation X
                           ;; Fractions
                           ("5/8" . [?⅝])
                           ("4/5" . [?⅘])
