@@ -115,9 +115,9 @@ Saturday, 4 July 2020, 01:47:15 AM (2020-07-04 01:47:15)."
                   (current-time)
                 (tkb-get-date-from-user nil t))))
   (insert (format-time-string 
-           "%A, %-d %B %Y, %I:%M:%S %p (%Y-%m-%d %H:%M:%S %Z)"))))
-(global-set-key (kbd "C-c d F") 'tkb-insert-fancy-date)
-(tkb-key-is-bound-to (kbd "C-c d F") 'tkb-insert-fancy-date)
+           "%A, %-d %B %Y, %I:%M:%S %p (%Y-%m-%d %H:%M:%S %Z)" time))))
+(global-set-key (kbd "C-c d F") 'tkb-insert-fancy-date-and-time)
+(tkb-key-is-bound-to (kbd "C-c d F") 'tkb-insert-fancy-date-and-time)
 
 (defun tkb-insert-fancy-date (prefix)
   "Inserts a fancy date like this: 
@@ -127,7 +127,7 @@ Saturday, 4 July 2020 (2020-07-04)"
                   (current-time)
                 (tkb-get-date-from-user nil nil))))
     (insert (format-time-string 
-             "%A, %-d %B %Y (%Y-%m-%d)"))))
+             "%A, %-d %B %Y (%Y-%m-%d)" time))))
 (global-set-key (kbd "C-c d f") 'tkb-insert-fancy-date)
 (tkb-key-is-bound-to (kbd "C-c d f") 'tkb-insert-fancy-date)
 
