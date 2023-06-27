@@ -556,11 +556,24 @@ where the \"FILE\" is optional and the \".\" can also be a \",\"."
 
 
 (defun tkb-move-frame-left ()
+  "Move the current frame left by 1/10th the width of the physical montor."
   (interactive)
   (let* ((left (frame-parameter nil 'left))
-         (width (frame-pixel-width)))
-    (set-frame-parameter nil 'left (- left width 20))))
-(tkb-keys ((kbd "C-c k l") #'tkb-move-frame-left))
+         (monitor-display-width (caddr (frame-monitor-attribute 'geometry)))
+         (tenth-width (/ monitor-display-width 10))
+         (new-left (- left tenth-width)))
+    (set-frame-parameter nil 'left new-left)))
+(tkb-keys ((kbd "C-c k F l") #'tkb-move-frame-left))
+
+(defun tkb-move-frame-right ()
+  "Move the current frame right by 1/10th the width of the physical montor."
+  (interactive)
+  (let* ((left (frame-parameter nil 'left))
+         (monitor-display-width (caddr (frame-monitor-attribute 'geometry)))
+         (tenth-width (/ monitor-display-width 10))
+         (new-left (+ left tenth-width)))
+    (set-frame-parameter nil 'left new-left)))
+(tkb-keys ((kbd "C-c k F r") #'tkb-move-frame-right))
 
 (defadvice browse-url (before tkb-advise-browse-url activate)
   (let ((all-args (ad-get-args 0))
