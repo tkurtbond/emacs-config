@@ -2231,6 +2231,7 @@ REPEAT is how many times to repeat the roll."
 (when-load-file "magit"
   :load
   (global-set-key (kbd "C-x M s") 'magit-status)
+  (setq magit-diff-refine-hunk 'all)
   (when (version< emacs-version "27.0")
     (when (fboundp 'global-magit-file-mode)
       (global-magit-file-mode))
