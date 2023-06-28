@@ -38,6 +38,10 @@
 (define-key tkb-map "L" (λ () (interactive) (insert ?Λ)))
 (define-key tkb-map " " (λ () (interactive) (insert 160))) ; non-breaking space
 (define-key tkb-map "b" #'browse-url-at-point)
+(define-key tkb-map "t" #'toggle-truncate-lines)
+
+(define-prefix-command 'tkb-frame-map)
+(global-set-key (kbd "C-c k F") 'tkb-frame-map)
 
 (define-prefix-command 'tkb-matching-map)
 (global-set-key (kbd "C-c k m") 'tkb-matching-map)

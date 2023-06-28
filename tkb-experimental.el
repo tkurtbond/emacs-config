@@ -556,11 +556,24 @@ where the \"FILE\" is optional and the \".\" can also be a \",\"."
 
 
 (defun tkb-move-frame-left ()
+  "Move the current frame left by 1/10th the width of the physical montor."
   (interactive)
   (let* ((left (frame-parameter nil 'left))
-         (width (frame-pixel-width)))
-    (set-frame-parameter nil 'left (- left width 20))))
-(tkb-keys ((kbd "C-c k l") #'tkb-move-frame-left))
+         (monitor-display-width (caddr (frame-monitor-attribute 'geometry)))
+         (tenth-width (/ monitor-display-width 10))
+         (new-left (- left tenth-width)))
+    (set-frame-parameter nil 'left new-left)))
+(tkb-keys ((kbd "C-c k F l") #'tkb-move-frame-left))
+
+(defun tkb-move-frame-right ()
+  "Move the current frame right by 1/10th the width of the physical montor."
+  (interactive)
+  (let* ((left (frame-parameter nil 'left))
+         (monitor-display-width (caddr (frame-monitor-attribute 'geometry)))
+         (tenth-width (/ monitor-display-width 10))
+         (new-left (+ left tenth-width)))
+    (set-frame-parameter nil 'left new-left)))
+(tkb-keys ((kbd "C-c k F r") #'tkb-move-frame-right))
 
 (defadvice browse-url (before tkb-advise-browse-url activate)
   (let ((all-args (ad-get-args 0))
@@ -855,7 +868,9 @@ if it is a unicode character."
 
 (tkb-keys ((kbd "C-c k u h") #'t:kill-host-from-url))
 
-(progn
+(when nil
+  ;; 2023-06-27: I no longer remember what I was trying to do with this
+  ;; function, so I'm going to steal it's keybinding for something else.
   (defun tkb-fill-list ()
     (interactive)
     (save-excursion
@@ -2216,6 +2231,7 @@ REPEAT is how many times to repeat the roll."
 (when-load-file "magit"
   :load
   (global-set-key (kbd "C-x M s") 'magit-status)
+  (setq magit-diff-refine-hunk 'all)
   (when (version< emacs-version "27.0")
     (when (fboundp 'global-magit-file-mode)
       (global-magit-file-mode))
