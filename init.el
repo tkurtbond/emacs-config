@@ -70,6 +70,7 @@
 			fuel
 			ac-geiser geiser geiser-chez geiser-chibi geiser-chicken
                         geiser-guile geiser-racket
+                        gemini-mode
                         haskell-mode
                         js-comint
                         julia-mode
