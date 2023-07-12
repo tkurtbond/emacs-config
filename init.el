@@ -98,14 +98,20 @@
                         w3m
                         yaml-mode
 			)))
+    ;; The order of things here might be mistaken.  Should I iterate
+    ;; over tkb-packages and then over package-selected-pages?
+    (message "tkb's packages: %S" tkb-packages)
     (unless (cl-every #'package-installed-p package-selected-packages)
       (package-refresh-contents))
-    (dolist (p package-selected-packages)
+    (dolist (p tkb-packages) ;; was package-selected-packages
+      (message "selected package %s" p)
       (unless (package-installed-p p)
+        (message "installing package %s" p)
 	(package-install p)))
-    (load "s.el")                  ; Because its autoloads didn't work.
-    (load "f.el")                  ; Ditto.
-    ))
+    )
+  (load "s")                      ; Because its autoloads didn't work.
+  (load "f")                      ; Ditto.
+  )
 
 (add-hook 'dired-load-hook
           (lambda ()
