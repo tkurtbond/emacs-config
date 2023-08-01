@@ -1486,12 +1486,21 @@ Goes backward if ARG is negative; error if CHAR not found."
   (add-to-list 'auto-mode-alist '("\\.fs\\'" . forth-mode))
   (autoload 'forth-block-mode "gforth")
   (add-to-list 'auto-mode-alist '("\\.fb\\'" . forth-block-mode))
-  (add-hook 'forth-mode-hook (function (lambda ()
-                                         ;; customize variables here:
-                                         (setq forth-indent-level 4)
-                                         (setq forth-minor-indent-level 2)
-                                         (setq forth-hilight-level 3)
-                                         )))
+  (add-hook 'forth-mode-hook #'(lambda ()
+                                 ;; Why are we setting the following to the defaults?
+                                 ;; customize variables here:
+                                 (setq forth-indent-level 4)
+                                 (setq forth-minor-indent-level 2)
+                                 (setq forth-hilight-level 3)
+                                 ))
+  (setq forth-custom-indent-words
+        '((("while" "[while]")
+           (-2 . 2)
+           (0 . 2))
+          (("repeat" "[repeat]")
+           (-2 . 0)
+           (0 . -4))
+          ))
 
 
   (eval-after-load "gforth"
