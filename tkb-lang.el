@@ -185,8 +185,8 @@
 (put 'bind 'scheme-indent-function 2)
 (put 'bind-loop 'scheme-indent-function 2)
 (put 'submatch-named 'scheme-indent-function 1) ; For irregex SREs.
-;; Hmm.  Not sure about this
-;;(put 'args:make-option 'scheme-indent-function 3)
+;; Hmm.  Not sure about this.
+(put 'args:make-option 'scheme-indent-function 3)
 
 (when nil
   (defun tkb-beginning-of-defun (&optional arg)
