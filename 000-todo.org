@@ -1,0 +1,4 @@
+* TODO Get all my VAX emacs lisp, including EMACS_LIBRARY:[LOCAL].
+  Put it in VAX subdirectory.
+* Why don't I have a VAX Macro emacs lisp mode, however crude? 
+  Compare SDCL mode and VAXBASIC mode.
