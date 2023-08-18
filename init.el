@@ -76,6 +76,7 @@
                         julia-mode
                         magit
 			markdown-mode
+                        monky
 			;; moz ; Did I every really use this?
 			nim-mode
                         nodejs-repl
