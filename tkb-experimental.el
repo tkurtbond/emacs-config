@@ -95,7 +95,7 @@ recommended by the ReST quickref: http://tinyurl.com/47lkhk"
   ;;
   (defconst tkb-org-journal (expand-file-name "~/current/org/journal.org"))
   (defconst tkb-org-contacts (expand-file-name "~/current/org/contacts.org"))
-  (defconst tkb-org-health (expand-file-name "~/current/org/health.org"))
+  (defconst tkb-org-health (expand-file-name "~/Repos/tkb-notes/Health/interactions.org"))
   (defconst tkb-org-notes (expand-file-name "~/current/org/notes.org"))
   (defconst tkb-org-rpg (expand-file-name "~/current/org/rpg.org"))
   (defconst tkb-org-tasks (expand-file-name "~/current/org/tasks.org"))
@@ -133,10 +133,10 @@ recommended by the ReST quickref: http://tinyurl.com/47lkhk"
            "* %^{Title} %U\n  %i\n  %?\n")
           ("c" "Contacts Log" entry
            (file+headline ,tkb-org-contacts "Contacts")
-           "* %^{Title} %U\n  %i\n  %?\n")
+           "* %^{Title} %U\n  %i%?\n")
           ("h" "Health" entry
-           (file+headline ,tkb-org-health "Health")
-           "* %^{Title} %U\n  %i\n  %?\n")
+           (file ,tkb-org-health)
+           "* %^{Title} %U\n  %i%?\n")
           ("n" "Notes" entry
            (file+headline ,tkb-org-notes "Notes")
            "\n\n* %^{Title} %U\n  %i\n  %?\n  %a\n\n")
