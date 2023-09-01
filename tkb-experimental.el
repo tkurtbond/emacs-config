@@ -1505,6 +1505,7 @@ Goes backward if ARG is negative; error if CHAR not found."
 
   (eval-after-load "gforth"
     '(progn
+      (load "tkb-forth")
        (defun forth-load-file (file-name)
          "Load a Forth file FILE-NAME into the inferior Forth process."
          (interactive (comint-get-source "Load Forth file: " forth-prev-l/c-dir/file
