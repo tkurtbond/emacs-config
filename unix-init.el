@@ -135,6 +135,7 @@
 (load-library "tkb-vc.el")
 (load-library "tkb-unicode.el")
 (load-library "tkb-www.el")
+(load-library "tkb-listening")
 
 
 ;;; Servers
