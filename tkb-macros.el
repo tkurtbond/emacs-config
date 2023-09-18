@@ -388,4 +388,26 @@ are already bound:\n" msg "Rebind them? "))))
 	     (let ((it ,sym)) ,@(cdr cl1))
 	   (acond ,@(cdr clauses)))))))
 
+
+(defmacro eval-after-load* (file varlist &rest body)
+  "Like `eval-after-load', but bind variables according to VARLIST in
+the current environment of the `eval-after-load' expression, not the
+environment when BODY is evaluated.  This allows easy passing of values
+into BODY.
+Each element of VARLIST is a symbol (which is bound to the current value
+of that symbol) or a list (SYMBOL VALUEFORM) (which binds SYMBOL to the
+value of VALUEFORM in the environment of the `eval-after-load' expression.
+
+A difference with `eval-after-load' is that BODY doesn't have to be quoted."
+  `(eval-after-load ,file
+     '(let ,(cl-loop for v in varlist
+                  collect (if (symbolp v)
+                              `(,v ,(eval v))
+                            `(,(car v) ,(eval (cadr v))))
+                  into new-varlist
+                  finally return new-varlist)
+        ,@body)))
+(put 'eval-after-load* 'lisp-indent-function
+     (1+ (get 'eval-after-load 'lisp-indent-function)))
+
 ;;; tkb-macros.el

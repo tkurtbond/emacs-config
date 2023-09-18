@@ -504,29 +504,6 @@ and add a log entry to it."
   (interactive)
   (message "Word count: %s" (how-many "\\w+" (point-min) (point-max))))
 
-
-(cl-defmacro eval-after-load* (file varlist &rest body)
-  "Like `eval-after-load', but bind variables according to VARLIST in
-the current environment of the `eval-after-load' expression, not the
-environment when BODY is evaluated.  This allows easy passing of values
-into BODY.
-Each element of VARLIST is a symbol (which is bound to the current value
-of that symbol) or a list (SYMBOL VALUEFORM) (which binds SYMBOL to the
-value of VALUEFORM in the environment of the `eval-after-load' expression.
-
-A difference with `eval-after-load' is that BODY doesn't have to be quoted."
-  `(eval-after-load ,file
-     '(let ,(cl-loop for v in varlist
-                  collect (if (symbolp v)
-                              `(,v ,(eval v))
-                            `(,(car v) ,(eval (cadr v))))
-                  into new-varlist
-                  finally return new-varlist)
-        ,@body)))
-(put 'eval-after-load* 'lisp-indent-function
-     (1+ (get 'eval-after-load 'lisp-indent-function)))
-
-
 (defun tkb-goto-info-node (arg)
   "Goto an Info node in normal text, specified as \"Info: (FILE)Node.\"
 where the \"FILE\" is optional and the \".\" can also be a \",\"."
@@ -630,12 +607,12 @@ argument ARGS is true open in a new buffer."
 
 ;; http://www.unicode.org/Public/UNIDATA/UnicodeData.txt
 ;; describe-char-unicodedata-file
-(let* ((udf-url "http://www.unicode.org/Public/UNIDATA/UnicodeData.txt")
-       (udf-dest "~/tmp/UnicodeData.txt")
-       (udf-dir  (file-name-directory udf-dest)))
-  (if (file-readable-p udf-dest)
-      (setq describe-char-unicodedata-file udf-dest)
-    (eval-after-load* "tkb-last" (udf-dest udf-url udf-dir)
+(defun tkb-load-unicode-txt ()
+  (let* ((udf-url "http://www.unicode.org/Public/UNIDATA/UnicodeData.txt")
+         (udf-dest "~/tmp/UnicodeData.txt")
+         (udf-dir  (file-name-directory udf-dest)))
+    (if (file-readable-p udf-dest)
+        (setq describe-char-unicodedata-file udf-dest)
       (when (y-or-n-p (format "You need to download %s ! Do it? " udf-url))
         ;; Really weird: wget -O 'file' complains that file doesn't exist!
         (unless (file-directory-p udf-dir)
@@ -645,6 +622,8 @@ argument ARGS is true open in a new buffer."
           (message "cmd: %s" cmd)
           (shell-command cmd)
           (setq describe-char-unicodedata-file "~/tmp/UnicodeData.txt"))))))
+
+(eval-after-load "tkb-last" #'tkb-load-unicode-txt)
 
 
 (defun fmt-duration (time)
@@ -773,7 +752,7 @@ appropriate directory structure."
 
   (defun tkb-describe-character (before)
     "Describe the character after point (before if a prefix was specified)
-if it is a unicode character."
+if it is a Unicode character."
     (interactive "P")
     (let* ((char (if before (char-before) (char-after)))
            (info (assoc (encode-char char 'ucs) unicode-character-list))
@@ -781,6 +760,20 @@ if it is a unicode character."
                    "Not in this list, try 'C-c k D' (describe-char)")))
       (message "%S" info)))
   (tkb-keys ((kbd "C-c k d") #'tkb-describe-character))
+
+  (defun tkb-insert-unicode-description (before)
+    "Insert a description of the character after point (before if a prefix was
+specified) if it is a Unicode character."
+    (interactive "P")
+    (let* ((char (if before (char-before) (char-after)))
+           (udata (describe-char-unicode-data char))
+           (name (cadr (assoc "Name" udata)))
+           (old-name (cadr (assoc "Old name" udata)))
+           (desc (format "U+%04X %c %s%s" char char name
+                         (if old-name (concat " (" old-name ")") ""))))
+      (if before (delete-char -1) (delete-char 1))
+      (insert desc)))
+  (tkb-keys ((kbd "C-c k U") #'tkb-insert-unicode-description))
 
   (define-minor-mode tkb-smart-unicode-mode
     "Toggle smart unicode punctuation" nil " ♻⚔☣☥☸◉⅙✽☮" ; "✘▧▧⚅☑☢☹☺♠♥♦♣♨"
