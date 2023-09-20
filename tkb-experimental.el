@@ -2779,5 +2779,10 @@ and make it the current selection."
   (define-key visual-line-mode-map (kbd "M-q") 'tkb-dont-do-that)
   (message "Defined M-q in visual-line-mode-map"))
 
+(defun tkb-edit-filename-at-point ()
+  (interactive)
+  (find-file (thing-at-point 'filename t)))
+(tkb-keys ((kbd "C-c F e") 'tkb-edit-filename-at-point))
+
 (message "End of tkb-experimental.el")
 ;;; end of tkb-experimental.el
