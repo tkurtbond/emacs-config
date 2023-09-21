@@ -2784,5 +2784,13 @@ and make it the current selection."
   (find-file (thing-at-point 'filename t)))
 (tkb-keys ((kbd "C-c F e") 'tkb-edit-filename-at-point))
 
+(defun tkb-physical-screen-size ()
+  (interactive)
+  (destructuring-bind (_ width height)
+      (assoc 'mm-size (frame-monitor-attributes))
+    (let ((in-width (/ width 25.4))
+          (in-height (/ height 25.4)))
+    (message "%d×%dmm (%d×%din)" width height in-width in-height))))
+
 (message "End of tkb-experimental.el")
 ;;; end of tkb-experimental.el
