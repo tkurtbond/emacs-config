@@ -154,6 +154,10 @@
 
 (eval-after-load "dired"
   '(progn
-     (define-key dired-mode-map (kbd "<f11>") 'dired-view-file)))
+    (define-key dired-mode-map (kbd "<f11>") 'dired-view-file)))
+
+
+;; backward-up-list is 
+(tkb-keys ((kbd "C-M-S-u") #'up-list))
 
 ;;; end of tkb-keys-menus.el
