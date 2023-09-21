@@ -157,7 +157,8 @@
     (define-key dired-mode-map (kbd "<f11>") 'dired-view-file)))
 
 
-;; backward-up-list is 
+;; backward-up-list is C-M-u, but to get an uppercase U you have to use
+;; C-M-S-u, not C-M-U.
 (tkb-keys ((kbd "C-M-S-u") #'up-list))
 
 ;;; end of tkb-keys-menus.el
