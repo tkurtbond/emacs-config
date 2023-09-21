@@ -39,16 +39,20 @@
 	("inconsolata" "-outline-Inconsolata-medium-r-normal-normal-17-127-96-96-c-*-iso8859-1" 55)
 
 	("Go Mono" ,@(cond
-                      ((>= (display-pixel-height) 2280)
-                       ;; Retina display probably, so use smaller font
-                       '("-*-Go Mono-normal-normal-normal-*-17-*-*-*-m-0-iso10646-1" 56))
-                      ((>= (display-pixel-height) 2160)
-                       '("-*-Go Mono-normal-normal-normal-*-20-*-*-*-m-0-iso10646-1" 58))
-                      ((> (display-pixel-height) 1080)
-                       '("-*-Go Mono-normal-normal-normal-*-17-*-*-*-m-0-iso10646-1" 55))
-                      (t
-                       '("-*-Go Mono-normal-normal-normal-*-14-*-*-*-m-0-iso10646-1" 50))))
-	))
+                       ;; Maybe I should do something with
+                       ;; (assoc 'mm-size (frame-monitor-attributes)) ?
+                       ((>= (display-pixel-height) 2280)
+                        ;; Retina display probably, so use smaller font
+                        '("-*-Go Mono-normal-normal-normal-*-17-*-*-*-m-0-iso10646-1" 56))
+                       ((>= (display-pixel-height) 2160)
+                        '("-*-Go Mono-normal-normal-normal-*-20-*-*-*-m-0-iso10646-1" 58))
+                       ((> (display-pixel-height) 1080)
+                        '("-*-Go Mono-normal-normal-normal-*-17-*-*-*-m-0-iso10646-1" 55))
+                       (t
+                        (if (= 170 (caddr (assoc 'mm-size (frame-monitor-attributes))))
+                            '("-*-Go Mono-normal-normal-normal-*-16-*-*-*-m-0-iso10646-1" 45) 
+                            '("-*-Go Mono-normal-normal-normal-*-14-*-*-*-m-0-iso10646-1" 50))))
+	           )))
 
 (defun tkb-set-frame-font ()
   (interactive)
@@ -71,7 +75,10 @@
     (setq tkb-default-top
 	  (cl-case system-type
 	    ((darwin) 30)
-            ((gnu/linux) 50)
+            ((gnu/linux)
+             (if (string-equal (getenv "XDG_CURRENT_DESKTOP") "KDE")
+                 5
+               50))
 	    (otherwise 20)))
     (set-frame-font tkb-default-font)
 
