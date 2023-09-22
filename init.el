@@ -76,6 +76,7 @@
                         julia-mode
                         magit
 			markdown-mode
+                        mew             ; Hope springs eternal
                         monky
 			;; moz ; Did I every really use this?
 			nim-mode
