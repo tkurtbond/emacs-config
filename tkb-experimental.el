@@ -773,9 +773,8 @@ if it is a Unicode character."
 specified) if it is a Unicode character."
     (interactive "P")
     (let* ((char (if before (char-before) (char-after)))
-           (udata (describe-char-unicode-data char))
-           (name (cadr (assoc "Name" udata)))
-           (old-name (cadr (assoc "Old name" udata)))
+           (name (get-char-code-property char 'name))
+           (old-name (get-char-code-property char 'old-name))
            (desc (format "U+%04X %c %s%s" char char name
                          (if old-name (concat " (" old-name ")") ""))))
       (if before (delete-char -1) (delete-char 1))
