@@ -93,18 +93,20 @@ recommended by the ReST quickref: http://tinyurl.com/47lkhk"
          (setq org-mobile-directory "~/Dropbox/Apps/MobileOrg")
          (push "~/Org" org-mobile-files))))
   ;;
-  (defconst tkb-org-journal (expand-file-name "~/current/org/journal.org"))
-  (defconst tkb-org-contacts (expand-file-name "~/current/org/contacts.org"))
-  (defconst tkb-org-health (expand-file-name "~/Repos/tkb-notes/Health/interactions.org"))
-  (defconst tkb-org-notes (expand-file-name "~/current/org/notes.org"))
-  (defconst tkb-org-rpg (expand-file-name "~/current/org/rpg.org"))
-  (defconst tkb-org-tasks (expand-file-name "~/current/org/tasks.org"))
-  (defconst tkb-org-video (expand-file-name "~/current/org/video.org"))
-  (defconst tkb-org-mpl-journal (expand-file-name "~/Repos/tkb-notes/MPL/Org/journal.org"))
+  (defconst tkb-org-journal      (expand-file-name "~/Repos/tkb-notes/Org/journal.org"))
+  (defconst tkb-org-contacts     (expand-file-name "~/Repos/tkb-notes/Org/contacts.org"))
+  (defconst tkb-org-books-read   (expand-file-name "~/Repos/tkb-notes/Books/read.org"))
+  (defconst tkb-org-health       (expand-file-name "~/Repos/tkb-notes/Health/interactions.org"))
+  (defconst tkb-org-notes        (expand-file-name "~/Repos/tkb-notes/Org/notes.org"))
+  (defconst tkb-org-rpg          (expand-file-name "~/Repos/tkb-notes/Org/rpg.org"))
+  (defconst tkb-org-tasks        (expand-file-name "~/Repos/tkb-notes/Org/tasks.org"))
+  (defconst tkb-org-video        (expand-file-name "~/Repos/tkb-notes/Org/video.org"))
+  (defconst tkb-org-blog-ideas   (expand-file-name "~/Repos/tkb-notes/Org/blog-ideas.org"))
+  (defconst tkb-org-mpl-journal  (expand-file-name "~/Repos/tkb-notes/MPL/Org/journal.org"))
   (defconst tkb-org-mhst-journal (expand-file-name "~/job/MPL/MHST/Org/mhst-journal.org"))
   (defconst tkb-org-mpl-contacts (expand-file-name "~/Repos/tkb-notes/MPL/Org/contacts.org"))
-  (defconst tkb-org-mpl-notes (expand-file-name "~/Repos/tkb-notes/MPL/Org/notes.org"))
-  (defconst tkb-org-mpl-tasks (expand-file-name "~/Repos/tkb-notes/MPL/Org/tasks.org"))
+  (defconst tkb-org-mpl-notes    (expand-file-name "~/Repos/tkb-notes/MPL/Org/notes.org"))
+  (defconst tkb-org-mpl-tasks    (expand-file-name "~/Repos/tkb-notes/MPL/Org/tasks.org"))
   (tkb-keys ((kbd "C-c k o c") #'org-capture))
 
   (defvar tkb-org-year (format-time-string "%Y")
@@ -125,7 +127,7 @@ recommended by the ReST quickref: http://tinyurl.com/47lkhk"
            (file+olp+datetree ,(expand-file-name "~/current/org/loud-experiment.org"))
            "*** %^{Title} %U\n  %i\n  %?\n")
           ("b" "Add book about to read" entry
-           (file+olp ,(expand-file-name "~/Repos/tkb-notes/Books/read.org")
+           (file+olp ,(expand-file-name tkb-org-books-read)
                      ,(format-time-string "%Y") "Read")
            "*** : %c" :prepend t)
           ("j" "Journal" entry
@@ -134,6 +136,9 @@ recommended by the ReST quickref: http://tinyurl.com/47lkhk"
           ("c" "Contacts Log" entry
            (file+headline ,tkb-org-contacts "Contacts")
            "* %^{Title} %U\n  %i%?\n")
+          ("B" "Blog Ideas" entry
+               (file ,tkb-org-blog-ideas)
+               "* %^{Title} %U\n  %i%?\n")
           ("h" "Health" entry
            (file ,tkb-org-health)
            "* %^{Title} %U\n  %i%?\n")
@@ -168,6 +173,8 @@ recommended by the ReST quickref: http://tinyurl.com/47lkhk"
   (define-prefix-command 'tkb-org-files-map)
   (global-set-key (kbd "C-C k o F") 'tkb-org-files-map)
   (tkb-keys ((kbd "C-c k o C-c") #'org-ctrl-c-ctrl-c)
+            ((kbd "C-c k o F B") #'(lambda () (interactive)
+                                     (find-file tkb-org-blog-ideas)))
             ((kbd "C-c k o F j") #'(lambda () (interactive)
                                      (find-file tkb-org-journal)))
             ((kbd "C-c k o F c") #'(lambda () (interactive)
