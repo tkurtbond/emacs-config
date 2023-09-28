@@ -61,6 +61,7 @@
                         dante           ; For Haskell
                         dash
                         define-word
+                        disable-mouse
 			docbook
                         elfeed
                         elfeed-org
