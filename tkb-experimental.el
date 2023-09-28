@@ -749,8 +749,9 @@ appropriate directory structure."
          (category (format-time-string "media/viewing/%Y/%m" date-time)))
     (tkb-blog titles tags category date-time "Recent Viewing: ")))
 
-(when t			       ; used by my hooks for rst and formerly asciidoc
-  (add-to-list 'load-path (expand-file-name "~/lib/emacs/others/misc"))
+(when-directory (d (expand-file-name "~/lib/emacs/others/misc"))
+  ;; used by my hooks for rst and formerly asciidoc
+  (add-to-list 'load-path d)
   ;; look at https://github.com/ndw/xmlunicode for xmlunicode.el
   ;; xmlunicode-character-list.el.  xmlunicode.el provides the
   ;; "smart-unicode-*" functions.

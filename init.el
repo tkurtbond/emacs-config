@@ -79,7 +79,7 @@
                         mew             ; Hope springs eternal
                         monky
 			;; moz ; Did I every really use this?
-			nim-mode
+			;;nim-mode ; unbalanced parentheses.
                         nodejs-repl
                         oberon
 			projectile 
@@ -211,7 +211,8 @@
 (load-file "~/lib/emacs/tkb/tkb-time-expansion-keys.el")
 (load-file "~/lib/emacs/tkb/tkb-status-reports.el")
 (load-file "~/lib/emacs/tkb/tkb-blog.el")
-(load-file "~/Repos/microblog/emacs/tkb-microblog.el")
+(when-directory (d (expand-file-name "~/Repos/microblog/emacs/"))
+  (load-file "~/Repos/microblog/emacs/tkb-microblog.el"))
 (load-library "gemini-mode.el")
 
 
