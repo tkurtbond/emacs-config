@@ -46,7 +46,7 @@
                         '("-*-Go Mono-normal-normal-normal-*-17-*-*-*-m-0-iso10646-1" 56))
                        ((>= (display-pixel-height) 2160)
                         (if (= 214 (caddr (assoc 'mm-size (frame-monitor-attributes))))
-                            '("-*-Go Mono-regular-normal-normal-*-26-*-*-*-m-0-iso10646-1" 60)
+                            '("-*-Go Mono-regular-normal-normal-*-24-*-*-*-m-0-iso10646-1" 50)  ;; was 26
                           '("-*-Go Mono-normal-normal-normal-*-20-*-*-*-m-0-iso10646-1" 58)))
                        ((> (display-pixel-height) 1080)
                         '("-*-Go Mono-normal-normal-normal-*-17-*-*-*-m-0-iso10646-1" 55))
