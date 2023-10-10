@@ -69,6 +69,13 @@
 (define-prefix-command 'tkb-buffer-map)
 (global-set-key (kbd "C-c b") 'tkb-buffer-map)
 
+(define-prefix-command 'tkb-O-map)
+(global-set-key (kbd "C-c k O") 'tkb-O-map)
+(tkb-keys ((kbd "C-c k O t") 'origami-toggle-node)
+          ((kbd "C-c k O r") 'origami-recursively-toggle-node)
+          ((kbd "C-c k O f") 'origami-forward-toggle-node))
+          
+
 (global-set-key [f3] 'tkb-start-categorizing-links)
 (global-set-key [f4] 'tkb-categorize-next-link)
 ;(global-set-key [f5] 'tkb-burst-digest-and-back)
@@ -155,7 +162,6 @@
 (eval-after-load "dired"
   '(progn
     (define-key dired-mode-map (kbd "<f11>") 'dired-view-file)))
-
 
 ;; backward-up-list is C-M-u, but to get an uppercase U you have to use
 ;; C-M-S-u, not C-M-U.

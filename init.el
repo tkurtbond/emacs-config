@@ -83,6 +83,7 @@
 			;;nim-mode ; unbalanced parentheses.
                         nodejs-repl
                         oberon
+                        origami
 			projectile 
 			racket-mode
                         ;;+++

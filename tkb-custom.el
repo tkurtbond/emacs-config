@@ -28,7 +28,7 @@
        (":signature" . "~/.signature-leo")
        ("Return-Path" . "<thomas.bond@leo.gov>")))))
  '(package-selected-packages
-   '(disable-mouse nlinum-relative monky geiser-gambit geiser-mit gemini-mode gemini-write skewer-mode elfeed elfeed-org elpher visual-fill-column string-inflection ada-ref-man oberon nodejs-repl js-comint dante haskell-mode ac-geiser geiser geiser-chez geiser-chibi geiser-chicken geiser-guile geiser-racket ansi package-build shut-up epl git commander dash s cask-mode caskxy cargo rust-mode julia-mode lua-mode mew unicode-fonts define-word wanderlust magit auctex adoc-mode caml jabber cider clojure-mode racket-mode go-guru go-mode use-package yaml-mode markdown-mode w3m projectile nim-mode fuel f docbook clojure-snippets clojure-quick-repls clojure-mode-extra-font-locking))
+   '(origami disable-mouse nlinum-relative monky geiser-gambit geiser-mit gemini-mode gemini-write skewer-mode elfeed elfeed-org elpher visual-fill-column string-inflection ada-ref-man oberon nodejs-repl js-comint dante haskell-mode ac-geiser geiser geiser-chez geiser-chibi geiser-chicken geiser-guile geiser-racket ansi package-build shut-up epl git commander dash s cask-mode caskxy cargo rust-mode julia-mode lua-mode mew unicode-fonts define-word wanderlust magit auctex adoc-mode caml jabber cider clojure-mode racket-mode go-guru go-mode use-package yaml-mode markdown-mode w3m projectile nim-mode fuel f docbook clojure-snippets clojure-quick-repls clojure-mode-extra-font-locking))
  '(rst-level-face-max 10)
  '(send-mail-function 'mailclient-send-it)
  '(w3m-use-cookies t)
