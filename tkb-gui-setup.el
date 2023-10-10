@@ -46,7 +46,7 @@
                         '("-*-Go Mono-normal-normal-normal-*-17-*-*-*-m-0-iso10646-1" 56))
                        ((>= (display-pixel-height) 2160)
                         (if (= 214 (caddr (assoc 'mm-size (frame-monitor-attributes))))
-                            '("-*-Go Mono-regular-normal-normal-*-24-*-*-*-m-0-iso10646-1" 50)  ;; was 26
+                            '("-*-Go Mono-regular-normal-normal-*-26-*-*-*-m-0-iso10646-1" 50) ; 26 on Gnome and 24 on KDE Plasma?
                           '("-*-Go Mono-normal-normal-normal-*-20-*-*-*-m-0-iso10646-1" 58)))
                        ((> (display-pixel-height) 1080)
                         '("-*-Go Mono-normal-normal-normal-*-17-*-*-*-m-0-iso10646-1" 55))
@@ -84,9 +84,21 @@
 	    (otherwise 20)))
     (set-frame-font tkb-default-font)
 
-    (if (>= (display-pixel-width) 2160)
-        (setq tkb-default-left 1925)
-      (setq tkb-default-left 5))
+    (when nil                           ; This was sadly naive.
+      (if (>= (display-pixel-width) 2160)
+          (setq tkb-default-left 1925)
+        (setq tkb-default-left 5)))
+
+    (message "initial frame monitor geometry: %S" (frame-monitor-geometry))
+
+    (cond ((= 7680 (car (frame-monitor-geometry)))
+           (setq tkb-default-left (+ 7680 5)))
+          ((= 3840 (car (frame-monitor-geometry)))
+           (setq tkb-default-left (+ 3840 5)))
+          ((= 0 (car (frame-monitor-geometry)) )
+           (setq tkb-default-left 5)))
+          
+      
 
     (let* ((dh (display-pixel-height))
 	   (ch (frame-char-height))
