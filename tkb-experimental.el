@@ -355,7 +355,8 @@ and add a log entry to it."
                        ("black" "green")
                        ("black" "wheat")
                        ("black" "navajowhite1")))
-(defun tkb-toggle-colors ()
+(defun tkb-next-colors ()
+  "Goto the next next set of background and foreground colors."
   (interactive)
   (let* ((fg (frame-parameter nil 'foreground-color))
          (bg (frame-parameter nil 'background-color))
