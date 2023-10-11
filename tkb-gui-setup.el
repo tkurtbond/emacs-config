@@ -47,14 +47,15 @@
                        ((>= (display-pixel-height) 2160)
                         (if (= 214 (caddr (assoc 'mm-size (frame-monitor-attributes))))
                             '("-*-Go Mono-regular-normal-normal-*-26-*-*-*-m-0-iso10646-1" 50) ; 26 on Gnome and 24 on KDE Plasma?
-                          '("-*-Go Mono-normal-normal-normal-*-20-*-*-*-m-0-iso10646-1" 58)))
+                          '("-*-Go Mono-normal-normal-normal-*-22-*-*-*-m-0-iso10646-1" 70))) ; was 20?
                        ((> (display-pixel-height) 1080)
                         '("-*-Go Mono-normal-normal-normal-*-17-*-*-*-m-0-iso10646-1" 55))
+                       ((= 170 (caddr (assoc 'mm-size (frame-monitor-attributes))))
+                        '("-*-Go Mono-normal-normal-normal-*-16-*-*-*-m-0-iso10646-1" 45))
+                       ((= 340 (caddr (assoc 'mm-size (frame-monitor-attributes))))
+                        '("-*-Go Mono-normal-normal-normal-*-26-*-*-*-m-0-iso10646-1" 50))
                        (t
-                        (if (= 170 (caddr (assoc 'mm-size (frame-monitor-attributes))))
-                            '("-*-Go Mono-normal-normal-normal-*-16-*-*-*-m-0-iso10646-1" 45) 
-                            '("-*-Go Mono-normal-normal-normal-*-14-*-*-*-m-0-iso10646-1" 50))))
-	           )))
+                        '("-*-Go Mono-normal-normal-normal-*-14-*-*-*-m-0-iso10646-1" 50))))))
 
 (defun tkb-set-frame-font ()
   (interactive)
@@ -95,7 +96,11 @@
            (setq tkb-default-left (+ 7680 5)))
           ((= 3840 (car (frame-monitor-geometry)))
            (setq tkb-default-left (+ 3840 5)))
-          ((= 0 (car (frame-monitor-geometry)) )
+          ((= 1920 (car (frame-monitor-geometry)))
+           (setq tkb-default-left (+ 1920 5)))
+          ((= 0 (car (frame-monitor-geometry)))
+           (setq tkb-default-left 5))
+          (t
            (setq tkb-default-left 5)))
           
       
@@ -134,13 +139,14 @@
 	    (append default-frame-alist tkb-default-frame-alist))
       (setq initial-frame-alist default-frame-alist)
       (tool-bar-mode -1)
-      ;;(set-frame-parameter nil 'height tkb-default-height)
+      (set-frame-parameter nil 'height tkb-default-height)
       (set-frame-parameter nil 'font tkb-default-font)
       (set-frame-parameter nil 'top tkb-default-top)
       (set-frame-parameter nil 'left tkb-default-left)
-      (set-frame-parameter nil 'width 80)
-      (message "(%d,%d) with %s" tkb-default-left tkb-default-top
-               tkb-default-font)))))
+      (set-frame-parameter nil 'width tkb-default-height)
+      (message "(%d,%d), %d height with font %S "
+               tkb-default-left tkb-default-top
+               tkb-default-height tkb-default-font)))))
 
 (tkb-initial-font-and-size nil)
 
