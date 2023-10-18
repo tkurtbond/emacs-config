@@ -84,6 +84,7 @@
 			;; moz ; Did I every really use this?
 			;;nim-mode ; unbalanced parentheses.
                         nodejs-repl
+                        nushell-mode
                         oberon
                         origami
 			projectile 
