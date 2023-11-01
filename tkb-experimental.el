@@ -50,6 +50,7 @@ recommended by the ReST quickref: http://tinyurl.com/47lkhk"
          (frame (cdr (assoc-string frame-name frames))))
     (raise-frame frame)
     (select-frame frame)))
+
 (defun tkb-select-frame-popup ()
   (interactive)
   (let* ((frames (cl-loop for frame in (frame-list)
@@ -59,7 +60,8 @@ recommended by the ReST quickref: http://tinyurl.com/47lkhk"
          (frame (x-popup-menu t `("Pick a frame" ("frames" ,@frames)))))
     (when frame
       (raise-frame frame)
-      (select-frame frame))))
+      (select-frame-set-input-focus frame)
+      )))
 (tkb-keys ((kbd "C-c A") 'tkb-select-frame-popup))
 
 (defun tkb-show-frame-size-and-position ()
