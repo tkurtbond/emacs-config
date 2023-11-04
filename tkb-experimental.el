@@ -2817,18 +2817,23 @@ and make it the current selection."
     (org-download-heading-lvl nil)
     (org-download-timestamp "%Y%m%d-%H%M%S_")
     (org-image-actual-width 300)
-    (cond ((getenv "DISPLAY")
-           (org-download-screenshot-method
-            "xclip -selection clipboard -t image/png -o > %s"))
-          ((getenv "WAYLAND_DISPLAY")
-           (org-download-screenshot-method
-            "wl-paste > %s"))
-          (t
-           (message "Neither X nor Wayland are available.")))
     :bind
     ("C-c k o d s" . org-download-screenshot)
     :config
-    (require 'org-download))
+    (require 'org-download)
+    (cond ((getenv "WAYLAND_DISPLAY")
+            ;; check for Wayland first because of X on Wayland
+            (message "Wayland is here!")
+            (setq org-download-screenshot-method
+                  "wl-paste > %s"))
+          ((getenv "DISPLAY")
+           (message "X is here!")
+           (setq org-download-screenshot-method
+            "xclip -selection clipboard -t image/png -o > %s"))
+          (t
+           (message "Neither X nor Wayland are available."))))
+
 
 (message "End of tkb-experimental.el")
 ;;; end of tkb-experimental.el
+?
