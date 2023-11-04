@@ -32,7 +32,7 @@
  '(rst-level-face-max 10)
  '(send-mail-function 'mailclient-send-it)
  '(w3m-use-cookies t)
- '(warning-suppress-log-types '((comp) (comp)))
+ '(warning-suppress-log-types '((server) (comp)))
  '(warning-suppress-types '((comp))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
