@@ -86,6 +86,7 @@
                         nodejs-repl
                         nushell-mode
                         oberon
+                        org-download
                         origami
 			projectile 
 			racket-mode

@@ -2804,7 +2804,31 @@ and make it the current selection."
       (assoc 'mm-size (frame-monitor-attributes))
     (let ((in-width (/ width 25.4))
           (in-height (/ height 25.4)))
-    (message "%d×%dmm (%d×%din)" width height in-width in-height))))
+      (message "%d×%dmm (%d×%din)" width height in-width in-height))))
+
+
+
+(use-package org-download
+    :after org
+    :defer nil
+    :custom
+    (org-download-method 'directory)
+    (org-download-image-dir "Images")
+    (org-download-heading-lvl nil)
+    (org-download-timestamp "%Y%m%d-%H%M%S_")
+    (org-image-actual-width 300)
+    (cond ((getenv "DISPLAY")
+           (org-download-screenshot-method
+            "xclip -selection clipboard -t image/png -o > %s"))
+          ((getenv "WAYLAND_DISPLAY")
+           (org-download-screenshot-method
+            "wl-paste > %s"))
+          (t
+           (message "Neither X nor Wayland are available.")))
+    :bind
+    ("C-c k o d s" . org-download-screenshot)
+    :config
+    (require 'org-download))
 
 (message "End of tkb-experimental.el")
 ;;; end of tkb-experimental.el
