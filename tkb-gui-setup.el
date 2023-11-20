@@ -63,6 +63,10 @@
 			 (completing-read "Font? " tkb-fonts) tkb-fonts))))
 
 
+(defvar tkb-default-font nil)
+(defvar tkb-default-height nil)
+(defvar tkb-default-width 80)
+
 (defun tkb-initial-font-and-size (prefix)
   (interactive "P")
   ;; Because I sometimes use this after emacs -q, and it needs cl.
@@ -124,7 +128,7 @@
               (setq color alt-color))
           (setq color "wheat"))
         (setq tkb-default-frame-alist
-	      `((width . 80)
+	      `((width . ,tkb-default-width)
 	        (height . ,tkb-default-height)
 	        ;; (height . ,nfh)
 	        (top . ,tkb-default-top)
@@ -143,12 +147,14 @@
       (set-frame-parameter nil 'font tkb-default-font)
       (set-frame-parameter nil 'top tkb-default-top)
       (set-frame-parameter nil 'left tkb-default-left)
-      (set-frame-parameter nil 'width tkb-default-height)
-      (message "(%d,%d), %d height with font %S "
+      (set-frame-parameter nil 'height tkb-default-height)
+      (set-frame-parameter nil 'width tkb-default-width)
+      (message "(%d,%d), %d×%d with font %S "
                tkb-default-left tkb-default-top
-               tkb-default-height tkb-default-font)))))
+               tkb-default-width tkb-default-height tkb-default-font)))))
 
 (tkb-initial-font-and-size nil)
+(tkb-keys ((kbd "C-c k g i") 'tkb-initial-font-and-size))
 
 (when nil 
   (defvar tkb-timer nil)
