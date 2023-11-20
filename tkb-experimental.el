@@ -104,7 +104,7 @@ recommended by the ReST quickref: http://tinyurl.com/47lkhk"
   (defconst tkb-org-tasks        (expand-file-name "~/Repos/tkb-notes/Org/tasks.org"))
   (defconst tkb-org-video        (expand-file-name "~/Repos/tkb-notes/Org/video.org"))
   (defconst tkb-org-blog-ideas   (expand-file-name "~/Repos/tkb-notes/Org/blog-ideas.org"))
-  (defconst tkb-org-gaming-ideas (expand-file-name "~/Repos/tkb-notes/Org/gaming-ideas.org"))
+  (defconst tkb-org-gaming-ideas (expand-file-name "~/Repos/tkb-notes/RPG/gaming-ideas.org"))
   (defconst tkb-org-mpl-journal  (expand-file-name "~/Repos/tkb-notes/MPL/Org/journal.org"))
   (defconst tkb-org-mhst-journal (expand-file-name "~/job/MPL/MHST/Org/mhst-journal.org"))
   (defconst tkb-org-mpl-contacts (expand-file-name "~/Repos/tkb-notes/MPL/Org/contacts.org"))
