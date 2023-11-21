@@ -2833,6 +2833,13 @@ and make it the current selection."
           (t
            (message "Neither X nor Wayland are available."))))
 
+(defun tkb-open-file-at-point ()
+  (interactive)
+  (let ((filename (thing-at-point 'filename t)))
+    (if filename
+        (find-file filename)
+      (message "No filename found at point"))))
+
 
 (message "End of tkb-experimental.el")
 ;;; end of tkb-experimental.el
