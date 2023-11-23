@@ -46,8 +46,8 @@
                         '("-*-Go Mono-normal-normal-normal-*-17-*-*-*-m-0-iso10646-1" 56))
                        ((>= (display-pixel-height) 2160)
                         (if (= 214 (caddr (assoc 'mm-size (frame-monitor-attributes))))
-                            '("-*-Go Mono-regular-normal-normal-*-26-*-*-*-m-0-iso10646-1" 50) ; 26 on Gnome and 24 on KDE Plasma?
-                          '("-*-Go Mono-normal-normal-normal-*-22-*-*-*-m-0-iso10646-1" 70))) ; was 20?
+                            '("-*-Go Mono-regular-normal-normal-*-20-*-*-*-m-0-iso10646-1" 50) ; 26 on Gnome and 24 on KDE Plasma?
+                          '("-*-Go Mono-normal-normal-normal-*-15-*-*-*-m-0-iso10646-1" 70))) ; was 20?
                        ((> (display-pixel-height) 1080)
                         '("-*-Go Mono-normal-normal-normal-*-17-*-*-*-m-0-iso10646-1" 55))
                        ((= 170 (caddr (assoc 'mm-size (frame-monitor-attributes))))
