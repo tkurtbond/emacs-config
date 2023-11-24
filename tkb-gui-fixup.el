@@ -4,6 +4,10 @@
 ;;; **NOT** PIXEL_SIZE: https://www.x.org/releases/X11R7.6/doc/xorg-docs/specs/XLFD/xlfd.html#pixel_size
 ;; ALSO: https://wiki.archlinux.org/title/X_Logical_Font_Description#Font_sizes
 
+;; Under X using POINT_SIZE in the font definition gets converted to
+;; PIXEL_SIZE in emacs 'font frame parameter, but the original is
+;; still in the 'font-parameter frame parameter.
+
 (defun tkb-gui-fixup (&optional point-size width height)
   "Fix up the emacs frames to have the right position and font."
   (interactive)
