@@ -26,5 +26,7 @@
          (setf (cdr (assq 'font default-frame-alist)) font)
          (setf (cdr (assq 'width default-frame-alist)) width)
          (setf (cdr (assq 'height default-frame-alist)) height))))
-;; (tkb-gui-fixup 10 80 55)
+;; urlich: (tkb-gui-fixup 14 80 70)
+;; helblindi: (tkb-gui-fixup 10 80 55)
 ;; (tkb-gui-fixup 8 80 55)
+
