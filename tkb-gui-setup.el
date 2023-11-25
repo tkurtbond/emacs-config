@@ -156,13 +156,16 @@
         (set-frame-parameter nil 'font tkb-default-font)
         (set-frame-parameter nil 'top tkb-default-top)
         (set-frame-parameter nil 'left tkb-default-left)
+        (message "frame height: %d" (frame-parameter nil 'height))
         (set-frame-parameter nil 'height tkb-default-height)
         (set-frame-parameter nil 'width tkb-default-width)
+
+        (set-frame-size (selected-frame) tkb-default-width tkb-default-height)
         
-        (message "(%d,%d), %d×%d with font %S "
+        (message "(%d,%d), %d×%d with \nfont \"%s\" and \ndescription \"%s\""
                  tkb-default-left tkb-default-top
                  tkb-default-width tkb-default-height
-                 tkb-default-font)))))
+                 tkb-default-font tkb-default-description)))))
 
 (tkb-initial-font-and-size nil)
 (tkb-keys ((kbd "C-c k g i") 'tkb-initial-font-and-size))
