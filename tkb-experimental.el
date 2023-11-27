@@ -2840,6 +2840,34 @@ and make it the current selection."
         (find-file filename)
       (message "No filename found at point"))))
 
+;; Unicode subscripts
+;; (apply #'string (cl-loop for i from 0 to 9 collect (+ #x2080 i)))
+;;=> "₀₁₂₃₄₅₆₇₈₉"
+(defun tkb-digit-to-unicode-subscript (d)
+  "Convert a number between 0 and 9 into its Unicode subscript equivalent."
+  (unless (<= 0 d 9) (error "%d isn't a number between 0 and 9, can't convert it to a subscript" d))
+  (+ d #x2080))
+;; Unicode superscripts are more complicated, because of hysterical raisons.
+;;(apply #'string (cl-loop for i from 0 to 9 collect (if (<= 2 i 3) (+ #x00B0) (+ #x2070 i))))
+;;=> "⁰ⁱ°°⁴⁵⁶⁷⁸⁹"
+(defun tkb-digit-to-unicode-superscript (d)
+  "Convert a number between 0 and 9 into its Unicode superscript equivalent."
+  (unless (<= 0 d 9) (error "%d isn't a number between 0 and 9, can't convert it to a superscript" d))
+  (if (<= 2 d 3) (+ d #x00B0) (+ d #x2070)))
+  
+(defun tkb-unicode-fraction-the-hard-way (numerator denominator)
+  (interactive "nNumerator? \nnDenominator? ")
+  (let ((numers (number-to-string (truncate (abs numerator))))
+        (denoms (number-to-string (truncate (abs denominator)))))
+    (concat (apply #'string (cl-loop for c across numers
+                                  collect (tkb-digit-to-unicode-superscript (- c ?0))))
+            "/"
+            (apply #'string (cl-loop for c across denoms
+                                  collect (tkb-digit-to-unicode-subscript (- c ?0)))))))
+
+(defun tkb-insert-unicode-fraction-the-hard-way (numerator denominator)
+  (interactive "nNumerator? \nnDenominator? ")
+  (insert (tkb-unicode-fraction-the-hard-way numerator denominator)))
 
 (message "End of tkb-experimental.el")
 ;;; end of tkb-experimental.el
