@@ -2853,7 +2853,10 @@ and make it the current selection."
 (defun tkb-digit-to-unicode-superscript (d)
   "Convert a number between 0 and 9 into its Unicode superscript equivalent."
   (unless (<= 0 d 9) (error "%d isn't a number between 0 and 9, can't convert it to a superscript" d))
-  (if (<= 2 d 3) (+ d #x00B0) (+ d #x2070)))
+  (if (= d 1) #x00B9
+    (if (<= 2 d 3)
+        (+ d #x00B0)
+      (+ d #x2070))))
   
 (defun tkb-unicode-fraction-the-hard-way (numerator denominator)
   "Return a string with a common fraction using unciode super- and sub-scripts."
@@ -2865,6 +2868,8 @@ and make it the current selection."
             "/"
             (apply #'string (cl-loop for c across denoms
                                   collect (tkb-digit-to-unicode-subscript (- c ?0)))))))
+;; (tkb-unicode-fraction-the-hard-way 15 16)
+;; (tkb-unicode-fraction-the-hard-way 1234567890 1234567890)
 
 (defun tkb-insert-unicode-fraction-the-hard-way (numerator denominator)
   "Insert a common fraction using unicode super- and sub-scripts."
