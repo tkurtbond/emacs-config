@@ -2856,6 +2856,7 @@ and make it the current selection."
   (if (<= 2 d 3) (+ d #x00B0) (+ d #x2070)))
   
 (defun tkb-unicode-fraction-the-hard-way (numerator denominator)
+  "Return a string with a common fraction using unciode super- and sub-scripts."
   (interactive "nNumerator? \nnDenominator? ")
   (let ((numers (number-to-string (truncate (abs numerator))))
         (denoms (number-to-string (truncate (abs denominator)))))
@@ -2866,6 +2867,7 @@ and make it the current selection."
                                   collect (tkb-digit-to-unicode-subscript (- c ?0)))))))
 
 (defun tkb-insert-unicode-fraction-the-hard-way (numerator denominator)
+  "Insert a common fraction using unicode super- and sub-scripts."
   (interactive "nNumerator? \nnDenominator? ")
   (insert (tkb-unicode-fraction-the-hard-way numerator denominator)))
 
