@@ -410,4 +410,8 @@ A difference with `eval-after-load' is that BODY doesn't have to be quoted."
 (put 'eval-after-load* 'lisp-indent-function
      (1+ (get 'eval-after-load 'lisp-indent-function)))
 
+(defmacro nv (&rest body)
+  "Evaluate the BODY expressions and return no values."
+  `(progn ,@body (cl-values)))
+
 ;;; tkb-macros.el
