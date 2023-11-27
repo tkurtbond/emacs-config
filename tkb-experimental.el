@@ -2170,7 +2170,7 @@ REPEAT is how many times to repeat the roll."
                           ("sK" . [?K]) ; Degrees Kelvin
                           ("sD" . [?°]) ; Degree sign
                           ("sx" . [?🗙]) ; Cancelation X
-                          ;; Fractions
+                          ;; Common or Vulgar Fractions
                           ("5/8" . [?⅝])
                           ("4/5" . [?⅘])
                           ("1/8" . [?⅛])
@@ -2875,6 +2875,16 @@ and make it the current selection."
   "Insert a common fraction using unicode super- and sub-scripts."
   (interactive "nNumerator? \nnDenominator? ")
   (insert (tkb-unicode-fraction-the-hard-way numerator denominator)))
+
+(defun tkb-display-monitor-geometry ()
+  (interactive)
+  (cl-destructuring-bind (x y width height) (frame-monitor-geometry)
+    (cl-destructuring-bind (mm-wide mm-high) (frame-monitor-attribute 'mm-size)
+      (message "Monitor geometry is %d×%d@(%d,%d) on %d*%dmm" width height x y
+               mm-wide mm-high))))
+
+;;; ¿¿¿Write a function using display-monitor-attributes-list and probably
+;;; pcase-dolist to display information on all attached monitor.???
 
 (message "End of tkb-experimental.el")
 ;;; end of tkb-experimental.el
