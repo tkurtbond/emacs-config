@@ -3,6 +3,9 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (message "Starting tkb-gui-setup.el")
 
+(defvar tkb-default-font-name "IBM Plex Mono")
+(defvar tkb-default-font-size 10)
+
 (setq tkb-fonts
       `(("courier-11pt" ;; w32 says this is 11pt
 	 "-outline-Courier New-normal-r-normal-normal-15-*-*-*-c-*-iso10646-1"
@@ -38,7 +41,7 @@
 	("consolas" "-outline-Consolas-normal-r-normal-normal-17-127-96-96-c-*-iso8859-1" 55 "constant consolas 55 high")
 	("inconsolata" "-outline-Inconsolata-medium-r-normal-normal-17-127-96-96-c-*-iso8859-1" 55 "constant inconsolata 55 high")
 
-	("Go Mono" ,@(cond
+	(,tkb-default-font-name ,@(cond
                        ;; Maybe I should do something with
                        ;; (assoc 'mm-size (frame-monitor-attributes)) ?
                        ((>= (display-pixel-height) 2280)
@@ -46,7 +49,7 @@
                         '("-*-Go Mono-normal-normal-normal-*-17-*-*-*-m-0-iso10646-1" 56 "go display-pixel-height >= 2280"))
                        ((>= (display-pixel-height) 2160)
                         (if (= 214 (caddr (assoc 'mm-size (frame-monitor-attributes))))
-                            '("Go Mono-10" 50 "display-pixel-height >= 2160 high and mm-size height = 214") ; 26 on Gnome and 24 on KDE Plasma?
+                            `(,(format "%s-%d" tkb-default-font-name tkb-default-font-size) 50 "display-pixel-height >= 2160 high and mm-size height = 214") ; 26 on Gnome and 24 on KDE Plasma?
                           '("-*-Go Mono-normal-normal-normal-*-*-10-*-*-m-0-iso10646-1" 70 "display-pixel-height >= 2160 high and mm-size height != 214"))) ; was 20?
                        ((> (display-pixel-height) 1080)
                         '("-*-Go Mono-normal-normal-normal-*-17-*-*-*-m-0-iso10646-1" 55 "display-pixel-height > 1080 high"))
@@ -89,7 +92,7 @@ defaults.")
   (cl-destructuring-bind (tag font height description)
       (assoc-string (if prefix
 			(completing-read "Font? " tkb-fonts)
-		      (if nil "dejavu-13pt" "Go Mono"))
+		      (if nil "dejavu-13pt" tkb-default-font-name))
                     tkb-fonts)
 
     (setq tkb-default-tag tag)
