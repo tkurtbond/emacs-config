@@ -194,7 +194,9 @@
 
 (when window-system
   (add-hook 'after-init-hook
-	    (lambda () (load "~/lib/emacs/tkb/tkb-gui-setup"))))
+	    (lambda ()
+              (load "~/lib/emacs/tkb/tkb-gui-setup")
+              (load "~/lib/emacs/tkb/tkb-gui-fixup"))))
 
 ;; wanderlust
 (autoload 'wl-user-agent-compose "wl-draft" nil t)

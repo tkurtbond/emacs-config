@@ -46,8 +46,8 @@
                         '("-*-Go Mono-normal-normal-normal-*-17-*-*-*-m-0-iso10646-1" 56 "go display-pixel-height >= 2280"))
                        ((>= (display-pixel-height) 2160)
                         (if (= 214 (caddr (assoc 'mm-size (frame-monitor-attributes))))
-                            '("-*-Go Mono-regular-normal-normal-*-20-*-*-*-m-0-iso10646-1" 50 "display-pixel-height >= 2160 high and mm-size height = 214") ; 26 on Gnome and 24 on KDE Plasma?
-                          '("-*-Go Mono-normal-normal-normal-*-16-*-*-*-m-0-iso10646-1" 70 "display-pixel-height >= 2160 high and mm-size height != 214"))) ; was 20?
+                            '("Go Mono-10" 50 "display-pixel-height >= 2160 high and mm-size height = 214") ; 26 on Gnome and 24 on KDE Plasma?
+                          '("-*-Go Mono-normal-normal-normal-*-*-10-*-*-m-0-iso10646-1" 70 "display-pixel-height >= 2160 high and mm-size height != 214"))) ; was 20?
                        ((> (display-pixel-height) 1080)
                         '("-*-Go Mono-normal-normal-normal-*-17-*-*-*-m-0-iso10646-1" 55 "display-pixel-height > 1080 high"))
                        ((= 170 (caddr (assoc 'mm-size (frame-monitor-attributes))))
@@ -102,7 +102,7 @@ defaults.")
             ((gnu/linux)
              (if (string-equal (getenv "XDG_CURRENT_DESKTOP") "KDE")
                  10
-               50))
+               80))
 	    (otherwise 20)))
 
     (when nil                           ; This was sadly naive.
@@ -113,26 +113,16 @@ defaults.")
     (message "initial frame monitor geometry: %S" (frame-monitor-geometry))
 
     (cond ((= 7680 (car (frame-monitor-geometry)))
-           (setq tkb-default-left (+ 7680 10)))
+           (setq tkb-default-left (+ 7680 20)))
           ((= 3840 (car (frame-monitor-geometry)))
-           (setq tkb-default-left (+ 3840 10)))
+           (setq tkb-default-left (+ 3840 20)))
           ((= 1920 (car (frame-monitor-geometry)))
-           (setq tkb-default-left (+ 1920 10)))
+           (setq tkb-default-left (+ 1920 20)))
           ((= 0 (car (frame-monitor-geometry)))
-           (setq tkb-default-left 10))
+           (setq tkb-default-left 20))
           (t
-           (setq tkb-default-left 10)))
+           (setq tkb-default-left 20)))
           
-    (let* ((dh (display-pixel-height))
-	   (ch (frame-char-height))
-	   (nfh (truncate (- (/ dh ch) (* (/ tkb-default-top ch) 2)
-			     (* (/ dh ch) .10)))))
-      (when nil (not (y-or-n-p (format "dh: %d ch: %d nfh: %d " dh ch nfh)))
-	    (error "not doing it"))
-      ;;  FIXME: make this work if executed multiple times.
-      ;;(set-frame-parameter nil 'height nfh)
-      (message "nfh: %d" nfh)
-      ;;(set-frame-height nil nfh)
       (set-frame-font tkb-default-font nil t)
       (set-frame-height nil tkb-default-height)
 
@@ -146,7 +136,6 @@ defaults.")
         (setq tkb-default-frame-alist
 	      `((width . ,tkb-default-width)
 	        (height . ,tkb-default-height)
-	        ;; (height . ,nfh)
 	        (top . ,tkb-default-top)
 	        (left . ,tkb-default-left)
 	        (font . ,tkb-default-font)
@@ -175,10 +164,35 @@ defaults.")
         (message "(%d,%d), %d×%d with \nfont \"%s\" and \ndescription \"%s\""
                  tkb-default-left tkb-default-top
                  tkb-default-width tkb-default-height
-                 tkb-default-font tkb-default-description)))))
+                 tkb-default-font tkb-default-description))))
+
+(defun tkb-gui-report-defaults ()
+  "Report the tkb-default-* values."
+  (interactive)
+  (message "\
+tkb-default-tag:         %s\n\
+tkb-default-description: %s\n\
+tkb-default-font:        %s\n\
+tkb-default-height:      %d\n\
+tkb-default-width:       %d\n\
+tkb-default-top:         %d\n\
+tkb-default-left:        %d\n"
+           tkb-default-tag        
+           tkb-default-description
+           tkb-default-font       
+           tkb-default-height     
+           tkb-default-width      
+           tkb-default-top        
+           tkb-default-left))
 
 (tkb-initial-font-and-size nil)
+(tkb-gui-report-defaults)
 (tkb-keys ((kbd "C-c k g i") 'tkb-initial-font-and-size))
+
+
+
+
+
 
 (when nil 
   (defvar tkb-timer nil)
