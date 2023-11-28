@@ -63,11 +63,22 @@
 			 (completing-read "Font? " tkb-fonts) tkb-fonts))))
 
 
-(defvar tkb-default-tag nil)
-(defvar tkb-default-font nil)
-(defvar tkb-default-height nil)
-(defvar tkb-default-description nil)
-(defvar tkb-default-width 80)
+(defvar tkb-default-tag nil
+  "\
+The tag in the association list tkb-fonts at the beginning of each entry.")
+(defvar tkb-default-font nil
+  "The default font for emacs frames chosen by tkb-gui-setup.el.")
+(defvar tkb-default-height nil
+  "The default height for emacs frames chosen by tkb-gui-setup.el." )
+(defvar tkb-default-description nil
+  "The description of the conditions that were met to produce this set of
+defaults.")
+(defvar tkb-default-width 80
+  "The default width in characters for emacs frames.")
+(defvar tkb-default-top nil
+  "The default y-offset chosen for emacs frames by tkb-gui-setup.el.")
+(defvar tkb-default-left nil
+  "The default x-offset chosen for emacs frames by tkb-gui-setup.el.")
 
 (defun tkb-initial-font-and-size (prefix)
   (interactive "P")
@@ -85,7 +96,6 @@
     (setq tkb-default-font font)
     (setq tkb-default-height height)
     (setq tkb-default-description description)
-
     (setq tkb-default-top
 	  (cl-case system-type
 	    ((darwin) 30)
