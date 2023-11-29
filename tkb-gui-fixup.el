@@ -20,7 +20,7 @@
   (interactive)
 
   (unless font-name  (setq font-name  (tkb-select-mono-font tkb-default-font-name)))
-  (unless point-size (setq point-size (read-number "Font Size? " 10)))
+  (unless point-size (setq point-size (read-number "Font Size? " tkb-default-point-size)))
   (unless width      (setq width      (read-number "Width? "
                                                    tkb-default-width)))
   (unless height     (setq height     (read-number "Height? "
@@ -43,6 +43,12 @@
   (setf (cdr (assq 'left   default-frame-alist)) left)
   (setf (cdr (assq 'top    default-frame-alist)) top)
 
+  (setf (cdr (assq 'font   initial-frame-alist)) tkb-default-font)
+  (setf (cdr (assq 'width  initial-frame-alist)) width)
+  (setf (cdr (assq 'height initial-frame-alist)) height)
+  (setf (cdr (assq 'left   initial-frame-alist)) left)
+  (setf (cdr (assq 'top    initial-frame-alist)) top)
+  
   (cl-loop for f in (frame-list) do
         (set-frame-parameter f 'font   tkb-default-font)
         (set-frame-parameter f 'width  width)

@@ -3,72 +3,19 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (message "Starting tkb-gui-setup.el")
 
+;; originals were: Courier, DejaVu Sans Mono, Freefont, Unifont
+
+(cl-defun tkb-mf (&optional
+                    (point-size tkb-default-point-size)
+                    (font-name tkb-default-font-name))
+  "Make a font from a font name and a font size."
+  (format "%s-%d" font-name point-size))
+
+(defvar tkb-default-width 80
+  "The default width in characters for emacs frames.")
+(defvar tkb-default-point-size 10)
+
 (defvar tkb-default-font-name "IBM Plex Mono")
-(defvar tkb-default-font-size 10)
-
-(setq tkb-fonts
-      `(("courier-11pt" ;; w32 says this is 11pt
-	 "-outline-Courier New-normal-r-normal-normal-15-*-*-*-c-*-iso10646-1"
-	 55 "constant courier-11pt 55 high")
-	("dejavu-9pt" ;; w32 says this is 9pt
-	 "-*-DejaVu Sans Mono-normal-r-normal-normal-12-90-96-96-c-*-iso10646-1"
-	 55 "constant dejavu-9pt 55 high")
-	("dejavu-10pt" ;; w32 says this is 10pt
-	 "-*-DejaVu Sans Mono-normal-r-normal-normal-13-97-96-96-c-*-iso8859-1"
-	 55 "constant dejavu-10pt 55 high")
-	("dejavu-11pt" ;; w32 says this is 11pt
-	 "-*-DejaVu Sans Mono-normal-r-normal-normal-15-112-96-96-c-*-iso10646-1"
-	 55 "constant dejavu-10pt 55 high")
-	("dejavu-13pt" ;; w32 says this is 13 point; is it iso10646-1 by default?
-	 "-*-DejaVu Sans Mono-normal-r-normal-normal-17-127-96-96-c-*-iso10646-1"
-	 50 "constant dejavu-13pt 50 high")
-	;; ftp://ftp.gnu.org/pub/gnu/freefont/
-	;; http://www.gnu.org/software/freefont/
-	("freefont-14pt" ;; w32 says this is 14 point; wider than dejavu 13pt
-	 "-outline-FreeMono-normal-r-normal-normal-19-142-96-96-c-*-iso10646-1"
-	 50 "constant freefont-14pt 50 high")
-	("freefont-13pt" ;; w32 says this is 13 point
-	 "-outline-FreeMono-normal-r-normal-normal-17-127-96-96-c-*-iso10646-1"
-	 55 "constant freefont-13pt 55 high")
-	("unifont"
-	 ;; w32 doesn't show this in font selection dialog...
-	 ;; Windows Font Explorer shows 12 pt as best looking size.
-	 "-outline-unifont-medium-r-normal-normal-*-*-96-96-p-*-iso10646-1"
-	 65 "constant unifont 65 high")
-
-	;; Ok if don't need unicode:
-	("dina" "-raster-Dina-normal-r-normal-normal-13-97-96-96-c-*-iso8859-1" 55 "constant dina 55 high")
-	("consolas" "-outline-Consolas-normal-r-normal-normal-17-127-96-96-c-*-iso8859-1" 55 "constant consolas 55 high")
-	("inconsolata" "-outline-Inconsolata-medium-r-normal-normal-17-127-96-96-c-*-iso8859-1" 55 "constant inconsolata 55 high")
-
-	(,tkb-default-font-name ,@(cond
-                       ;; Maybe I should do something with
-                       ;; (assoc 'mm-size (frame-monitor-attributes)) ?
-                       ((>= (display-pixel-height) 2280)
-                        ;; Retina display probably, so use smaller font
-                        '("-*-Go Mono-normal-normal-normal-*-17-*-*-*-m-0-iso10646-1" 56 "go display-pixel-height >= 2280"))
-                       ((>= (display-pixel-height) 2160)
-                        (if (= 214 (caddr (assoc 'mm-size (frame-monitor-attributes))))
-                            `(,(format "%s-%d" tkb-default-font-name tkb-default-font-size) 50 "display-pixel-height >= 2160 high and mm-size height = 214") ; 26 on Gnome and 24 on KDE Plasma?
-                          '("-*-Go Mono-normal-normal-normal-*-*-10-*-*-m-0-iso10646-1" 70 "display-pixel-height >= 2160 high and mm-size height != 214"))) ; was 20?
-                       ((> (display-pixel-height) 1080)
-                        '("-*-Go Mono-normal-normal-normal-*-17-*-*-*-m-0-iso10646-1" 55 "display-pixel-height > 1080 high"))
-                       ((= 170 (caddr (assoc 'mm-size (frame-monitor-attributes))))
-                        '("-*-Go Mono-normal-normal-normal-*-16-*-*-*-m-0-iso10646-1" 45 "mm-size height = 170"))
-                       ((= 340 (caddr (assoc 'mm-size (frame-monitor-attributes))))
-                        '("-*-Go Mono-normal-normal-normal-*-26-*-*-*-m-0-iso10646-1" 50 "mm-size height = 340"))
-                       (t
-                        '("-*-Go Mono-normal-normal-normal-*-14-*-*-*-m-0-iso10646-1" 50 "everything else"))))))
-
-(defun tkb-set-frame-font ()
-  (interactive)
-  (set-frame-font (cadr (assoc-string
-			 (completing-read "Font? " tkb-fonts) tkb-fonts))))
-
-
-(defvar tkb-default-tag nil
-  "\
-The tag in the association list tkb-fonts at the beginning of each entry.")
 (defvar tkb-default-font nil
   "The default font for emacs frames chosen by tkb-gui-setup.el.")
 (defvar tkb-default-height nil
@@ -76,26 +23,41 @@ The tag in the association list tkb-fonts at the beginning of each entry.")
 (defvar tkb-default-description nil
   "The description of the conditions that were met to produce this set of
 defaults.")
-(defvar tkb-default-width 80
-  "The default width in characters for emacs frames.")
 (defvar tkb-default-top nil
   "The default y-offset chosen for emacs frames by tkb-gui-setup.el.")
 (defvar tkb-default-left nil
   "The default x-offset chosen for emacs frames by tkb-gui-setup.el.")
+(defvar tkb-default-color nil 
+  "The default color chosen for emacs frames by tkb-gui-setup.el.")
+(defvar tkb-default-frame-alist nil
+  "The default-frame-alist chosen for emacs frames by tkb-gui-setup.el")
 
-(defun tkb-initial-font-and-size (prefix)
-  (interactive "P")
-  ;; Because I sometimes use this after emacs -q, and it needs cl.
-  (require 'cl-lib)
+
+(defun tkb-calculate-gui-defaults ()
+  (interactive)
   
   ;; need to do something with display-pixel-height
-  (cl-destructuring-bind (tag font height description)
-      (assoc-string (if prefix
-			(completing-read "Font? " tkb-fonts)
-		      (if nil "dejavu-13pt" tkb-default-font-name))
-                    tkb-fonts)
-
-    (setq tkb-default-tag tag)
+  (cl-destructuring-bind (font height description)
+      (cond
+        ;; Maybe I should do something with
+        ;; (assoc 'mm-size (frame-monitor-attributes)) ?
+        ((>= (display-pixel-height) 2280)
+         ;; Retina display probably, so use smaller font
+         `(,(tkb- 56 "go display-pixel-height >= 2280")))
+        ((>= (display-pixel-height) 2160)
+         (if (= 214 (caddr (assoc 'mm-size (frame-monitor-attributes))))
+             `(,(tkb-mf) 50
+                "display-pixel-height >= 2160 high and mm-size height = 214")
+           `(,(tkb-mf 12) 70
+              "display-pixel-height >= 2160 high and mm-size height != 214")))
+        ((> (display-pixel-height) 1080)
+         `(,(tkb-mf) 55 "display-pixel-height > 1080 high"))
+        ((= 170 (caddr (assoc 'mm-size (frame-monitor-attributes))))
+         `(,(tkb-mf) 45 "mm-size height = 170"))
+        ((= 340 (caddr (assoc 'mm-size (frame-monitor-attributes))))
+         `(,(tkb-mf) 50 "mm-size height = 340"))
+        (t
+         `(,(tkb-mf) 50 "everything else")))
     (setq tkb-default-font font)
     (setq tkb-default-height height)
     (setq tkb-default-description description)
@@ -104,16 +66,9 @@ defaults.")
 	    ((darwin) 30)
             ((gnu/linux)
              (if (string-equal (getenv "XDG_CURRENT_DESKTOP") "KDE")
-                 10
+                 20
                80))
 	    (otherwise 20)))
-
-    (when nil                           ; This was sadly naive.
-      (if (>= (display-pixel-width) 2160)
-          (setq tkb-default-left 1925)
-        (setq tkb-default-left 5)))
-
-    (message "initial frame monitor geometry: %S" (frame-monitor-geometry))
 
     (cond ((= 7680 (car (frame-monitor-geometry)))
            (setq tkb-default-left (+ 7680 20)))
@@ -125,113 +80,116 @@ defaults.")
            (setq tkb-default-left 20))
           (t
            (setq tkb-default-left 20)))
-          
-      (set-frame-font tkb-default-font nil t)
-      (set-frame-height nil tkb-default-height)
+    (let ((alt-color (getenv "EMACS_ALT_COLOR"))
+          (color))
+      (if alt-color
+          (if (string-blank-p alt-color)
+              (setq color "khaki1")
+            (setq color alt-color))
+        (setq color "wheat"))
+      (setq tkb-default-color color))))
 
-      (let ((alt-color (getenv "EMACS_ALT_COLOR"))
-            (color))
-        (if alt-color
-            (if (string-empty-p alt-color)
-                (setq color "khaki1")
-              (setq color alt-color))
-          (setq color "wheat"))
-        (setq tkb-default-frame-alist
-	      `((width . ,tkb-default-width)
-	        (height . ,tkb-default-height)
-	        (top . ,tkb-default-top)
-	        (left . ,tkb-default-left)
-	        (font . ,tkb-default-font)
-	        ;; This makes things feel weird.
-	        ;; (minibuffer . nil)
-	        (background-color . ,color)
-	        (foreground-color . "black")
-	        (cursor-color . "orange")))
-        (message "default-frame-alist: ")
-        (pp default-frame-alist)
-        (setq default-frame-alist
-	      (append default-frame-alist tkb-default-frame-alist))
-        (message "initial-frame-alist: ")
-        (pp initial-frame-alist)
-        (setq initial-frame-alist default-frame-alist)
-        (tool-bar-mode -1)
-        (set-frame-parameter nil 'font tkb-default-font)
-        (set-frame-parameter nil 'top tkb-default-top)
-        (set-frame-parameter nil 'left tkb-default-left)
-        (message "frame height: %d" (frame-parameter nil 'height))
-        (set-frame-parameter nil 'height tkb-default-height)
-        (set-frame-parameter nil 'width tkb-default-width)
-
-        (set-frame-size (selected-frame) tkb-default-width tkb-default-height)
-        
-        (message "(%d,%d), %d×%d with \nfont \"%s\" and \ndescription \"%s\""
-                 tkb-default-left tkb-default-top
-                 tkb-default-width tkb-default-height
-                 tkb-default-font tkb-default-description))))
+(tkb-calculate-gui-defaults)
 
 (defun tkb-gui-report-defaults ()
   "Report the tkb-default-* values."
   (interactive)
   (message "\
-tkb-default-tag:         %s\n\
-tkb-default-description: %s\n\
-tkb-default-font:        %s\n\
-tkb-default-height:      %d\n\
-tkb-default-width:       %d\n\
-tkb-default-top:         %d\n\
-tkb-default-left:        %d\n"
-           tkb-default-tag        
+tkb-default-description: %s
+tkb-default-font:        %s
+tkb-default-height:      %d
+tkb-default-width:       %d
+tkb-default-top:         %d
+tkb-default-left:        %d
+tkb-default-color:       %s"
            tkb-default-description
            tkb-default-font       
            tkb-default-height     
            tkb-default-width      
            tkb-default-top        
-           tkb-default-left))
+           tkb-default-left
+           tkb-default-color)
+  (cl-values))
+
+(tkb-gui-report-defaults)
+
+
+(defun tkb-initial-font-and-size (prefix)
+  (interactive "P")
+  ;; Because I sometimes use this after emacs -q, and it needs cl.
+  (require 'cl-lib)
+
+  (tool-bar-mode -1)
+
+  (set-frame-font tkb-default-font nil t)
+  (set-frame-height nil tkb-default-height)
+
+  (setq tkb-default-frame-alist
+	`(
+          (width            . ,tkb-default-width)
+	  (height           . ,tkb-default-height)
+	  (top              . ,tkb-default-top)
+	  (left             . ,tkb-default-left)
+	  (font             . ,tkb-default-font)
+	  (background-color . ,tkb-default-color)
+	  (foreground-color . "black")
+	  (cursor-color     . "orange")
+          ))
+  (setq default-frame-alist tkb-default-frame-alist)
+  (setq initial-frame-alist tkb-default-frame-alist)
+
+  (set-frame-parameter nil 'font tkb-default-font)
+  (set-frame-parameter nil 'top tkb-default-top)
+  (set-frame-parameter nil 'left tkb-default-left)
+  (set-frame-parameter nil 'height tkb-default-height)
+  (set-frame-parameter nil 'width tkb-default-width)
+
+  ;;(set-frame-size (selected-frame) tkb-default-width tkb-default-height)
+
+  )
 
 (tkb-initial-font-and-size nil)
-(tkb-gui-report-defaults)
 (tkb-keys ((kbd "C-c k g i") 'tkb-initial-font-and-size))
 
 
+;; See: https://emacs.stackexchange.com/a/50215
+(defun tkb-mono-fonts ()
+  (sort (seq-uniq (seq-filter (lambda (font)
+                                (when-let ((info (font-info font)))
+                                  (and (string-match-p "spacing=100" (aref info 1))
+                                       (not (or (string-match-p "Noto Color Emoji" (aref info 1))
+                                                (string-match-p "Noto Sans SignWriting" (aref info 1)))))))
+                              (font-family-list))
+                  #'string=)
+        #'string<))
 
+(defun tkb-list-mono-fonts ()
+  (interactive)
+  (let ((buf (get-buffer-create "*Mono Fonts*"))
+        (font-names (tkb-mono-fonts)))
+    (with-output-to-temp-buffer buf
+      (cl-loop for font-name in font-names
+            do (progn (princ font-name) (terpri))))))
 
+(defun tkb-display-mono-fonts ()
+  (interactive)
+  (loop for font-name in (tkb-mono-fonts)
+        do (progn
+             (set-frame-font font-name)
+             (unless (y-or-n-p (format "Font is %s.  Continue? " font-name))
+               (cl-return)))))
 
+(defun tkb-select-mono-font (&optional default)
+  (interactive)
+  (let ((fonts (tkb-mono-fonts)))
+    (completing-read "Monospace Font? " fonts nil nil default)))
 
-(when nil 
-  (defvar tkb-timer nil)
-  (defun tkb-position-frame (&optional new-left)
-    (interactive "P")
-    (let* ((new-left (if new-left (prefix-numeric-value new-left) -50))
-	   (dw (display-pixel-width))
-	   (fw (frame-pixel-width))
-	   (nl (- dw fw 50))
-	   (top (frame-parameter nil 'top)))
-      ;;(set-frame-position (selected-frame) nl top)
-      ;;(set-frame-parameter nil 'left nl)
-      ;;(frame-notice-user-settings)
-      (set-frame-parameter nil 'left new-left)
-      (set-frame-parameter nil 'top 20)
-      (message "Yowza! %d %d %d %s" dw fw nl (current-time-string))
-      (when (and (boundp 'tkb-timer) tkb-timer (memq tkb-timer timer-list))
-	(cancel-timer tkb-timer))))
-  ;;(add-hook 'window-setup-hook #'tkb-position-frame)
-  ;;(set-frame-parameter nil 'left -50)
-  ;;(set-frame-parameter nil 'left '(- 50))
-  ;;(set-frame-parameter nil 'top 20)
-  ;;(set-frame-position nil -50 20)
-
-  (when nil
-    (message "Setting timer: %s" (current-time-string))
-    (setq tkb-timer
-	  (run-at-time "10 seconds" nil #'tkb-position-frame -50)))
-
-  (defun tkb-wait-frame ()
-    (setq tkb-timer
-	  (run-at-time "10 seconds" nil #'tkb-position-frame -50)))
-
-
-  ;;(add-hook 'emacs-startup-hook #'tkb-position-frame)
-  (add-hook 'emacs-startup-hook #'tkb-wait-frame))
+(defun tkb-select-frame-font ()
+  (interactive)
+  (let ((font (tkb-select-mono-font)))
+    (if (not (string-blank-p font))
+        (set-frame-font font)
+      (message "No font selected!"))))
 
 (setq tkb-is-root (string-equal (user-real-login-name) "root"))
 
@@ -242,6 +200,9 @@ tkb-default-left:        %d\n"
 
 (setq icon-title-format
       '(multiple-frames ("emacs %b: " (tkb-is-root "root" user-mail-address))
-			("emacs " (tkb-is-root "root" user-mail-address))))
+	("emacs " (tkb-is-root "root" user-mail-address))))
+
+
+
 (message "Ending tkb-gui-setup.el")
 ;;; end of tkb-gui-setup.el
