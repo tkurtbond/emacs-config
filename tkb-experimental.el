@@ -2894,5 +2894,7 @@ and make it the current selection."
 ;;; ¿¿¿Write a function using display-monitor-attributes-list and probably
 ;;; pcase-dolist to display information on all attached monitor.???
 
+(setq column-number-indicator-zero-based nil)
+
 (message "End of tkb-experimental.el")
 ;;; end of tkb-experimental.el
