@@ -2808,6 +2808,11 @@ and make it the current selection."
 
 
 
+;; If you are using Wayland, install the wl-clipboard package.  If you
+;; are using X, install the xclip page.
+
+
+(message "About to use-package org-download")
 (use-package org-download
     :after org
     :defer nil
@@ -2818,8 +2823,10 @@ and make it the current selection."
     (org-download-timestamp "%Y%m%d-%H%M%S_")
     (org-image-actual-width 300)
     :bind
-    ("C-c k o d s" . org-download-screenshot)
+    ;; Why didn't this get bound?
+    ("C-c k o d" . org-download-screenshot)
     :config
+    ;; Why didn't org-download-clipboard work?
     (require 'org-download)
     (cond ((getenv "WAYLAND_DISPLAY")
             ;; check for Wayland first because of X on Wayland
@@ -2832,6 +2839,7 @@ and make it the current selection."
             "xclip -selection clipboard -t image/png -o > %s"))
           (t
            (message "Neither X nor Wayland are available."))))
+(message "After use-package org-download")
 
 (defun tkb-open-file-at-point ()
   (interactive)
