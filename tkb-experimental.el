@@ -2126,28 +2126,36 @@ REPEAT is how many times to repeat the roll."
 ;; the "C-x 8" key prefix.
 ;; Note that section and pilcrow are in C-x 8: S and P.
 
-(iso-transl-define-keys '(("gl" . [?λ])  ; greek lowercase lambda
+(iso-transl-define-keys '(;; Dingbats
+                          ("dC" . [?✔])   ; HEAVY CHECK MARK
+                          ("dc" . [?✓])  ; CHECK MARK
+                          ("dd" . [?⯁])  ; black diamond centered
+                          ("dl" . [?◊])  ; lozenge
+                          ("dt" . [?▶])  ; black right pointing triangle
+                          ("di" . [?☛])  ; black right pointing index
+                          ;; Greek
+                          ("gl" . [?λ])  ; greek lowercase lambda
                           ("gL" . [?Λ])  ; greek uppercase lambda
-                          ("pb" . [?•])  ; bullet
-                          ("pc" . [?©])  ; copyright
-                          ("pC" . [?🄯])  ; copyleft
+                          ;; Punctuation
+                          ("p " . [? ])  ; non-breaking space.
+                          ("p*" . [?×])  ; multiply
+                          ("p-" . [?−])  ; Minus sign
+                          ("p/" . [?÷])  ; divide
                           ("pD" . [?‡])  ; double dagger
+                          ("pP" . [?″])  ; double prime
+                          ("pQ" . [?“])  ; open double quote
+                          ("pS" . [?‘])  ; open single quote
+                          ("pb" . [?•])  ; bullet
                           ("pd" . [?†])  ; dagger
                           ("pe" . [?…])  ; ellipsis
                           ("ph" . [?­])  ; soft hyphen
-                          ("pn" . [?–])  ; N-dash
                           ("pm" . [?—])  ; M-dash
-                          ("p-" . [?−])  ; Minus sign
-                          ("p " . [? ])  ; non-breaking space.
+                          ("pn" . [?–])  ; N-dash
                           ("pp" . [?′])  ; prime
-                          ("pP" . [?″])  ; double prime
-                          ("pS" . [?‘])  ; open single quote
-                          ("ps" . [?’])  ; close single quote
-                          ("pQ" . [?“])  ; open double quote
                           ("pq" . [?”])  ; close double quote
+                          ("ps" . [?’])  ; close single quote
                           ("pv" . [?‖])  ; double vertical bar
-                          ("p*" . [?×])  ; multiply
-                          ("p/" . [?÷])  ; divide
+                          ;; Gender
                           ("Gh" . [?×])  ; Hybrid gender in biology
                           ("Gm" . [?♂])  ; male sign
                           ("Gf" . [?♀])  ; female sign
@@ -2157,12 +2165,10 @@ REPEAT is how many times to repeat the roll."
                           ("Ga" . [?⚪])  ; agender, sexless
                           ("Gt" . [?⚧])  ; transgender
                           ;; Symbols
-                          ("sc" . [?✓]) ; CHECK MARK in Unicode.
+                          ("sc" . [?©])  ; copyright
+                          ("sC" . [?🄯])  ; copyleft
                           ("sd" . [?Δ]) ; GREEK CAPITAL LETTER DELTA
                           ("si" . [?∞]) ; infinity
-                          ("sl" . [?◊]) ; lozenge
-                          ("st" . [?▶]) ; black right pointing triangle
-                          ("sI" . [?☛])
                           ("sp" . [?¶]) ; pilcrow
                           ("ss" . [?§]) ; SECTION SIGN in Unicode; also silcrow
                           ("sF" . [?℉]) ; Degrees Fahrenheit
