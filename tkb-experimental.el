@@ -2690,7 +2690,7 @@ and make it the current selection."
   (let ((user-at-host (concat" " (user-login-name) "@"
                              (car (split-string (system-name) "\\." t))
                              " ")))
-    (if (string-equal (user-login-name) "root")
+    (if (member (user-login-name) '("root" "Administrator"))
         ;; Make it obvious if the user is root.
         (put-text-property 0 (length user-at-host) 'face
                            'error user-at-host)
