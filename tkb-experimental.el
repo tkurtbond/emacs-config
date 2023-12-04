@@ -2349,6 +2349,24 @@ ring."
     (kill-new new-string)))
 (tkb-keys ((kbd "C-c k P") 'tkb-prefix-iso-date-kill))
 
+(defun tkb-suffix-iso-date-kill (string)
+  "Add the ISO YYYY-MM-DD date preceded by - as a suffix to the current kill
+ring."
+  (interactive (list (current-kill 0 t)))
+  (let ((new-string (concat string "-" (format-time-string "%Y-%2m-%2d"))))
+    (message "Old string: %s\nNew string: %s" string new-string)
+    (kill-new new-string)))
+(tkb-keys ((kbd "C-c k p") 'tkb-suffix-iso-date-kill))
+
+(defun tkb-append-region-to-kill (string region)
+  "Append region to current kill, separated by a -."
+  (interactive (list (current-kill 0 t)
+                     (buffer-substring-no-properties (point) (mark))))
+  (let ((new-string (concat string "-" region)))
+    (message "Old string: %s\nNew string: %s" string new-string)
+    (kill-new new-string)))
+(tkb-keys ((kbd "C-c k A") 'tkb-append-region-to-kill))
+
 (defun tkb-insert-post-fragment ()
   "Insert a fragment into the current, defaulting to
 ~/Repos/tkurtbond.github.io/fragments/post.rst."
