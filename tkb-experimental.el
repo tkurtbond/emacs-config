@@ -972,7 +972,9 @@ over 40 is morbidly obese, over 50 is super morbidly obese."
 (when nil
   (progn
     (setq version-control nil)
-    ;; I think this keeps all your emacs backup files under one directory.
+    ;; I think this keeps all your emacs backup files under one directory,
+    ;; which is a problem if some of the files you are editing are sensitive
+    ;; and on encrypted drives, because that writes the backups elsewhere.
     (or (file-directory-p "~/backup") (make-directory "~/backup" t))
     (let ((backup-dir (expand-file-name "~/backup")))
       (setq backup-directory-alist
