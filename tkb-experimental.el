@@ -2922,5 +2922,10 @@ and make it the current selection."
 
 (setq column-number-indicator-zero-based nil)
 
+;; Should I use polymode instead of web-mode?
+;; Should I use standard-indent?
+(setq web-mode-code-indent-offset 2
+      web-mode-markup-indent-offset 2)
+
 (message "End of tkb-experimental.el")
 ;;; end of tkb-experimental.el

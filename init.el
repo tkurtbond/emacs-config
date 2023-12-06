@@ -76,6 +76,7 @@
                         gemini-mode
                         haskell-mode
                         js-comint
+                        js2-mode
                         julia-mode
                         magit
 			markdown-mode
@@ -105,6 +106,7 @@
                         visual-fill-column
 			wanderlust ;; apparently using again.
                         w3m
+                        web-mode
                         yaml-mode
 			)))
     ;; The order of things here might be mistaken.  Should I iterate
