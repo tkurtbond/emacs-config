@@ -32,62 +32,67 @@ defaults.")
 (defvar tkb-default-frame-alist nil
   "The default-frame-alist chosen for emacs frames by tkb-gui-setup.el")
 
+(defun tkb-calculate-font-and-height ()
+  (cond
+    ;; Maybe I should do something with
+    ;; (assoc 'mm-size (frame-monitor-attributes)) ?
+    ((>= (display-pixel-height) 2280)
+     ;; Retina display probably, so use smaller font
+     `(,(tkb- 56 "go display-pixel-height >= 2280")))
+    ((>= (display-pixel-height) 2160)
+     (if (>= 214 (caddr (assoc 'mm-size (frame-monitor-attributes))))
+         `(,(tkb-mf 12) 50
+            "display-pixel-height >= 2160 high and mm-size height <= 214")
+       `(,(tkb-mf 12) 70
+          "display-pixel-height >= 2160 high and mm-size height != 214")))
+    ((> (display-pixel-height) 1080)
+     `(,(tkb-mf) 55 "display-pixel-height > 1080 high"))
+    ((= 170 (caddr (assoc 'mm-size (frame-monitor-attributes))))
+     `(,(tkb-mf) 45 "mm-size height = 170"))
+    ((= 340 (caddr (assoc 'mm-size (frame-monitor-attributes))))
+     `(,(tkb-mf) 50 "mm-size height = 340"))
+    (t
+     `(,(tkb-mf) 50 "everything else"))))
+
 
 (defun tkb-calculate-gui-defaults ()
   (interactive)
   
   ;; need to do something with display-pixel-height
-  (cl-destructuring-bind (font height description)
-      (cond
-        ;; Maybe I should do something with
-        ;; (assoc 'mm-size (frame-monitor-attributes)) ?
-        ((>= (display-pixel-height) 2280)
-         ;; Retina display probably, so use smaller font
-         `(,(tkb- 56 "go display-pixel-height >= 2280")))
-        ((>= (display-pixel-height) 2160)
-         (if (>= 214 (caddr (assoc 'mm-size (frame-monitor-attributes))))
-             `(,(tkb-mf 12) 50
-                "display-pixel-height >= 2160 high and mm-size height <= 214")
-           `(,(tkb-mf 12) 70
-              "display-pixel-height >= 2160 high and mm-size height != 214")))
-        ((> (display-pixel-height) 1080)
-         `(,(tkb-mf) 55 "display-pixel-height > 1080 high"))
-        ((= 170 (caddr (assoc 'mm-size (frame-monitor-attributes))))
-         `(,(tkb-mf) 45 "mm-size height = 170"))
-        ((= 340 (caddr (assoc 'mm-size (frame-monitor-attributes))))
-         `(,(tkb-mf) 50 "mm-size height = 340"))
-        (t
-         `(,(tkb-mf) 50 "everything else")))
-    (setq tkb-default-font font)
-    (setq tkb-default-height height)
-    (setq tkb-default-description description)
-    (setq tkb-default-top
-	  (cl-case system-type
-	    ((darwin) 30)
-            ((gnu/linux)
-             (if (string-equal (getenv "XDG_CURRENT_DESKTOP") "KDE")
-                 20
-               80))
-	    (otherwise 20)))
+  (let ((default-configuration (tkb-calculate-font-and-height)))
+    (setq tkb-default-configuration default-configuration)
+    (cl-destructuring-bind (font height description)
+        default-configuration
+      (setq tkb-default-font font)
+      (setq tkb-default-height height)
+      (setq tkb-default-description description)
+      (setq tkb-default-top
+	    (cl-case system-type
+	      ((darwin) 30)
+              ((gnu/linux)
+               (if (string-equal (getenv "XDG_CURRENT_DESKTOP") "KDE")
+                   20
+                 80))
+	      (otherwise 20)))
 
-    (cond ((= 7680 (car (frame-monitor-geometry)))
-           (setq tkb-default-left (+ 7680 20)))
-          ((= 3840 (car (frame-monitor-geometry)))
-           (setq tkb-default-left (+ 3840 20)))
-          ((= 1920 (car (frame-monitor-geometry)))
-           (setq tkb-default-left (+ 1920 20)))
-          ((= 0 (car (frame-monitor-geometry)))
-           (setq tkb-default-left 20))
-          (t
-           (setq tkb-default-left 20)))
-    (let ((alt-color (getenv "EMACS_ALT_COLOR"))
-          (color))
-      (if alt-color
-          (if (string-blank-p alt-color)
-              (setq color "khaki1")
-            (setq color alt-color))
-        (setq color "wheat"))
-      (setq tkb-default-color color))))
+      (cond ((= 7680 (car (frame-monitor-geometry)))
+             (setq tkb-default-left (+ 7680 20)))
+            ((= 3840 (car (frame-monitor-geometry)))
+             (setq tkb-default-left (+ 3840 20)))
+            ((= 1920 (car (frame-monitor-geometry)))
+             (setq tkb-default-left (+ 1920 20)))
+            ((= 0 (car (frame-monitor-geometry)))
+             (setq tkb-default-left 20))
+            (t
+             (setq tkb-default-left 20)))
+      (let ((alt-color (getenv "EMACS_ALT_COLOR"))
+            (color))
+        (if alt-color
+            (if (string-blank-p alt-color)
+                (setq color "khaki1")
+              (setq color alt-color))
+          (setq color "wheat"))
+        (setq tkb-default-color color)))))
 
 (tkb-calculate-gui-defaults)
 
