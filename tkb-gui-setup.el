@@ -203,6 +203,26 @@ tkb-default-color:       %s"
 	("emacs " (tkb-is-root "root" user-mail-address))))
 
 
+(defvar tkb-beep-sound "/usr/share/sounds/freedesktop/stereo/bell.oga")
+(defvar tkb-beep-program "ogg123")
+
+(defun tkb-bell ()
+  (interactive)
+  (start-process "Beep" nil tkb-beep-program
+                 tkb-beep-sound))
+
+(setq ring-bell-function #'tkb-bell)
+
+(unless (file-exists-p tkb-beep-sound)
+  (yes-or-no-p (format "Error: tkb-beep-sound is set to \"%s\", which does \
+not  exist!\nUnderstand? "
+           tkb-beep-sound)))
+(let ((path (split-string (getenv "PATH") ":")))
+  (unless (file-installed-p tkb-beep-program path)
+    (yes-or-no-p (format "Error: tkb-beep-sound is set to \"%s\", which does \
+not exist!\nUnderstand? "
+             tkb-beep-program))))
+
 
 (message "Ending tkb-gui-setup.el")
 ;;; end of tkb-gui-setup.el
