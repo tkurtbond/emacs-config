@@ -5,5 +5,6 @@
 (setq line-move-visual nil)
 (global-set-key "\C-cC" #'compile)
 
-(load (expand-file-name "~/.roswell/helper.el"))
-(setq inferior-lisp-program "ros -Q run")
+;;; This is for consp.org. 
+;;(load (expand-file-name "~/.roswell/helper.el"))
+;;(setq inferior-lisp-program "ros -Q run")
