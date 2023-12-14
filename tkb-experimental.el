@@ -2129,7 +2129,7 @@ REPEAT is how many times to repeat the roll."
 ;; Note that section and pilcrow are in C-x 8: S and P.
 
 (iso-transl-define-keys '(;; Dingbats
-                          ("dC" . [?✔])   ; HEAVY CHECK MARK
+                          ("dC" . [?✔])  ; HEAVY CHECK MARK
                           ("dc" . [?✓])  ; CHECK MARK
                           ("dd" . [?⯁])  ; black diamond centered
                           ("dl" . [?◊])  ; lozenge
