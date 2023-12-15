@@ -43,7 +43,7 @@ defaults.")
      (if (>= 214 (caddr (assoc 'mm-size (frame-monitor-attributes))))
          `(,(tkb-mf 12) 50
             "display-pixel-height >= 2160 high and mm-size height <= 214")
-       `(,(tkb-mf 12) 70
+       `(,(tkb-mf 14) 65
           "display-pixel-height >= 2160 high and mm-size height != 214")))
     ((> (display-pixel-height) 1080)
      `(,(tkb-mf) 55 "display-pixel-height > 1080 high"))
