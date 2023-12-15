@@ -33,26 +33,34 @@ defaults.")
   "The default-frame-alist chosen for emacs frames by tkb-gui-setup.el")
 
 (defun tkb-calculate-font-and-height ()
-  (cond
-    ;; Maybe I should do something with
-    ;; (assoc 'mm-size (frame-monitor-attributes)) ?
-    ((>= (display-pixel-height) 2280)
-     ;; Retina display probably, so use smaller font
-     `(,(tkb- 56 "go display-pixel-height >= 2280")))
-    ((>= (display-pixel-height) 2160)
-     (if (>= 214 (caddr (assoc 'mm-size (frame-monitor-attributes))))
-         `(,(tkb-mf 12) 50
-            "display-pixel-height >= 2160 high and mm-size height <= 214")
-       `(,(tkb-mf 12) 70
-          "display-pixel-height >= 2160 high and mm-size height != 214")))
-    ((> (display-pixel-height) 1080)
-     `(,(tkb-mf) 55 "display-pixel-height > 1080 high"))
-    ((= 170 (caddr (assoc 'mm-size (frame-monitor-attributes))))
-     `(,(tkb-mf) 45 "mm-size height = 170"))
-    ((= 340 (caddr (assoc 'mm-size (frame-monitor-attributes))))
-     `(,(tkb-mf) 50 "mm-size height = 340"))
-    (t
-     `(,(tkb-mf) 50 "everything else"))))
+  (let ((mm-size (assoc 'mm-size (frame-monitor-attributes)))
+        (geometry (assoc 'geometry (frame-monitor-attributes))))
+    (cl-destructuring-bind ((_ mm-width mm-height)
+                            (_ _ _ pixel-width pixel-height))
+        (list mm-size geometry)
+      (cond
+        ;; Maybe I should do something with
+        ;; (assoc 'mm-size (frame-monitor-attributes)) ?
+        ((>= (display-pixel-height) 2280)
+         ;; Retina display probably, so use smaller font
+         `(,(tkb- 56 "go display-pixel-height >= 2280")))
+        ((>= (display-pixel-height) 2160)
+         (if (>= 214 (caddr (assoc 'mm-size (frame-monitor-attributes))))
+             `(,(tkb-mf 12) 50
+                "display-pixel-height >= 2160 high and mm-size height <= 214")
+           `(,(tkb-mf 12) 70
+              "display-pixel-height >= 2160 high and mm-size height != 214")))
+        ((> (display-pixel-height) 1080)
+         `(,(tkb-mf) 55 "display-pixel-height > 1080 high"))
+        ((= 170 (caddr (assoc 'mm-size (frame-monitor-attributes))))
+         `(,(tkb-mf) 45 "mm-size height = 170"))
+        ((= 340 (caddr (assoc 'mm-size (frame-monitor-attributes))))
+         `(,(tkb-mf) 50 "mm-size height = 340"))
+        ((and (= mm-width 344) (= mm-height 194)
+              (= pixel-width 1366) (= pixel-height 768))
+         `(,(tkb-mf 8) 40 "(344 194 1366 768)"))
+        (t
+         `(,(tkb-mf) 50 "everything else"))))))
 
 
 (defun tkb-calculate-gui-defaults ()
