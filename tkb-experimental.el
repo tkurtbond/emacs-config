@@ -250,7 +250,8 @@ and add a log entry to it."
   (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
   (tkb-keys ((kbd "C-c k o s") #'org-store-link)
             ((kbd "C-c k o a") #'org-agenda))
-  (add-hook 'org-mode-hook 'turn-on-font-lock))	; org-mode buffers only
+  (add-hook 'org-mode-hook 'turn-on-font-lock) ; org-mode buffers only
+  (setq org-startup-indented t))
 
 (setq org-use-sub-superscripts '{}
       org-export-with-sub-superscripts '{})
