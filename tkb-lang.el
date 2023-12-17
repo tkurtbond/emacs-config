@@ -145,6 +145,12 @@
             (setq indent-line-function (function indent-relative)))))
 
 ;; For scheme
+
+(defun tkb-module-scheme-indent (&rest x)
+  "Since Emacs can't find defines anywhere but at the start of a line,
+always indent Chicken Scheme module forms 0 characters."
+  0)
+
 (put 'syntax-rules 'scheme-indent-function 1)
 (put 'transformer 'scheme-indent-function 1)
 (put 'syntax-case 'scheme-indent-function 2)
@@ -154,7 +160,8 @@
 (put 'c/output-file 'scheme-indent-function 1)
 (put 'c/cwd 'scheme-indent-function 1)
 (put 'sensortable 'scheme-indent-function 1)
-(put 'module 'scheme-indent-function 2)
+;;(put 'module 'scheme-indent-function 2)
+(put 'module 'scheme-indent-function #'tkb-module-scheme-indent)
 (put 'receive 'scheme-indent-function 2)
 (put 'condition-case 'scheme-indent-function 1)
 (put 'receive 'scheme-indent-function 1)
