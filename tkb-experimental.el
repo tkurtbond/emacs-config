@@ -1985,7 +1985,8 @@ Goes backward if ARG is negative; error if CHAR not found."
                        "PATH"))
            (s (buffer-substring-no-properties (point-min) (point-max)))
            (path (-remove (lambda (path-element)
-                            (string-match "^[ \t]*$" path-element))
+                            (or (string-match "^[ \t]*$" path-element)
+                                (string-match "^#.*$" path-element)))
                           (s-split "\n" s))))
       (kill-buffer-and-window)
       (message "Setting path \"%s\" to \"%s\"" tkb-edit-path-path-var
@@ -1998,19 +1999,23 @@ Goes backward if ARG is negative; error if CHAR not found."
     (setq tkb-edit-path-path-var nil))
 
   (defun tkb-edit-path (prefix)
+    "Switch to a buffer to edit a path variable (defaulting to PATH), one item
+per line.  If PREFIX is not null, prompt for the path variable to edit."
     (interactive "P")
     (let* ((path-var (if prefix
                          (read-string "Path variable? ")
                        "PATH"))
            (path (tkb-path-get path-var))
-           (buf (get-buffer-create "*Editing-PATH*")))
+           (buf (get-buffer-create "*Editing-PATH*"))
+           (msg "Use C-c C-c to finish and set your path, or C-c C-k to abort."))
       (setq tkb-edit-path-path-var path-var)
       (pop-to-buffer buf '(display-buffer-pop-up-window))
       (delete-region (point-min) (point-max))
       (cl-loop for dir in path do (progn (insert dir) (insert "\n")))
+      (insert "# ") (insert msg) (insert "\n")
       (buffer-local-set-key (kbd "C-c C-c") 'tkb-save-path)
       (buffer-local-set-key (kbd "C-c C-k") 'tkb-not-save-path)
-      (message "Use C-c C-c to finish and set your path, or C-c C-k to abort.")))
+      (message msg)))
   )
 
 (defun tkb-prepend-to-path (directory env-variable)
