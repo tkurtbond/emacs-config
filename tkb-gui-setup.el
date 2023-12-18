@@ -46,7 +46,7 @@ defaults.")
          `(,(tkb- 56 "go display-pixel-height >= 2280")))
         ((>= (display-pixel-height) 2160)
          (if (>= 214 (caddr (assoc 'mm-size (frame-monitor-attributes))))
-             `(,(tkb-mf 12) 50
+             `(,(tkb-mf 14) 50
                 "display-pixel-height >= 2160 high and mm-size height <= 214")
            `(,(tkb-mf 14) 65
               "display-pixel-height >= 2160 high and mm-size height != 214")))
