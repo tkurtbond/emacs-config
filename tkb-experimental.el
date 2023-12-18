@@ -242,7 +242,9 @@ and add a log entry to it."
             `(("l" "Log" entry (file+headline ,org-file "Log")
                "* %^{Title} %U\n  %i\n  %?\n"))))
       (org-capture)))
-  (tkb-keys ((kbd "C-c k o l") #'tkb-add-org-log)))
+  (tkb-keys ((kbd "C-c k o l") #'tkb-add-org-log))
+  (tkb-keys ((kbd "C-c k o C-p") #'org-move-subtree-up))
+  (tkb-keys ((kbd "C-c k o C-n") #'org-move-subtree-down))
 
 (progn
   ;; See Info: (org)Activation.
