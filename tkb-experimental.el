@@ -82,8 +82,8 @@ recommended by the ReST quickref: http://tinyurl.com/47lkhk"
   (interactive "M")
   (message "file: %s" (locate-file filename load-path (get-load-suffixes))))
 
-(when t					; Using org-capture now.
-  (progn                                ; Config for mobile org
+(when t  ; Using org-capture now.
+  (progn ; Config for mobile org
     ;; Set to the location of your Org files on your local system
     (setq org-directory "~/Org")
     ;; (setq org-adapt-indentation t) ;; No, maybe not.
@@ -140,11 +140,11 @@ recommended by the ReST quickref: http://tinyurl.com/47lkhk"
            (file+headline ,tkb-org-contacts "Contacts")
            "* %^{Title} %U\n  %i%?\n")
           ("B" "Blog Ideas" entry
-               (file ,tkb-org-blog-ideas)
-               "* %^{Title} %U\n  %i%?\n")
+           (file ,tkb-org-blog-ideas)
+           "* %^{Title} %U\n  %i%?\n")
           ("g" "Gaming Ideas" entry
-               (file ,tkb-org-gaming-ideas)
-               "* %^{Title} %U\n  %i%?\n")
+           (file ,tkb-org-gaming-ideas)
+           "* %^{Title} %U\n  %i%?\n")
           ("h" "Health" entry
            (file ,tkb-org-health)
            "* %^{Title} %U\n  %i%?\n")
@@ -244,7 +244,7 @@ and add a log entry to it."
       (org-capture)))
   (tkb-keys ((kbd "C-c k o l") #'tkb-add-org-log))
   (tkb-keys ((kbd "C-c k o C-p") #'org-move-subtree-up))
-  (tkb-keys ((kbd "C-c k o C-n") #'org-move-subtree-down))
+  (tkb-keys ((kbd "C-c k o C-n") #'org-move-subtree-down)))
 
 (progn
   ;; See Info: (org)Activation.
