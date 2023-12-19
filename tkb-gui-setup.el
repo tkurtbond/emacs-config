@@ -9,7 +9,7 @@
                     (point-size tkb-default-point-size)
                     (font-name tkb-default-font-name))
   "Make a font from a font name and a font size."
-  (format "%s-%d" font-name point-size))
+  (list (format "%s-%d" font-name point-size) point-size))
 
 (defvar tkb-default-width 80
   "The default width in characters for emacs frames.")
@@ -43,24 +43,24 @@ defaults.")
         ;; (assoc 'mm-size (frame-monitor-attributes)) ?
         ((>= (display-pixel-height) 2280)
          ;; Retina display probably, so use smaller font
-         `(,(tkb- 56 "go display-pixel-height >= 2280")))
+         `(,@(tkb-mf 14) 56 "go display-pixel-height >= 2280"))
         ((>= (display-pixel-height) 2160)
          (if (>= 214 (caddr (assoc 'mm-size (frame-monitor-attributes))))
-             `(,(tkb-mf 14) 50
+             `(,@(tkb-mf 14) 50
                 "display-pixel-height >= 2160 high and mm-size height <= 214")
-           `(,(tkb-mf 14) 65
+           `(,@(tkb-mf 14) 65
               "display-pixel-height >= 2160 high and mm-size height != 214")))
         ((> (display-pixel-height) 1080)
-         `(,(tkb-mf) 55 "display-pixel-height > 1080 high"))
+         `(,@(tkb-mf) 55 "display-pixel-height > 1080 high"))
         ((= 170 (caddr (assoc 'mm-size (frame-monitor-attributes))))
-         `(,(tkb-mf 11) 45 "mm-size height = 170"))
+         `(,@(tkb-mf 11) 45 "mm-size height = 170"))
         ((= 340 (caddr (assoc 'mm-size (frame-monitor-attributes))))
-         `(,(tkb-mf) 50 "mm-size height = 340"))
+         `(,@(tkb-mf) 50 "mm-size height = 340"))
         ((and (= mm-width 344) (= mm-height 194)
               (= pixel-width 1366) (= pixel-height 768))
-         `(,(tkb-mf 8) 40 "(344 194 1366 768)"))
+         `(,@(tkb-mf 8) 40 "(344 194 1366 768)"))
         (t
-         `(,(tkb-mf) 50 "everything else"))))))
+         `(,@(tkb-mf) 50 "everything else"))))))
 
 
 (defun tkb-calculate-gui-defaults ()
@@ -69,9 +69,10 @@ defaults.")
   ;; need to do something with display-pixel-height
   (let ((default-configuration (tkb-calculate-font-and-height)))
     (setq tkb-default-configuration default-configuration)
-    (cl-destructuring-bind (font height description)
+    (cl-destructuring-bind (font point-size height description)
         default-configuration
       (setq tkb-default-font font)
+      (setq tkb-default-point-size point-size)
       (setq tkb-default-height height)
       (setq tkb-default-description description)
       (setq tkb-default-top

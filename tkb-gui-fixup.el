@@ -30,7 +30,7 @@
 
   (setq tkb-default-font-name  font-name)
   (setq tkb-default-point-size point-size)
-  (setq tkb-default-font       (tkb-mf point-size font-name))
+  (setq tkb-default-font       (car (tkb-mf point-size font-name)))
   (setq tkb-default-width      width)
   (setq tkb-default-height     height)
   (setq tkb-default-left       left)
@@ -49,7 +49,10 @@
   (setf (cdr (assq 'left   initial-frame-alist)) left)
   (setf (cdr (assq 'top    initial-frame-alist)) top)
   
-  (cl-loop for f in (frame-list) do
+  (cl-loop for f in (filtered-frame-list
+                     #'(lambda (f)
+                         (not (frame-parameter f 'tkb-static))))
+        do
         (set-frame-parameter f 'font   tkb-default-font)
         (set-frame-parameter f 'width  width)
         (set-frame-parameter f 'height height)
