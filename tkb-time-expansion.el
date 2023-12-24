@@ -253,8 +253,8 @@ time, to get the time to be finished."
   '(
     ("GOI"	 "Kay Atman's GOI web prototype")
     ("GOIApp"    "GOI Mobile App work with S. Reger")
-    ("MHST"	 "Miners Health Saftey an Training")
-    ("MHSTBill"  "Billable Miners Health Saftey an Training")
+    ("MHST"	 "Miners Health Saftey and Training")
+    ("MHSTBill"  "Billable Miners Health Saftey and Training")
     ("MiscGnA"	 "Miscellaneous")
     ("PrattBill" "Pratt Billable")
     ("PrattNB"   "Pratt Non-billable")
