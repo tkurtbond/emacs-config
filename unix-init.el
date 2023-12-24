@@ -38,10 +38,10 @@
 ;;; end of temporary debugging code.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(tkb-dbg (load-file "~/lib/emacs/tkb/tkb-debug-abbrevs.el"))
+(tkb-dbg (load-file "~/lib/emacs/emacs-config/tkb-debug-abbrevs.el"))
 
-(load-file "~/lib/emacs/tkb/tkb-test.el") ; before anything with (test ...)
-(load-file "~/lib/emacs/tkb/tkb-macros.el") ; Must come first.
+(load-file "~/lib/emacs/emacs-config/tkb-test.el") ; before anything with (test ...)
+(load-file "~/lib/emacs/emacs-config/tkb-macros.el") ; Must come first.
 
 ;;; GNU Emacs or XEmacs?
 (setq tkb-xemacs-p (string-match "xemacs" emacs-version))
@@ -56,13 +56,13 @@
 
 
 
-(when (file-exists-p "~/lib/emacs/tkb/tkb-local.el")
-  (load-file "~/lib/emacs/tkb/tkb-local.el"))
+(when (file-exists-p "~/lib/emacs/emacs-config/tkb-local.el")
+  (load-file "~/lib/emacs/emacs-config/tkb-local.el"))
 
 (when (file-exists-p "~/local/emacs/")
   (push "~/local/emacs/" load-path))
 
-(when-directory (d "/usr/lib/emacs/tkb/site-lisp") (push d load-path))
+(when-directory (d "/usr/lib/emacs/emacs-config/site-lisp") (push d load-path))
 (when-directory (d "/usr/local/share/emacs/site-lisp") (push d load-path))
 (when-directory (d "/software/public/share/emacs/site-lisp") (push d load-path))
 (when-directory (d  "/sw/pub/share/emacs/site-lisp") (push d load-path))
@@ -75,7 +75,7 @@
   (push "/sw/pub/info/" Info-default-directory-list))
 
 
-(when-directory (d (expand-file-name "~/lib/emacs/tkb"))
+(when-directory (d (expand-file-name "~/lib/emacs/emacs-config"))
   (setq tkb-emacs-dir d)
   (add-to-list 'load-path tkb-emacs-dir))
 

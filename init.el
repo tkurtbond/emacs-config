@@ -139,7 +139,7 @@
   (global-hl-line-mode +1))
 
 
-(setq custom-file "~/lib/emacs/tkb/tkb-custom.el")
+(setq custom-file "~/lib/emacs/emacs-config/tkb-custom.el")
 (load custom-file)
 
 (add-hook 'write-file-hooks 'time-stamp)
@@ -147,18 +147,18 @@
 
 (load (cl-case system-type
 	((ms-dos windows-nt)
-	 "~/lib/emacs/tkb/mswoe-init.el")
+	 "~/lib/emacs/emacs-config/mswoe-init.el")
 	((vax-vms axp-vms)
-	 "~/lib/emacs/tkb/vms-init.el")
+	 "~/lib/emacs/emacs-config/vms-init.el")
 	(t
-	 "~/lib/emacs/tkb/unix-init.el")))
+	 "~/lib/emacs/emacs-config/unix-init.el")))
 
 (when (eq 'darwin system-type)
-  (load "~/lib/emacs/tkb/macos-init.el"))
+  (load "~/lib/emacs/emacs-config/macos-init.el"))
 
-(load "~/lib/emacs/tkb/tkb-gnus.el")
+(load "~/lib/emacs/emacs-config/tkb-gnus.el")
 
-;(load "~/lib/emacs/tkb/tkb-mh-e.el")
+;(load "~/lib/emacs/emacs-config/tkb-mh-e.el")
 
 ;; For some reason emacs-w3m ends up under
 ;; c:/emacs/emacs-VER/share/emacs/site-lisp
@@ -190,15 +190,15 @@
 
 (when nil 
   (when (locate-file "w3m" load-path '(".el" ".el.gz"))
-    (load "~/lib/emacs/tkb/tkb-w3m.el")))
-(load "~/lib/emacs/tkb/tkb-fortune.el")
-(when nil (load "~/lib/emacs/tkb/tkb-timeclock.el"))
+    (load "~/lib/emacs/emacs-config/tkb-w3m.el")))
+(load "~/lib/emacs/emacs-config/tkb-fortune.el")
+(when nil (load "~/lib/emacs/emacs-config/tkb-timeclock.el"))
 
 (when window-system
   (add-hook 'after-init-hook
 	    (lambda ()
-              (load "~/lib/emacs/tkb/tkb-gui-setup")
-              (load "~/lib/emacs/tkb/tkb-gui-fixup"))))
+              (load "~/lib/emacs/emacs-config/tkb-gui-setup")
+              (load "~/lib/emacs/emacs-config/tkb-gui-fixup"))))
 
 ;; wanderlust
 (autoload 'wl-user-agent-compose "wl-draft" nil t)
@@ -217,10 +217,10 @@
 (put 'set-goal-column 'disabled nil)
 
 
-(load-file "~/lib/emacs/tkb/tkb-time-expansion.el")
-(load-file "~/lib/emacs/tkb/tkb-time-expansion-keys.el")
-(load-file "~/lib/emacs/tkb/tkb-status-reports.el")
-(load-file "~/lib/emacs/tkb/tkb-blog.el")
+(load-file "~/lib/emacs/emacs-config/tkb-time-expansion.el")
+(load-file "~/lib/emacs/emacs-config/tkb-time-expansion-keys.el")
+(load-file "~/lib/emacs/emacs-config/tkb-status-reports.el")
+(load-file "~/lib/emacs/emacs-config/tkb-blog.el")
 (when-directory (d (expand-file-name "~/Repos/microblog/emacs/"))
   (load-file "~/Repos/microblog/emacs/tkb-microblog.el"))
 (load-library "gemini-mode.el")
@@ -261,9 +261,9 @@
 
 ;;(require 'mercurial)
 
-(setq abbrev-file-name "~/lib/emacs/tkb/abbrev_defs")
+(setq abbrev-file-name "~/lib/emacs/emacs-config/abbrev_defs")
 
 (setq auth-sources '((:source "~/.authinfo.gpg")))
 
-(load "~/lib/emacs/tkb/tkb-last.el")
+(load "~/lib/emacs/emacs-config/tkb-last.el")
 ;; end of init.el
