@@ -66,7 +66,7 @@ defaults.")
 (defun tkb-calculate-gui-defaults ()
   (interactive)
   
-  ;; need to do something with display-pixel-height
+  ;; Need to do something with display-pixel-height?
   (let ((default-configuration (tkb-calculate-font-and-height)))
     (setq tkb-default-configuration default-configuration)
     (cl-destructuring-bind (font point-size height description)
@@ -88,6 +88,8 @@ defaults.")
              (setq tkb-default-left (+ 7680 20)))
             ((= 3840 (car (frame-monitor-geometry)))
              (setq tkb-default-left (+ 3840 20)))
+            ((= 2880 (car (frame-monitor-geometry)))
+             (setq tkb-default-left (+ 2880 20)))
             ((= 1920 (car (frame-monitor-geometry)))
              (setq tkb-default-left (+ 1920 20)))
             ((= 0 (car (frame-monitor-geometry)))
