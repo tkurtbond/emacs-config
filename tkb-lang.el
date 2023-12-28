@@ -163,7 +163,7 @@ always indent Chicken Scheme module forms 0 characters."
 ;;(put 'module 'scheme-indent-function 2)
 ;;; Why does geiser/run-geiser reset this?
 (put 'module 'scheme-indent-function #'tkb-module-scheme-indent)
-(message "(get 'modem 'scheme-indent-function) is %s\n" (get 'module 'scheme-indent-function))
+(message "(get 'module 'scheme-indent-function) is %s\n" (get 'module 'scheme-indent-function))
 (eval-after-load "geiser-repl"
   '(progn
     (defadvice geiser (after tkb-geiser-after activate)
