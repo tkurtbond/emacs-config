@@ -2863,17 +2863,24 @@ and make it the current selection."
     ;; Why didn't org-download-clipboard work?
     (require 'org-download)
     (cond ((getenv "WAYLAND_DISPLAY")
-            ;; check for Wayland first because of X on Wayland
-            (message "Wayland is here!")
-            (setq org-download-screenshot-method
-                  "wl-paste > %s"))
-          ((getenv "DISPLAY")
-           (message "X is here!")
+           ;; check for Wayland first because of X on Wayland.
+           (message "org-download-screenshot: Wayland is here!")
+           ;; This needs the wl-clipboard package.
+           (unless (executable-find "wl-paste")
+             (user-error "org-download-screenshot: wl-paste is missing, install wl-clipboard!"))
            (setq org-download-screenshot-method
-            "xclip -selection clipboard -t image/png -o > %s"))
+                 "wl-paste > %s"))
+          ((getenv "DISPLAY")
+           (message "org-download-screenshot: X is here!")
+           ;; This needs the xclip package.
+           (unless (executable-find "xclip")
+             (user-error "org-download-screenshot: xclip is missing!"))
+           (setq org-download-screenshot-method
+                 "xclip -selection clipboard -t image/png -o > %s"))
           (t
            (message "Neither X nor Wayland are available."))))
 (message "After use-package org-download")
+;;(describe-key (kbd "C-c k o d"))
 
 (defun tkb-open-file-at-point ()
   (interactive)
