@@ -59,6 +59,9 @@ defaults.")
         ((and (= mm-width 344) (= mm-height 194)
               (= pixel-width 1366) (= pixel-height 768))
          `(,@(tkb-mf 8) 40 "(344 194 1366 768)"))
+        ((and (= mm-width 309) (= mm-height 174)
+              (= pixel-width 1920) (= pixel-height 1080))
+         `(,@(tkb-mf 12) 40 "(309 174 1920 1080)"))
         (t
          `(,@(tkb-mf) 50 "everything else"))))))
 
