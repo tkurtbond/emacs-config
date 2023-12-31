@@ -226,6 +226,7 @@ tkb-default-color:       %s"
 (defvar tkb-beep-program "ogg123")
 
 (defun tkb-bell ()
+  "Ring the bell."
   (interactive)
   (start-process "Beep" nil tkb-beep-program
                  tkb-beep-sound))
@@ -238,8 +239,8 @@ not  exist!\nUnderstand? "
            tkb-beep-sound)))
 (let ((path (split-string (getenv "PATH") ":")))
   (unless (file-installed-p tkb-beep-program path)
-    (yes-or-no-p (format "Error: tkb-beep-sound is set to \"%s\", which does \
-not exist!\nUnderstand? "
+    (yes-or-no-p (format "Error: tkb-beep-program is set to \"%s\", which does \
+not exist!\nInstall vorbis-tools! Understand? "
              tkb-beep-program))))
 
 
