@@ -221,27 +221,29 @@ tkb-default-color:       %s"
       '(multiple-frames ("emacs %b: " (tkb-is-root "root" user-mail-address))
 	("emacs " (tkb-is-root "root" user-mail-address))))
 
+(when (getenv "WAYLAND_DISPLAY")
+  (message "Running under Wayland")
+  (defvar tkb-beep-sound "/usr/share/sounds/freedesktop/stereo/bell.oga")
+  (defvar tkb-beep-program "ogg123")
 
-(defvar tkb-beep-sound "/usr/share/sounds/freedesktop/stereo/bell.oga")
-(defvar tkb-beep-program "ogg123")
+  (defun tkb-bell ()
+    "Ring the bell."
+    (interactive)
+    (start-process "Beep" nil tkb-beep-program
+                   tkb-beep-sound))
 
-(defun tkb-bell ()
-  "Ring the bell."
-  (interactive)
-  (start-process "Beep" nil tkb-beep-program
-                 tkb-beep-sound))
+  (setq ring-bell-function #'tkb-bell)
 
-(setq ring-bell-function #'tkb-bell)
-
-(unless (file-exists-p tkb-beep-sound)
-  (yes-or-no-p (format "Error: tkb-beep-sound is set to \"%s\", which does \
+  (unless (file-exists-p tkb-beep-sound)
+    (yes-or-no-p (format "Error: tkb-beep-sound is set to \"%s\", which does \
 not  exist!\nUnderstand? "
-           tkb-beep-sound)))
-(let ((path (split-string (getenv "PATH") ":")))
-  (unless (file-installed-p tkb-beep-program path)
-    (yes-or-no-p (format "Error: tkb-beep-program is set to \"%s\", which does \
+                         tkb-beep-sound)))
+  
+  (let ((path (split-string (getenv "PATH") ":")))
+    (unless (file-installed-p tkb-beep-program path)
+      (yes-or-no-p (format "Error: tkb-beep-program is set to \"%s\", which does \
 not exist!\nInstall vorbis-tools! Understand? "
-             tkb-beep-program))))
+                           tkb-beep-program)))))
 
 
 (message "Ending tkb-gui-setup.el")
