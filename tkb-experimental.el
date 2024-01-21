@@ -2952,5 +2952,23 @@ and make it the current selection."
   (shrink-window-horizontally
    (- (window-width) (current-column) 1)))
 
+
+(defvar tkb-nikola-metadata-regexp "\\.\\. [a-z]+:")
+
+(defun tkb-nikola-rest-fill-break-p ()
+  "Don't fill on metadata lines in nikola reST posts."
+  (save-excursion
+    (beginning-of-line)
+    (looking-at tkb-nikola-metadata-regexp)))
+
+(defun tkb-nikola-rest-hook ()
+  (interactive)
+  (when (and (string-match "\\.rst\\'" (buffer-file-name))
+             (looking-at tkb-nikola-metadata-regexp))
+    (make-local-variable 'fill-nobreak-predicate)
+    (setq fill-nobreak-predicate (list #'tkb-nikola-rest-fill-break-p))))
+
+(add-to-list 'find-file-hook #'tkb-nikola-rest-hook)
+
 (message "End of tkb-experimental.el")
 ;;; end of tkb-experimental.el
