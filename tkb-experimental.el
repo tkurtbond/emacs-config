@@ -2944,5 +2944,13 @@ and make it the current selection."
       web-mode-markup-indent-offset 2
       web-mode-script-padding 2)
 
+;; gemini://idiomdrottning.org/cozify-window
+;; sets the window width to one space wider than the current cursor position:
+(defun cozify-window ()
+  "Change the wide of a window to one more than the current column when there are windows side by side."
+  (interactive)
+  (shrink-window-horizontally
+   (- (window-width) (current-column) 1)))
+
 (message "End of tkb-experimental.el")
 ;;; end of tkb-experimental.el
