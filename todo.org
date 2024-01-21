@@ -1,6 +1,11 @@
 * 2024-01-20
 
+gemini://idiomdrottning.org/bad-emacs-defaults
+
 (make-directory "~/.emacs_backups/" t)
 (make-directory "~/.emacs_autosave/" t)
 (setq auto-save-file-name-transforms '((".*" "~/.emacs_autosave/" t)))
 (setq backup-directory-alist '(("." . "~/.emacs_backups/")))
+
+
+
