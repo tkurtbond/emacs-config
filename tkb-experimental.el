@@ -2953,6 +2953,9 @@ and make it the current selection."
    (- (window-width) (current-column) 1)))
 
 
+;; Nikola metadata lines start like this:
+;; .. keyword:
+;; They shouldn't be wrapped.
 (defvar tkb-nikola-metadata-regexp "\\.\\. [a-z]+:")
 
 (defun tkb-nikola-rest-fill-nobreak-p ()
