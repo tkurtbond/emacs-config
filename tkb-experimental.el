@@ -128,53 +128,53 @@ recommended by the ReST quickref: http://tinyurl.com/47lkhk"
   (setq org-capture-templates
         `(("X" "EXPERIMENT" entry
            (file+olp+datetree ,(expand-file-name "~/current/org/loud-experiment.org"))
-           "*** %^{Title} %U\n  %i\n  %?\n")
+           "*** %^{Title} %U\n%i\n%?\n")
           ("b" "Add book about to read" entry
            (file+olp ,(expand-file-name tkb-org-books-read)
                      ,(format-time-string "%Y") "Read")
            "*** : %c" :prepend t)
           ("j" "Journal" entry
            (file+headline ,tkb-org-journal "Journal")
-           "* %^{Title} %U\n  %i\n  %?\n")
+           "* %^{Title} %U\n%i\n%?\n")
           ("c" "Contacts Log" entry
            (file+headline ,tkb-org-contacts "Contacts")
-           "* %^{Title} %U\n  %i%?\n")
+           "* %^{Title} %U\n%i%?\n")
           ("B" "Blog Ideas" entry
            (file ,tkb-org-blog-ideas)
-           "* %^{Title} %U\n  %i%?\n")
+           "* %^{Title} %U\n%i%?\n")
           ("g" "Gaming Ideas" entry
            (file ,tkb-org-gaming-ideas)
-           "* %^{Title} %U\n  %i%?\n")
+           "* %^{Title} %U\n%i%?\n")
           ("h" "Health" entry
            (file ,tkb-org-health)
-           "* %^{Title} %U\n  %i%?\n")
+           "* %^{Title} %U\n%i%?\n")
           ("n" "Notes" entry
            (file+headline ,tkb-org-notes "Notes")
-           "\n\n* %^{Title} %U\n  %i\n  %?\n  %a\n\n")
+           "\n\n* %^{Title} %U\n%i\n%?\n%a\n\n")
           ("r" "RPG" entry
            (file+headline ,tkb-org-rpg "RPG")
-           "\n\n* %^{Title} %U\n  %i\n  %?\n  %a\n\n")
+           "\n\n* %^{Title} %U\n%i\n%?\n%a\n\n")
           ("t" "Tasks" entry
            (file+headline ,tkb-org-tasks "Tasks")
-           "* TODO %^{Title} %U\n  %i\n  %?\n  %a\n")
+           "* TODO %^{Title} %U\n%i\n%?\n%a\n")
           ("v" "Video" entry
            (file+headline ,tkb-org-video "Video")
-           "* TODO %^{Title} %U\n  %^C%i%?\n")
+           "* TODO %^{Title} %U\n%^C%i%?\n")
           ("J" "MPL Journal" entry
            (file+headline ,tkb-org-mpl-journal "MPL Journal")
-           "* %^{Title} %U\n  %i\n  %?\n")
+           "* %^{Title} %U\n%i\n%?\n")
           ("M" "MHST Journal" entry
            (file+headline ,tkb-org-mhst-journal "MHST Journal")
-           "* %^{Title} %U\n  %i\n  %?\n")
+           "* %^{Title} %U\n%i\n%?\n")
           ("C" "MPL Contacts Log" entry
            (file+headline ,tkb-org-mpl-contacts "MPL Contacts")
-           "* %^{Title} %U\n  %i\n  %?\n")
+           "* %^{Title} %U\n%i\n%?\n")
           ("N" "MPL Notes" entry
            (file+headline ,tkb-org-mpl-notes "MPL Notes")
-           "\n\n* %^{Title} %U\n  %i\n  %?\n  %a\n\n")
+           "\n\n* %^{Title} %U\n%i\n%?\n%a\n\n")
           ("T" "MPL Tasks" entry
            (file+headline ,tkb-org-mpl-tasks "MPL Tasks")
-           "* TODO %^{Title} %U\n  %i\n  %?\n  %a\n")))
+           "* TODO %^{Title} %U\n%i\n%?\n%a\n")))
   ;;(defvar tkb-org-files-map (make-sparse-keymap))
   (define-prefix-command 'tkb-org-files-map)
   (global-set-key (kbd "C-C k o F") 'tkb-org-files-map)
@@ -240,7 +240,7 @@ and add a log entry to it."
     (let* ((org-file (tkb-find-org-log-file))
            (org-capture-templates
             `(("l" "Log" entry (file+headline ,org-file "Log")
-               "* %^{Title} %U\n  %i\n  %?\n"))))
+               "* %^{Title} %U\n%i\n%?\n"))))
       (org-capture)))
   (tkb-keys ((kbd "C-c k o l") #'tkb-add-org-log))
   (tkb-keys ((kbd "C-c k o C-p") #'org-move-subtree-up))
