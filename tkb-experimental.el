@@ -2955,7 +2955,7 @@ and make it the current selection."
 
 (defvar tkb-nikola-metadata-regexp "\\.\\. [a-z]+:")
 
-(defun tkb-nikola-rest-fill-break-p ()
+(defun tkb-nikola-rest-fill-nobreak-p ()
   "Don't fill on metadata lines in nikola reST posts."
   (save-excursion
     (beginning-of-line)
@@ -2966,7 +2966,7 @@ and make it the current selection."
   (when (and (string-match "\\.rst\\'" (buffer-file-name))
              (looking-at tkb-nikola-metadata-regexp))
     (make-local-variable 'fill-nobreak-predicate)
-    (setq fill-nobreak-predicate (list #'tkb-nikola-rest-fill-break-p))))
+    (setq fill-nobreak-predicate (list #'tkb-nikola-rest-fill-nobreak-p))))
 
 (add-to-list 'find-file-hook #'tkb-nikola-rest-hook)
 
