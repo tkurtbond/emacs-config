@@ -141,7 +141,7 @@ recommended by the ReST quickref: http://tinyurl.com/47lkhk"
            "* %^{Title} %U\n%i%?\n")
           ("B" "Blog Ideas" entry
            (file ,tkb-org-blog-ideas)
-           "* %^{Title} %U\n%i%?\n")
+           "* TODO %^{Title} %U\n%i%?\n")
           ("g" "Gaming Ideas" entry
            (file ,tkb-org-gaming-ideas)
            "* %^{Title} %U\n%i%?\n")
@@ -985,7 +985,8 @@ over 40 is morbidly obese, over 50 is super morbidly obese."
       (setq auto-save-file-name-transforms
             `((".*" ,backup-dir t))))))
 (progn
-  (setq backup-directory-alist '(("." . ".~"))))
+  (setq backup-directory-alist '(("." . ".~/")))
+  (setq auto-save-file-name-transforms `((".*" ".~/" t))))
 
 (defun tkb-next-blank-line ()
   (interactive)
