@@ -64,4 +64,5 @@
  '(slime-repl-output-face ((t (:background "LightBlue" :foreground "black"))))
  '(strange ((t (:inverse-video t :box (:line-width 2 :color "grey75" :style pressed-button) :height 3.0))))
  '(tkb-linum ((t (:foreground "red"))))
+ '(whitespace-newline ((t (:background "gold" :foreground "light gray" :weight normal))))
  '(wl-highlight-summary-temp-face ((t (:background "yellow" :foreground "red")))))
