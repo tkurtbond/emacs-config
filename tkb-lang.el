@@ -369,6 +369,7 @@ always indent Chicken Scheme module forms 0 characters."
                 auto-mode-alist)))
 
 (when-load-file "ada-mode"
+  ;; The directory old-ada-mode gets added to load-path in unix.el.
   (message "Setting up Ada Mode.")
   (autoload 'ada-mode "ada-mode")
   (cl-loop for ext in '("\\.gpr$" "\\.ada$" "\\.ads$" "\\.adb$")
