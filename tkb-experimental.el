@@ -986,7 +986,16 @@ over 40 is morbidly obese, over 50 is super morbidly obese."
             `((".*" ,backup-dir t))))))
 (progn
   (setq backup-directory-alist '(("." . ".~/")))
-  (setq auto-save-file-name-transforms `((".*" ".~/" t))))
+  (when nil
+    ;; This causes an error autosaving because the directory doesn't exist.
+    (setq auto-save-file-name-transforms `((".*" ".~/" t)))
+    ;; This didn't work to fix it.  TODO: investigate later.
+    (defun tkb-make-auto-save-directory (auto-save-file-name)
+      (let ((auto-save-directory-name (file-name-directory auto-save-file-name)))
+        (unless (file-exists-p auto-save-directory-name)
+          (make-directory auto-save-directory-name))
+        auto-save-file-name))
+    (advice-add 'make-auto-save-file-name :filter-return #'tkb-make-auto-save-directory)))
 
 (defun tkb-next-blank-line ()
   (interactive)
