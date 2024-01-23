@@ -1,4 +1,5 @@
-* 2024-01-20
+* TODO Figure out how to integrate auto-save-file-name-transforms
+2024-01-20
 
 gemini://idiomdrottning.org/bad-emacs-defaults
 
