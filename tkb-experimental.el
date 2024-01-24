@@ -2983,5 +2983,12 @@ and make it the current selection."
 
 (add-to-list 'find-file-hook #'tkb-nikola-rest-hook)
 
+(defun tkb-troff-column-width (text-width number-of-columns gutter-width)
+  (interactive "nText width? \nnNumber of columns? \nnGutter width? ")
+  (let ((column-width (/ (- text-width (* (- number-of-columns 1)
+                                          gutter-width))
+                         number-of-columns)))
+    (message "Column width: %f" column-width)))
+
 (message "End of tkb-experimental.el")
 ;;; end of tkb-experimental.el
