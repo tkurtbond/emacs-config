@@ -2990,5 +2990,15 @@ and make it the current selection."
                          number-of-columns)))
     (message "Column width: %f" column-width)))
 
+(defun tkb-dotted-netmask-from-cidr (cidr)
+  "Convert the CIDR of an IP address to a dotted netmask.
+Given 192.168.1.151/24, the CIDR is 24."
+  (interactive "nCIDR? ")
+  (let* ((binary (loop for i from (- 32 cidr) to 32 sum (expt 2 i)))
+         (octets (loop for n = binary then (ash n -8)  for i from 1 to 4
+                       collect (logand #xFF n) into octets
+                       finally return (reverse octets))))
+    (message "Netmask: %s" (apply #'format (cons "%d.%d.%d.%d" octets)))))
+
 (message "End of tkb-experimental.el")
 ;;; end of tkb-experimental.el
