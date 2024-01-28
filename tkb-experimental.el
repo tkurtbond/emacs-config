@@ -135,7 +135,7 @@ recommended by the ReST quickref: http://tinyurl.com/47lkhk"
            "*** : %c" :prepend t)
           ("j" "Journal" entry
            (file+headline ,tkb-org-journal "Journal")
-           "* %^{Title} %U\n%i\n%?\n")
+           "* %^{Title} %U\n%i%?")
           ("c" "Contacts Log" entry
            (file+headline ,tkb-org-contacts "Contacts")
            "* %^{Title} %U\n%i%?\n")
