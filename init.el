@@ -20,6 +20,8 @@
 (setq read-file-name-completion-ignore-case t)
 (setq read-buffer-completion-ignore-case t)
 (setq-default indent-tabs-mode nil)
+(setq backup-by-copying t)
+(setq sentence-end-double-space nil)    ; ??? Revisit decision after a week, and after a month.
 
 (setq line-move-visual nil)
 
