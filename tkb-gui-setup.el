@@ -152,7 +152,7 @@ tkb-default-color:       %s"
 	  (font             . ,tkb-default-font)
 	  (background-color . ,tkb-default-color)
 	  (foreground-color . "black")
-	  (cursor-color     . "orange")
+	  (cursor-color     . "orange") ; #xffa500; 255, 165, 0
           ))
   (setq default-frame-alist tkb-default-frame-alist)
   (setq initial-frame-alist tkb-default-frame-alist)
