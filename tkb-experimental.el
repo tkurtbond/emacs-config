@@ -3024,5 +3024,34 @@ Given 192.168.1.151/24, the CIDR is 24."
                        finally return (reverse octets))))
     (message "Netmask: %s" (apply #'format (cons "%d.%d.%d.%d" octets)))))
 
+;;; From: https://incompetech.com/graphpaper/hexagonal/
+;; Calculating various bits about regular hexagons
+;; 
+;; Given length of a side x...
+;; Tip to tip across the hex is 2x.
+;; Height of the hex flat side to flat side is 2x(sqrt(3/4)) or about 1.732x.
+;; Area of the hex is 1.5(x^2 (sqrt(3)) or about 2.56x^2.
+;;
+;;     Example: Making graph paper with 4 hexes per square inch
+;;     Hexagon with a side length of x... The area of that hex would be about...
+;;     2.6 (x^2)
+;;     So for 4 hexes per square inch...
+;;     4 * 2.6 (x^2) = 1
+;;     x^2 = 1/10.4
+;;     x^2 = .096
+;;     x = .31 inches per side.
+;;
+;;     Extra: 1 sq. in. per hex ~= 0.6204
+(defun tkb-hex-width-to-side-length (w)
+  "Convert from the width of a hex from flat side to flat side to the length
+ of a side.  Use with https://incompetech.com/graphpaper/hexagonal/ "
+  (interactive "nWidth of hex from flat side to flat side? ")
+  ;; w = 1.732x
+  ;; x = w / 1.732
+  (let ((x (/ w 1.732)))
+    (message "Length of side: %f" x)
+    x))
+
+
 (message "End of tkb-experimental.el")
 ;;; end of tkb-experimental.el
