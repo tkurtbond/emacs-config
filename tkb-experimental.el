@@ -89,12 +89,12 @@ recommended by the ReST quickref: http://tinyurl.com/47lkhk"
     ;; (setq org-adapt-indentation t) ;; No, maybe not.
     (eval-after-load "org-mobile"
       '(progn 
-         ;; Set to the name of the file where new notes will be stored
-         (setq org-mobile-inbox-for-pull "~/Org/flagged.org")
-         ;; Set to <your Dropbox root directory>/MobileOrg.
-         (setq org-mobile-directory "~/Dropbox/Apps/MobileOrg")
-         (push "~/Org" org-mobile-files))))
-  ;;
+        ;; Set to the name of the file where new notes will be stored
+        (setq org-mobile-inbox-for-pull "~/Org/flagged.org")
+        ;; Set to <your Dropbox root directory>/MobileOrg.
+        (setq org-mobile-directory "~/Dropbox/Apps/MobileOrg")
+        (push "~/Org" org-mobile-files))))
+  
   (defconst tkb-org-journal      (expand-file-name "~/Repos/tkb-notes/Org/journal.org"))
   (defconst tkb-org-contacts     (expand-file-name "~/Repos/tkb-notes/Org/contacts.org"))
   (defconst tkb-org-books-read   (expand-file-name "~/Repos/tkb-notes/Books/read.org"))
@@ -178,65 +178,79 @@ recommended by the ReST quickref: http://tinyurl.com/47lkhk"
   ;;(defvar tkb-org-files-map (make-sparse-keymap))
   (define-prefix-command 'tkb-org-files-map)
   (global-set-key (kbd "C-C k o F") 'tkb-org-files-map)
-  (tkb-keys ((kbd "C-c k o C-c") #'org-ctrl-c-ctrl-c)
-            ((kbd "C-c k o F B") #'(lambda () "Blog Ideas"
-                                     (interactive)
-                                     (find-file tkb-org-blog-ideas)))
-            ((kbd "C-c k o F j") #'(lambda () "TKB's Journal"
-                                     (interactive)
-                                     (find-file tkb-org-journal)))
-            ((kbd "C-c k o F c") #'(lambda ()
-                                     "TKB's Contacts"
-                                     (interactive)
-                                     (find-file tkb-org-contacts)))
-            ((kbd "C-c k o F h") #'(lambda ()
-                                     "TKB's Health"
-                                     (interactive)
-                                     (find-file tkb-org-health)))
-            ((kbd "C-c k o F n") #'(lambda ()
-                                     "TKB's Notes"
-                                     (interactive)
-                                     (find-file tkb-org-notes)))
-            ((kbd "C-c k o F r") #'(lambda ()
-                                     "TKB's RPG"
-                                     (interactive)
-                                     (find-file tkb-org-rpg)))
-            ((kbd "C-c k o F t") #'(lambda ()
-                                     "TKB's Tasks"
-                                     (interactive)
-                                     (find-file tkb-org-tasks)))
-            ((kbd "C-c k o F v") #'(lambda ()
-                                     "TKB's Video"
-                                     (interactive)
-                                     (find-file tkb-org-video)))
-            ((kbd "C-c k o F J") #'(lambda ()
-                                     "MPL Journal"
-                                     (interactive)
-                                     (find-file tkb-org-mpl-journal)))
-            ((kbd "C-c k o F M") #'(lambda ()
-                                     "MHST Journal"
-                                     (interactive)
-                                     (find-file tkb-org-mhst-journal)))
-            ((kbd "C-c k o F C") #'(lambda ()
-                                     "MPL Contacts"
-                                     (interactive)
-                                     (find-file tkb-org-mpl-contacts)))
-            ((kbd "C-c k o F N") #'(lambda ()
-                                     "MPL Notes"
-                                     (interactive)
-                                     (find-file tkb-org-mpl-notes)))
-            ((kbd "C-c k o F T") #'(lambda ()
-                                     "MPL Tasks"
-                                     (interactive)
-                                     (find-file tkb-org-mpl-tasks)))
-            )
+  (progn
+    (defun tkb-find-org-blog-ideas ()
+      "Find Org Blog Ideas"
+      (interactive)
+      (find-file tkb-org-blog-ideas))
+    (global-set-key (kbd "C-c k o F B") #'tkb-find-org-blog-ideas)
+    (defun tkb-find-org-journal ()
+      "Find Org TKB's Journal"
+      (interactive)
+      (find-file tkb-org-journal))
+    (global-set-key (kbd "C-c k o F j") #'tkb-find-org-journal)
+    (defun tkb-find-org-contacts ()
+      "Find Org TKB's Contacts"
+      (interactive)
+      (find-file tkb-org-contacts))
+    (global-set-key (kbd "C-c k o F c") #'tkb-find-org-contacts)
+    (defun tkb-find-org-health ()
+      "Find Org TKB's Health"
+      (interactive)
+      (find-file tkb-org-health))
+    (global-set-key (kbd "C-c k o F h") #'tkb-find-org-health)
+    (defun tkb-find-org-notes ()
+      "Find Org TKB's Notes"
+      (interactive)
+      (find-file tkb-org-notes))
+    (global-set-key (kbd "C-c k o F n") #'tkb-find-org-notes)
+    (defun tkb-find-org-rpg ()
+      "Find Org TKB's RPG"
+      (interactive)
+      (find-file tkb-org-rpg))
+    (global-set-key (kbd "C-c k o F r") #'tkb-find-org-rpg)
+    (defun tkb-find-org-tasks ()
+      "Find Org TKB's Tasks"
+      (interactive)
+      (find-file tkb-org-tasks))
+    (global-set-key (kbd "C-c k o F t") #'tkb-find-org-tasks)
+    (defun tkb-find-org-video ()
+      "Find Org TKB's Video"
+      (interactive)
+      (find-file tkb-org-video))
+    (global-set-key (kbd "C-c k o F v") #'tkb-find-org-video)
+    (defun tkb-find-org-mpl-journal ()
+      "Find Org MPL Journal"
+      (interactive)
+      (find-file tkb-org-mpl-journal))
+    (global-set-key (kbd "C-c k o F J") #'tkb-find-org-mpl-journal)
+    (defun tkb-find-org-mhst-journal ()
+      "Find Org MHST Journal"
+      (interactive)
+      (find-file tkb-org-mhst-journal))
+    (global-set-key (kbd "C-c k o F M") #'tkb-find-org-mhst-journal)
+    (defun tkb-find-org-mpl-contacts ()
+      "Find Org MPL Contacts"
+      (interactive)
+      (find-file tkb-org-mpl-contacts))
+    (global-set-key (kbd "C-c k o F C") #'tkb-find-org-mpl-contacts)
+    (defun tkb-find-org-mpl-notes ()
+      "Find Org MPL Notes"
+      (interactive)
+      (find-file tkb-org-mpl-notes))
+    (global-set-key (kbd "C-c k o F N") #'tkb-find-org-mpl-notes)
+    (defun tkb-find-org-mpl-tasks ()
+      "Find Org MPL Tasks"
+      (interactive)
+      (find-file tkb-org-mpl-tasks))
+    (global-set-key (kbd "C-c k o F T") #'tkb-find-org-mpl-tasks))
   (tkb-check-bindings (list (kbd "C-c k o C-c")))
 
   (defun tkb-find-org-log-file ()
     "Look in the current directory or its parents for a file named *-log.org
 and return it."
-    ;; So I can us M-x tkb-find-file-org-log and not bring up the debugger on the
-    ;; call to error when testing.
+    ;; So I can us M-x tkb-find-file-org-log and not bring up the
+    ;; debugger on the call to error when testing.
     (interactive)
     (let ((default-directory default-directory)
           (original-directory default-directory)
