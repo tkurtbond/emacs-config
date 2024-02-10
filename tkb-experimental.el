@@ -106,7 +106,7 @@ recommended by the ReST quickref: http://tinyurl.com/47lkhk"
   (defconst tkb-org-blog-ideas   (expand-file-name "~/Repos/tkb-notes/Org/blog-ideas.org"))
   (defconst tkb-org-gaming-ideas (expand-file-name "~/Repos/tkb-notes/RPG/gaming-ideas.org"))
   (defconst tkb-org-mpl-journal  (expand-file-name "~/Repos/tkb-notes/MPL/Org/journal.org"))
-  (defconst tkb-org-mhst-journal (expand-file-name "~/job/MPL/MHST/Org/mhst-journal.org"))
+  (defconst tkb-org-mhst-journal (expand-file-name "~/Repos/tkb-notes/MPL/MHST/Org/mhst-journal.org"))
   (defconst tkb-org-mpl-contacts (expand-file-name "~/Repos/tkb-notes/MPL/Org/contacts.org"))
   (defconst tkb-org-mpl-notes    (expand-file-name "~/Repos/tkb-notes/MPL/Org/notes.org"))
   (defconst tkb-org-mpl-tasks    (expand-file-name "~/Repos/tkb-notes/MPL/Org/tasks.org"))
@@ -179,31 +179,55 @@ recommended by the ReST quickref: http://tinyurl.com/47lkhk"
   (define-prefix-command 'tkb-org-files-map)
   (global-set-key (kbd "C-C k o F") 'tkb-org-files-map)
   (tkb-keys ((kbd "C-c k o C-c") #'org-ctrl-c-ctrl-c)
-            ((kbd "C-c k o F B") #'(lambda () (interactive)
+            ((kbd "C-c k o F B") #'(lambda () "Blog Ideas"
+                                     (interactive)
                                      (find-file tkb-org-blog-ideas)))
-            ((kbd "C-c k o F j") #'(lambda () (interactive)
+            ((kbd "C-c k o F j") #'(lambda () "TKB's Journal"
+                                     (interactive)
                                      (find-file tkb-org-journal)))
-            ((kbd "C-c k o F c") #'(lambda () (interactive)
+            ((kbd "C-c k o F c") #'(lambda ()
+                                     "TKB's Contacts"
+                                     (interactive)
                                      (find-file tkb-org-contacts)))
-            ((kbd "C-c k o F h") #'(lambda () (interactive)
+            ((kbd "C-c k o F h") #'(lambda ()
+                                     "TKB's Health"
+                                     (interactive)
                                      (find-file tkb-org-health)))
-            ((kbd "C-c k o F n") #'(lambda () (interactive)
+            ((kbd "C-c k o F n") #'(lambda ()
+                                     "TKB's Notes"
+                                     (interactive)
                                      (find-file tkb-org-notes)))
-            ((kbd "C-c k o F r") #'(lambda () (interactive)
+            ((kbd "C-c k o F r") #'(lambda ()
+                                     "TKB's RPG"
+                                     (interactive)
                                      (find-file tkb-org-rpg)))
-            ((kbd "C-c k o F t") #'(lambda () (interactive)
+            ((kbd "C-c k o F t") #'(lambda ()
+                                     "TKB's Tasks"
+                                     (interactive)
                                      (find-file tkb-org-tasks)))
-            ((kbd "C-c k o F v") #'(lambda () (interactive)
+            ((kbd "C-c k o F v") #'(lambda ()
+                                     "TKB's Video"
+                                     (interactive)
                                      (find-file tkb-org-video)))
-            ((kbd "C-c k o F J") #'(lambda () (interactive)
+            ((kbd "C-c k o F J") #'(lambda ()
+                                     "MPL Journal"
+                                     (interactive)
                                      (find-file tkb-org-mpl-journal)))
-            ((kbd "C-c k o F M") #'(lambda () (interactive)
+            ((kbd "C-c k o F M") #'(lambda ()
+                                     "MHST Journal"
+                                     (interactive)
                                      (find-file tkb-org-mhst-journal)))
-            ((kbd "C-c k o F C") #'(lambda () (interactive)
+            ((kbd "C-c k o F C") #'(lambda ()
+                                     "MPL Contacts"
+                                     (interactive)
                                      (find-file tkb-org-mpl-contacts)))
-            ((kbd "C-c k o F N") #'(lambda () (interactive)
+            ((kbd "C-c k o F N") #'(lambda ()
+                                     "MPL Notes"
+                                     (interactive)
                                      (find-file tkb-org-mpl-notes)))
-            ((kbd "C-c k o F T") #'(lambda () (interactive)
+            ((kbd "C-c k o F T") #'(lambda ()
+                                     "MPL Tasks"
+                                     (interactive)
                                      (find-file tkb-org-mpl-tasks)))
             )
   (tkb-check-bindings (list (kbd "C-c k o C-c")))
