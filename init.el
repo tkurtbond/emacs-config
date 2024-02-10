@@ -101,6 +101,7 @@
                         ;;---
 			;; regex-tool ; not currently using
                         s
+                        shadchen
                         skewer-mode
                         string-inflection
                         unicode-fonts
