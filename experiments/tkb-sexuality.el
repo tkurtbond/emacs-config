@@ -1,3 +1,4 @@
+;; Prompted by gemini://idiomdrottning.org/d12
 ;; See https://en.wikipedia.org/wiki/Demographics_of_sexual_orientation
 
 (defun tkb-npc-random-sexuality (prefix)
