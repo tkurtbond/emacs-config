@@ -88,13 +88,13 @@ recommended by the ReST quickref: http://tinyurl.com/47lkhk"
     (setq org-directory "~/Org")
     ;; (setq org-adapt-indentation t) ;; No, maybe not.
     (eval-after-load "org-mobile"
-      '(progn 
+      '(progn
         ;; Set to the name of the file where new notes will be stored
         (setq org-mobile-inbox-for-pull "~/Org/flagged.org")
         ;; Set to <your Dropbox root directory>/MobileOrg.
         (setq org-mobile-directory "~/Dropbox/Apps/MobileOrg")
         (push "~/Org" org-mobile-files))))
-  
+
   (defconst tkb-org-journal      (expand-file-name "~/Repos/tkb-notes/Org/journal.org"))
   (defconst tkb-org-contacts     (expand-file-name "~/Repos/tkb-notes/Org/contacts.org"))
   (defconst tkb-org-books-read   (expand-file-name "~/Repos/tkb-notes/Books/read.org"))
@@ -115,7 +115,7 @@ recommended by the ReST quickref: http://tinyurl.com/47lkhk"
   (defvar tkb-org-year (format-time-string "%Y")
     "The year the current emacs session was started, for use with org-capture.")
   (defun tkb-org-capture-advice-update-year (&optional goto keys)
-    "Update ‘tkb-org-year’ and update the entry for adding a book in 
+    "Update ‘tkb-org-year’ and update the entry for adding a book in
 ‘org-capture-templates’ to use the new value."
     (let ((new-year (format-time-string "%Y")))
       (unless (string-equal tkb-org-year new-year)
@@ -124,7 +124,7 @@ recommended by the ReST quickref: http://tinyurl.com/47lkhk"
                    (assoc 'file+olp it) (nth 2 it))
               tkb-org-year))))
   (advice-add 'org-capture :before #'tkb-org-capture-advice-update-year)
-  
+
   (setq org-capture-templates
         `(("X" "EXPERIMENT" entry
            (file+olp+datetree ,(expand-file-name "~/current/org/loud-experiment.org"))
@@ -1388,7 +1388,7 @@ Not under a window system, so you can't ispell the selection")))))
                         (error "Aborted send")))))
           (set-marker end-of-headers nil)))))
   (add-hook 'message-send-hook 'check-attachments-attached)
-  (when nil 
+  (when nil
     (defun tkb-messsage-header-setup-hook ()
       (goto-char (point-max))
       (insert "BCC: tkurtbond@gmail.com\n"))
@@ -2225,15 +2225,23 @@ REPEAT is how many times to repeat the roll."
                           ("pq" . [?”])  ; close double quote
                           ("ps" . [?’])  ; close single quote
                           ("pv" . [?‖])  ; double vertical bar
-                          ;; Gender
+                          ;; I should separate sex (physical) and gender (social)
                           ("Gh" . [?×])  ; Hybrid gender in biology
                           ("Gm" . [?♂])  ; male sign
                           ("Gf" . [?♀])  ; female sign
                           ("GM" . [?⚣])  ; male homosexuality
                           ("GF" . [?⚢])  ; female homosexuality
                           ("Gb" . [?⚥])  ; male & female, both
-                          ("Ga" . [?⚪])  ; agender, sexless
+                          ("Ga" . [?⚪]) ; MEDIUM WHITE CIRCLE: agender, sexless
                           ("Gt" . [?⚧])  ; transgender
+                          ;; ⚧ is actually MALE WITH STROKE AND MALE
+                          ;; AND FEMALE SIGN, but makes a good
+                          ;; transgender symbol.
+                          ("Gn" . [?🜬])  ; Non binary; enby.
+                          ;; 🜬 is actually the symbol for sublimate
+                          ;; of antimony, but makes a good enby symbol.
+
+                          ("Gu" . [?χ]) ; GREEK SMALL LETTER CHI: unknown gender
                           ;; Symbols
                           ("sc" . [?©])  ; copyright
                           ("sC" . [?🄯])  ; copyleft
@@ -2320,7 +2328,7 @@ REPEAT is how many times to repeat the roll."
         'tkb-local-geiser-chicken--external-help)
     (defalias 'geiser-chicken--external-help
       'tkb-saved-geiser-chicken--external-help)))
-    
+
 (when-load-file "magit"
   :load
   (global-set-key (kbd "C-x M s") 'magit-status)
@@ -2656,7 +2664,7 @@ inkscape."
 ;; variations on where I install groff.  And I've started using
 ;; ~/.bashrc_local-$(hostname -s) again to set up the proper alias for
 ;; man.  :(
-(when nil 
+(when nil
   (when-exec-found (groff "groff" (list "/usr/local/sw/versions/groff/git/bin"
                                         "/sw/versions/groff/git/bin"))
     (message "Found a groff of ours: %s" groff)))
@@ -2967,7 +2975,7 @@ and make it the current selection."
     (if (<= 2 d 3)
         (+ d #x00B0)
       (+ d #x2070))))
-  
+
 (defun tkb-unicode-fraction-the-hard-way (numerator denominator)
   "Return a string with a common fraction using unciode super- and sub-scripts."
   (interactive "nNumerator? \nnDenominator? ")
@@ -3052,7 +3060,7 @@ Given 192.168.1.151/24, the CIDR is 24."
 
 ;;; From: https://incompetech.com/graphpaper/hexagonal/
 ;; Calculating various bits about regular hexagons
-;; 
+;;
 ;; Given length of a side x...
 ;; Tip to tip across the hex is 2x.
 ;; Height of the hex flat side to flat side is 2x(sqrt(3/4)) or about 1.732x.
@@ -3077,7 +3085,6 @@ Given 192.168.1.151/24, the CIDR is 24."
   (let ((x (/ w 1.732)))
     (message "Length of side: %f" x)
     x))
-
-
+ 
 (message "End of tkb-experimental.el")
 ;;; end of tkb-experimental.el
