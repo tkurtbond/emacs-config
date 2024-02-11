@@ -2179,6 +2179,18 @@ REPEAT is how many times to repeat the roll."
         into rolls
         finally (insert (mapconcat #'int-to-string rolls ", "))))
 
+;; Maybe this is better?
+(defun* d* (sides &key (number 1)  (mod 0)  (repeat 1) (no-insert nil))
+  (interactive "nSides: \nnNumber: \nnMod: \nnRepeat: \nP")
+  (cl-loop repeat repeat
+        collect (cl-loop repeat number
+                      sum (1+ (random sides)) into roll
+                      finally return (+ roll mod))
+        into rolls
+        finally return (if no-insert
+                           rolls
+                         (insert (mapconcat #'int-to-string rolls ", ")))))
+
 (load-library "iso-transl.el")
 ;; This sticks keys in iso-transl-ctl-x-8-map, which makes them available under
 ;; the "C-x 8" key prefix.
