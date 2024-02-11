@@ -240,6 +240,7 @@ always indent Chicken Scheme module forms 0 characters."
 ;; For Emacs lisp
 (put 'eval-after-load 'lisp-indent-function 1)
 (put 'global-set-key 'lisp-indent-function 1)
+(put 'match 'lisp-indent-function 1) ;; for shadchen's match.
 
 ;; For Common Lisp
 (put 'dotimes 'lisp-indent-function 1)
