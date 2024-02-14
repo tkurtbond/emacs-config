@@ -3037,9 +3037,27 @@ and make it the current selection."
   (when (and (string-match "\\.rst\\'" (buffer-file-name))
              (looking-at tkb-nikola-metadata-regexp))
     (make-local-variable 'fill-nobreak-predicate)
-    (setq fill-nobreak-predicate (list #'tkb-nikola-rest-fill-nobreak-p))))
-
+    (add-to-list 'fill-nobreak-predicate #'tkb-nikola-rest-fill-nobreak-p)))
 (add-to-list 'find-file-hook #'tkb-nikola-rest-hook)
+
+(defun tkb-magit-commit-fill-nobreak-p ()
+  "Don't fill on the first line of a magit commit message."
+  (= 1 (line-number-at-pos)))
+  
+(defun tkb-magit-commit-find-file-hook ()
+  (interactive)
+  (when (string-match "COMMIT_EDITMSG\\'" (buffer-file-name))
+    (message "Setting fill-nobreak-predicate in tkb-magit-commit-find-file-hook.")
+    (make-local-variable 'fill-nobreak-predicate)
+    (add-to-list 'fill-nobreak-predicate #'tkb-magit-commit-fill-nobreak-p)
+    (message "%s" (describe-variable 'fill-nobreak-predicate))))
+;; Using add-to-list without specifying APPEND didn't work because
+;; that added it to the front of the list and the
+;; git-commit-setup-check-buffer find file hook ran later. The
+;; git-commit-setup-check-buffer runs git-commit-setup which runs
+;; normal-mode which runs kill-all-local-variables, which wiped out
+;; what tkb-magit-commit-find-file-hook was trying to do.
+(add-to-list 'find-file-hook #'tkb-magit-commit-find-file-hook t)
 
 (defun tkb-troff-column-width (text-width number-of-columns gutter-width)
   (interactive "nText width? \nnNumber of columns? \nnGutter width? ")
