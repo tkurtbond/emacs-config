@@ -3047,10 +3047,8 @@ and make it the current selection."
 (defun tkb-magit-commit-find-file-hook ()
   (interactive)
   (when (string-match "COMMIT_EDITMSG\\'" (buffer-file-name))
-    (message "Setting fill-nobreak-predicate in tkb-magit-commit-find-file-hook.")
     (make-local-variable 'fill-nobreak-predicate)
-    (add-to-list 'fill-nobreak-predicate #'tkb-magit-commit-fill-nobreak-p)
-    (message "%s" (describe-variable 'fill-nobreak-predicate))))
+    (add-to-list 'fill-nobreak-predicate #'tkb-magit-commit-fill-nobreak-p)))
 ;; Using add-to-list without specifying APPEND didn't work because
 ;; that added it to the front of the list and the
 ;; git-commit-setup-check-buffer find file hook ran later. The
