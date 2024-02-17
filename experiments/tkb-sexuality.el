@@ -9,8 +9,8 @@ gender (social, psychological, cultrual, and behaviorable aspects), and sexual o
   (let* ((sex-roll (d100))
          (sex 
           (cond ((<= sex-roll 2) ?⚥)   ; Hermaphroditic 1.7% ⇒ 2%: 1–2
-                ((<= sex-roll 51) ?♂)  ; Female 49%: 3–51
-                (else ?♀)))            ; Male 52–100
+                ((<= sex-roll 51) ?♂)  ; Female 48%: 3–51
+                (else ?♀)))            ; Male 48%: 52–100
          (gender-roll (d100))
          (gender
           (cond ((<= gender-roll xxx) ?⚧)  ; Transgender
