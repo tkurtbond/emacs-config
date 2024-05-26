@@ -53,7 +53,9 @@ defaults.")
              `(,@(tkb-mf 14) 50
                 "display-pixel-height >= 2160 high and mm-size height <= 214")
            `(,@(tkb-mf 14) 65
-              "display-pixel-height >= 2160 high and mm-size height != 214")))
+               "display-pixel-height >= 2160 high and mm-size height != 214")))
+        ((= (display-pixel-height) 1728)
+         `(,@(tkb-mf 14) 55 "display-pixel-height = 1728 high"))
         ((> (display-pixel-height) 1080)
          `(,@(tkb-mf) 55 "display-pixel-height > 1080 high"))
         ((= 170 (caddr (assoc 'mm-size (frame-monitor-attributes))))
