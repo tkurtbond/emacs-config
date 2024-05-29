@@ -2218,6 +2218,7 @@ REPEAT is how many times to repeat the roll."
                           ("pb" . [?•])  ; bullet
                           ("pd" . [?†])  ; dagger
                           ("pe" . [?…])  ; ellipsis
+                          ("pf" . [? ])  ; figure space
                           ("ph" . [?­])  ; soft hyphen
                           ("pm" . [?—])  ; M-dash
                           ("pn" . [?–])  ; N-dash
