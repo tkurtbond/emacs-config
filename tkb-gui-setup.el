@@ -36,7 +36,7 @@ defaults.")
   (let ((mm-size (assoc 'mm-size (frame-monitor-attributes)))
         (geometry (assoc 'geometry (frame-monitor-attributes))))
     (cl-destructuring-bind ((_ mm-width mm-height)
-                            (_ _ _ pixel-width pixel-height))
+                            (_ x-offset y-offset pixel-width pixel-height))
         (list mm-size geometry)
       (cond
         ;; Maybe I should do something with
@@ -50,9 +50,9 @@ defaults.")
              "go display-pixel-height >= 2280"))
         ((>= (display-pixel-height) 2160)
          (if (>= 214 (caddr (assoc 'mm-size (frame-monitor-attributes))))
-             `(,@(tkb-mf 14) 50
+             `(,@(tkb-mf 14) 60
                 "display-pixel-height >= 2160 high and mm-size height <= 214")
-           `(,@(tkb-mf 14) 65
+           `(,@(tkb-mf 14) 60
                "display-pixel-height >= 2160 high and mm-size height != 214")))
         ((= (display-pixel-height) 1728)
          `(,@(tkb-mf 14) 55 "display-pixel-height = 1728 high"))
@@ -93,26 +93,17 @@ defaults.")
                  80))
 	      (otherwise 20)))
 
-      (cond ((= 7680 (car (frame-monitor-geometry)))
-             (setq tkb-default-left (+ 7680 20)))
-            ((= 3840 (car (frame-monitor-geometry)))
-             (setq tkb-default-left (+ 3840 20)))
-            ((= 2880 (car (frame-monitor-geometry)))
-             (setq tkb-default-left (+ 2880 20)))
-            ((= 1920 (car (frame-monitor-geometry)))
-             (setq tkb-default-left (+ 1920 20)))
-            ((= 0 (car (frame-monitor-geometry)))
-             (setq tkb-default-left 20))
-            (t
-             (setq tkb-default-left 20)))
-      (let ((alt-color (getenv "EMACS_ALT_COLOR"))
-            (color))
-        (if alt-color
-            (if (string-blank-p alt-color)
-                (setq color "khaki1")
-              (setq color alt-color))
-          (setq color "wheat"))
-        (setq tkb-default-color color)))))
+      (cl-destructuring-bind (x-offset y-offset width height) (frame-monitor-geometry)
+        (setq tkb-default-left (+ x-offset 20))))
+
+    (let ((alt-color (getenv "EMACS_ALT_COLOR"))
+          (color))
+      (if alt-color
+          (if (string-blank-p alt-color)
+              (setq color "khaki1")
+            (setq color alt-color))
+        (setq color "wheat"))
+      (setq tkb-default-color color))))
 
 (tkb-calculate-gui-defaults)
 
