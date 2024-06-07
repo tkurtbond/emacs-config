@@ -2219,6 +2219,7 @@ REPEAT is how many times to repeat the roll."
                           ("pb" . [?•])  ; bullet
                           ("pd" . [?†])  ; dagger
                           ("pe" . [?…])  ; ellipsis
+                          ("pf" . [? ])  ; figure space
                           ("ph" . [?­])  ; soft hyphen
                           ("pm" . [?—])  ; M-dash
                           ("pn" . [?–])  ; N-dash
@@ -3105,6 +3106,12 @@ Given 192.168.1.151/24, the CIDR is 24."
 
 ;; For forth mode:
 (setq forth-smie-basic-indent 4)
+
+;;; See: https://github.com/tkurtbond/tkbtools/blob/main/Scripts/start-ssh-agent
+(defun attach-ssh-agent ()
+  (interactive)
+  ;; XDG/Fedora compatable?
+  (setenv "SSH_AUTH_SOCK" (s-concat (getenv "XDG_RUNTIME_DIR") "/ssh-agent.socket")))
  
 (message "End of tkb-experimental.el")
 ;;; end of tkb-experimental.el
