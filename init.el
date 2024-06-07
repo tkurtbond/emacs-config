@@ -72,6 +72,7 @@
                         elpher
 			;;elscreen ; Did I ever really use this?
 			f
+                        ;; forth-mode
 			fuel
 			ac-geiser geiser geiser-chez geiser-chibi geiser-chicken
                         geiser-guile geiser-racket
