@@ -21,7 +21,10 @@
 (setq read-buffer-completion-ignore-case t)
 (setq-default indent-tabs-mode nil)
 (setq backup-by-copying t)
-(setq sentence-end-double-space nil)    ; ??? Revisit decision after a week, and after a month.
+;; ??? Revisit decision after a week, and after a month.
+;; Go back to using double spaces, because I like the extra space and it
+;; works so much better with groff.
+;;(setq sentence-end-double-space nil) 
 
 (setq line-move-visual nil)
 
