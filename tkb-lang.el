@@ -49,7 +49,6 @@
   (tkb-syn))
 
 (push '("\\.cl\\'" . lisp-mode) auto-mode-alist)
-
 (add-hook 'lisp-mode-hook #'(lambda () (setq indent-tabs-mode nil)))
 
 
@@ -445,5 +444,7 @@ always indent Chicken Scheme module forms 0 characters."
     (setq tab-width 3))
   (add-hook 'go-mode-hook #'tkb-go-hook)
   )
+
+(use-package php-mode)                  ; Has it really come to THIS?
 
 ;;; end of tkb-lang.el

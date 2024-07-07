@@ -95,6 +95,7 @@
                         oberon
                         org-download
                         origami
+                        php-mode
 			projectile 
 			racket-mode
                         ;;+++
