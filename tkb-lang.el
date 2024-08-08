@@ -49,7 +49,6 @@
   (tkb-syn))
 
 (push '("\\.cl\\'" . lisp-mode) auto-mode-alist)
-
 (add-hook 'lisp-mode-hook #'(lambda () (setq indent-tabs-mode nil)))
 
 
@@ -240,6 +239,7 @@ always indent Chicken Scheme module forms 0 characters."
 ;; For Emacs lisp
 (put 'eval-after-load 'lisp-indent-function 1)
 (put 'global-set-key 'lisp-indent-function 1)
+(put 'match 'lisp-indent-function 1) ;; for shadchen's match.
 
 ;; For Common Lisp
 (put 'dotimes 'lisp-indent-function 1)
@@ -369,6 +369,7 @@ always indent Chicken Scheme module forms 0 characters."
                 auto-mode-alist)))
 
 (when-load-file "ada-mode"
+  ;; The directory old-ada-mode gets added to load-path in unix.el.
   (message "Setting up Ada Mode.")
   (autoload 'ada-mode "ada-mode")
   (cl-loop for ext in '("\\.gpr$" "\\.ada$" "\\.ads$" "\\.adb$")
@@ -443,5 +444,7 @@ always indent Chicken Scheme module forms 0 characters."
     (setq tab-width 3))
   (add-hook 'go-mode-hook #'tkb-go-hook)
   )
+
+(use-package php-mode)                  ; Has it really come to THIS?
 
 ;;; end of tkb-lang.el

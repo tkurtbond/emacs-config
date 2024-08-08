@@ -36,20 +36,26 @@ defaults.")
   (let ((mm-size (assoc 'mm-size (frame-monitor-attributes)))
         (geometry (assoc 'geometry (frame-monitor-attributes))))
     (cl-destructuring-bind ((_ mm-width mm-height)
-                            (_ _ _ pixel-width pixel-height))
+                            (_ x-offset y-offset pixel-width pixel-height))
         (list mm-size geometry)
       (cond
         ;; Maybe I should do something with
         ;; (assoc 'mm-size (frame-monitor-attributes)) ?
         ((>= (display-pixel-height) 2280)
          ;; Retina display probably, so use smaller font
-         `(,@(tkb-mf 14) 56 "go display-pixel-height >= 2280"))
+         `(,@(tkb-mf 14)
+             ,(if (s-contains-p "KDE" (getenv "XDG_CURRENT_DESKTOP"))
+                   56
+                 50)
+             "go display-pixel-height >= 2280"))
         ((>= (display-pixel-height) 2160)
          (if (>= 214 (caddr (assoc 'mm-size (frame-monitor-attributes))))
-             `(,@(tkb-mf 14) 50
+             `(,@(tkb-mf 14) 60
                 "display-pixel-height >= 2160 high and mm-size height <= 214")
-           `(,@(tkb-mf 14) 65
-              "display-pixel-height >= 2160 high and mm-size height != 214")))
+           `(,@(tkb-mf 14) 60
+               "display-pixel-height >= 2160 high and mm-size height != 214")))
+        ((= (display-pixel-height) 1728)
+         `(,@(tkb-mf 14) 55 "display-pixel-height = 1728 high"))
         ((> (display-pixel-height) 1080)
          `(,@(tkb-mf) 55 "display-pixel-height > 1080 high"))
         ((= 170 (caddr (assoc 'mm-size (frame-monitor-attributes))))
@@ -87,26 +93,17 @@ defaults.")
                  80))
 	      (otherwise 20)))
 
-      (cond ((= 7680 (car (frame-monitor-geometry)))
-             (setq tkb-default-left (+ 7680 20)))
-            ((= 3840 (car (frame-monitor-geometry)))
-             (setq tkb-default-left (+ 3840 20)))
-            ((= 2880 (car (frame-monitor-geometry)))
-             (setq tkb-default-left (+ 2880 20)))
-            ((= 1920 (car (frame-monitor-geometry)))
-             (setq tkb-default-left (+ 1920 20)))
-            ((= 0 (car (frame-monitor-geometry)))
-             (setq tkb-default-left 20))
-            (t
-             (setq tkb-default-left 20)))
-      (let ((alt-color (getenv "EMACS_ALT_COLOR"))
-            (color))
-        (if alt-color
-            (if (string-blank-p alt-color)
-                (setq color "khaki1")
-              (setq color alt-color))
-          (setq color "wheat"))
-        (setq tkb-default-color color)))))
+      (cl-destructuring-bind (x-offset y-offset width height) (frame-monitor-geometry)
+        (setq tkb-default-left (+ x-offset 20))))
+
+    (let ((alt-color (getenv "EMACS_ALT_COLOR"))
+          (color))
+      (if alt-color
+          (if (string-blank-p alt-color)
+              (setq color "khaki1")
+            (setq color alt-color))
+        (setq color "wheat"))
+      (setq tkb-default-color color))))
 
 (tkb-calculate-gui-defaults)
 
@@ -152,7 +149,7 @@ tkb-default-color:       %s"
 	  (font             . ,tkb-default-font)
 	  (background-color . ,tkb-default-color)
 	  (foreground-color . "black")
-	  (cursor-color     . "orange")
+	  (cursor-color     . "orange") ; #xffa500; 255, 165, 0
           ))
   (setq default-frame-alist tkb-default-frame-alist)
   (setq initial-frame-alist tkb-default-frame-alist)
@@ -223,6 +220,7 @@ tkb-default-color:       %s"
 
 (when (getenv "WAYLAND_DISPLAY")
   ;; check for Wayland first because of X on Wayland.
+  (message "Running under Wayland")
   (defvar tkb-beep-sound "/usr/share/sounds/freedesktop/stereo/bell.oga")
   (defvar tkb-beep-program "ogg123")
 
@@ -238,6 +236,7 @@ tkb-default-color:       %s"
     (yes-or-no-p (format "Error: tkb-beep-sound is set to \"%s\", which does \
 not  exist!\nUnderstand? "
                          tkb-beep-sound)))
+
   (let ((path (split-string (getenv "PATH") ":")))
     (unless (file-installed-p tkb-beep-program path)
       (yes-or-no-p (format "Error: tkb-beep-program is set to \"%s\", which does \

@@ -43,12 +43,16 @@
 (define-prefix-command 'tkb-frame-map)
 (global-set-key (kbd "C-c k F") 'tkb-frame-map)
 
-(define-prefix-command 'tkb-matching-map)
-(global-set-key (kbd "C-c k m") 'tkb-matching-map)
-(define-key tkb-matching-map "q" [?“])
-(define-key tkb-matching-map "Q" [?”])
-(define-key tkb-matching-map "s" [?‘])
-(define-key tkb-matching-map "S" [?’])
+(when nil
+  ;; Retired; use C-x 8 p Q, etc.
+  (define-prefix-command 'tkb-matching-map)
+  (global-set-key (kbd "C-c k m") 'tkb-matching-map)
+  (define-key tkb-matching-map "q" [?“])
+  (define-key tkb-matching-map "Q" [?”])
+  (define-key tkb-matching-map "s" [?‘])
+  (define-key tkb-matching-map "S" [?’]))
+
+(global-set-key (kbd "C-c k m") #'compile)
 
 (define-prefix-command 'tkb-forms-map)
 (global-set-key (kbd "C-c F") 'tkb-forms-map)

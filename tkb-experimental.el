@@ -88,13 +88,13 @@ recommended by the ReST quickref: http://tinyurl.com/47lkhk"
     (setq org-directory "~/Org")
     ;; (setq org-adapt-indentation t) ;; No, maybe not.
     (eval-after-load "org-mobile"
-      '(progn 
-         ;; Set to the name of the file where new notes will be stored
-         (setq org-mobile-inbox-for-pull "~/Org/flagged.org")
-         ;; Set to <your Dropbox root directory>/MobileOrg.
-         (setq org-mobile-directory "~/Dropbox/Apps/MobileOrg")
-         (push "~/Org" org-mobile-files))))
-  ;;
+      '(progn
+        ;; Set to the name of the file where new notes will be stored
+        (setq org-mobile-inbox-for-pull "~/Org/flagged.org")
+        ;; Set to <your Dropbox root directory>/MobileOrg.
+        (setq org-mobile-directory "~/Dropbox/Apps/MobileOrg")
+        (push "~/Org" org-mobile-files))))
+
   (defconst tkb-org-journal      (expand-file-name "~/Repos/tkb-notes/Org/journal.org"))
   (defconst tkb-org-contacts     (expand-file-name "~/Repos/tkb-notes/Org/contacts.org"))
   (defconst tkb-org-books-read   (expand-file-name "~/Repos/tkb-notes/Books/read.org"))
@@ -106,7 +106,7 @@ recommended by the ReST quickref: http://tinyurl.com/47lkhk"
   (defconst tkb-org-blog-ideas   (expand-file-name "~/Repos/tkb-notes/Org/blog-ideas.org"))
   (defconst tkb-org-gaming-ideas (expand-file-name "~/Repos/tkb-notes/RPG/gaming-ideas.org"))
   (defconst tkb-org-mpl-journal  (expand-file-name "~/Repos/tkb-notes/MPL/Org/journal.org"))
-  (defconst tkb-org-mhst-journal (expand-file-name "~/job/MPL/MHST/Org/mhst-journal.org"))
+  (defconst tkb-org-mhst-journal (expand-file-name "~/Repos/tkb-notes/MPL/MHST/Org/mhst-journal.org"))
   (defconst tkb-org-mpl-contacts (expand-file-name "~/Repos/tkb-notes/MPL/Org/contacts.org"))
   (defconst tkb-org-mpl-notes    (expand-file-name "~/Repos/tkb-notes/MPL/Org/notes.org"))
   (defconst tkb-org-mpl-tasks    (expand-file-name "~/Repos/tkb-notes/MPL/Org/tasks.org"))
@@ -115,7 +115,7 @@ recommended by the ReST quickref: http://tinyurl.com/47lkhk"
   (defvar tkb-org-year (format-time-string "%Y")
     "The year the current emacs session was started, for use with org-capture.")
   (defun tkb-org-capture-advice-update-year (&optional goto keys)
-    "Update ‘tkb-org-year’ and update the entry for adding a book in 
+    "Update ‘tkb-org-year’ and update the entry for adding a book in
 ‘org-capture-templates’ to use the new value."
     (let ((new-year (format-time-string "%Y")))
       (unless (string-equal tkb-org-year new-year)
@@ -124,95 +124,133 @@ recommended by the ReST quickref: http://tinyurl.com/47lkhk"
                    (assoc 'file+olp it) (nth 2 it))
               tkb-org-year))))
   (advice-add 'org-capture :before #'tkb-org-capture-advice-update-year)
-  
+
   (setq org-capture-templates
         `(("X" "EXPERIMENT" entry
            (file+olp+datetree ,(expand-file-name "~/current/org/loud-experiment.org"))
-           "*** %^{Title} %U\n  %i\n  %?\n")
+           "*** %^{Title} %U\n%i\n%?\n")
           ("b" "Add book about to read" entry
            (file+olp ,(expand-file-name tkb-org-books-read)
                      ,(format-time-string "%Y") "Read")
            "*** : %c" :prepend t)
           ("j" "Journal" entry
            (file+headline ,tkb-org-journal "Journal")
-           "* %^{Title} %U\n  %i\n  %?\n")
+           "* %^{Title} %U\n%i%?")
           ("c" "Contacts Log" entry
            (file+headline ,tkb-org-contacts "Contacts")
-           "* %^{Title} %U\n  %i%?\n")
+           "* %^{Title} %U\n%i%?\n")
           ("B" "Blog Ideas" entry
            (file ,tkb-org-blog-ideas)
-           "* %^{Title} %U\n  %i%?\n")
+           "* TODO %^{Title} %U\n%i%?\n")
           ("g" "Gaming Ideas" entry
            (file ,tkb-org-gaming-ideas)
-           "* %^{Title} %U\n  %i%?\n")
+           "* %^{Title} %U\n%i%?\n")
           ("h" "Health" entry
            (file ,tkb-org-health)
-           "* %^{Title} %U\n  %i%?\n")
+           "* %^{Title} %U\n%i%?\n")
           ("n" "Notes" entry
            (file+headline ,tkb-org-notes "Notes")
-           "\n\n* %^{Title} %U\n  %i\n  %?\n  %a\n\n")
+           "\n\n* %^{Title} %U\n%i\n%?\n%a\n\n")
           ("r" "RPG" entry
            (file+headline ,tkb-org-rpg "RPG")
-           "\n\n* %^{Title} %U\n  %i\n  %?\n  %a\n\n")
+           "\n\n* %^{Title} %U\n%i\n%?\n%a\n\n")
           ("t" "Tasks" entry
            (file+headline ,tkb-org-tasks "Tasks")
-           "* TODO %^{Title} %U\n  %i\n  %?\n  %a\n")
+           "* TODO %^{Title} %U\n%i\n%?\n%a\n")
           ("v" "Video" entry
            (file+headline ,tkb-org-video "Video")
-           "* TODO %^{Title} %U\n  %^C%i%?\n")
+           "* TODO %^{Title} %U\n%^C%i%?\n")
           ("J" "MPL Journal" entry
            (file+headline ,tkb-org-mpl-journal "MPL Journal")
-           "* %^{Title} %U\n  %i\n  %?\n")
+           "* %^{Title} %U\n%i\n%?\n")
           ("M" "MHST Journal" entry
            (file+headline ,tkb-org-mhst-journal "MHST Journal")
-           "* %^{Title} %U\n  %i\n  %?\n")
+           "* %^{Title} %U\n%i\n%?\n")
           ("C" "MPL Contacts Log" entry
            (file+headline ,tkb-org-mpl-contacts "MPL Contacts")
-           "* %^{Title} %U\n  %i\n  %?\n")
+           "* %^{Title} %U\n%i\n%?\n")
           ("N" "MPL Notes" entry
            (file+headline ,tkb-org-mpl-notes "MPL Notes")
-           "\n\n* %^{Title} %U\n  %i\n  %?\n  %a\n\n")
+           "\n\n* %^{Title} %U\n%i\n%?\n%a\n\n")
           ("T" "MPL Tasks" entry
            (file+headline ,tkb-org-mpl-tasks "MPL Tasks")
-           "* TODO %^{Title} %U\n  %i\n  %?\n  %a\n")))
+           "* TODO %^{Title} %U\n%i\n%?\n%a\n")))
   ;;(defvar tkb-org-files-map (make-sparse-keymap))
   (define-prefix-command 'tkb-org-files-map)
   (global-set-key (kbd "C-C k o F") 'tkb-org-files-map)
-  (tkb-keys ((kbd "C-c k o C-c") #'org-ctrl-c-ctrl-c)
-            ((kbd "C-c k o F B") #'(lambda () (interactive)
-                                     (find-file tkb-org-blog-ideas)))
-            ((kbd "C-c k o F j") #'(lambda () (interactive)
-                                     (find-file tkb-org-journal)))
-            ((kbd "C-c k o F c") #'(lambda () (interactive)
-                                     (find-file tkb-org-contacts)))
-            ((kbd "C-c k o F h") #'(lambda () (interactive)
-                                     (find-file tkb-org-health)))
-            ((kbd "C-c k o F n") #'(lambda () (interactive)
-                                     (find-file tkb-org-notes)))
-            ((kbd "C-c k o F r") #'(lambda () (interactive)
-                                     (find-file tkb-org-rpg)))
-            ((kbd "C-c k o F t") #'(lambda () (interactive)
-                                     (find-file tkb-org-tasks)))
-            ((kbd "C-c k o F v") #'(lambda () (interactive)
-                                     (find-file tkb-org-video)))
-            ((kbd "C-c k o F J") #'(lambda () (interactive)
-                                     (find-file tkb-org-mpl-journal)))
-            ((kbd "C-c k o F M") #'(lambda () (interactive)
-                                     (find-file tkb-org-mhst-journal)))
-            ((kbd "C-c k o F C") #'(lambda () (interactive)
-                                     (find-file tkb-org-mpl-contacts)))
-            ((kbd "C-c k o F N") #'(lambda () (interactive)
-                                     (find-file tkb-org-mpl-notes)))
-            ((kbd "C-c k o F T") #'(lambda () (interactive)
-                                     (find-file tkb-org-mpl-tasks)))
-            )
+  (progn
+    (defun tkb-find-org-blog-ideas ()
+      "Find Org Blog Ideas"
+      (interactive)
+      (find-file tkb-org-blog-ideas))
+    (global-set-key (kbd "C-c k o F B") #'tkb-find-org-blog-ideas)
+    (defun tkb-find-org-journal ()
+      "Find Org TKB's Journal"
+      (interactive)
+      (find-file tkb-org-journal))
+    (global-set-key (kbd "C-c k o F j") #'tkb-find-org-journal)
+    (defun tkb-find-org-contacts ()
+      "Find Org TKB's Contacts"
+      (interactive)
+      (find-file tkb-org-contacts))
+    (global-set-key (kbd "C-c k o F c") #'tkb-find-org-contacts)
+    (defun tkb-find-org-health ()
+      "Find Org TKB's Health"
+      (interactive)
+      (find-file tkb-org-health))
+    (global-set-key (kbd "C-c k o F h") #'tkb-find-org-health)
+    (defun tkb-find-org-notes ()
+      "Find Org TKB's Notes"
+      (interactive)
+      (find-file tkb-org-notes))
+    (global-set-key (kbd "C-c k o F n") #'tkb-find-org-notes)
+    (defun tkb-find-org-rpg ()
+      "Find Org TKB's RPG"
+      (interactive)
+      (find-file tkb-org-rpg))
+    (global-set-key (kbd "C-c k o F r") #'tkb-find-org-rpg)
+    (defun tkb-find-org-tasks ()
+      "Find Org TKB's Tasks"
+      (interactive)
+      (find-file tkb-org-tasks))
+    (global-set-key (kbd "C-c k o F t") #'tkb-find-org-tasks)
+    (defun tkb-find-org-video ()
+      "Find Org TKB's Video"
+      (interactive)
+      (find-file tkb-org-video))
+    (global-set-key (kbd "C-c k o F v") #'tkb-find-org-video)
+    (defun tkb-find-org-mpl-journal ()
+      "Find Org MPL Journal"
+      (interactive)
+      (find-file tkb-org-mpl-journal))
+    (global-set-key (kbd "C-c k o F J") #'tkb-find-org-mpl-journal)
+    (defun tkb-find-org-mhst-journal ()
+      "Find Org MHST Journal"
+      (interactive)
+      (find-file tkb-org-mhst-journal))
+    (global-set-key (kbd "C-c k o F M") #'tkb-find-org-mhst-journal)
+    (defun tkb-find-org-mpl-contacts ()
+      "Find Org MPL Contacts"
+      (interactive)
+      (find-file tkb-org-mpl-contacts))
+    (global-set-key (kbd "C-c k o F C") #'tkb-find-org-mpl-contacts)
+    (defun tkb-find-org-mpl-notes ()
+      "Find Org MPL Notes"
+      (interactive)
+      (find-file tkb-org-mpl-notes))
+    (global-set-key (kbd "C-c k o F N") #'tkb-find-org-mpl-notes)
+    (defun tkb-find-org-mpl-tasks ()
+      "Find Org MPL Tasks"
+      (interactive)
+      (find-file tkb-org-mpl-tasks))
+    (global-set-key (kbd "C-c k o F T") #'tkb-find-org-mpl-tasks))
   (tkb-check-bindings (list (kbd "C-c k o C-c")))
 
   (defun tkb-find-org-log-file ()
     "Look in the current directory or its parents for a file named *-log.org
 and return it."
-    ;; So I can us M-x tkb-find-file-org-log and not bring up the debugger on the
-    ;; call to error when testing.
+    ;; So I can us M-x tkb-find-file-org-log and not bring up the
+    ;; debugger on the call to error when testing.
     (interactive)
     (let ((default-directory default-directory)
           (original-directory default-directory)
@@ -240,7 +278,7 @@ and add a log entry to it."
     (let* ((org-file (tkb-find-org-log-file))
            (org-capture-templates
             `(("l" "Log" entry (file+headline ,org-file "Log")
-               "* %^{Title} %U\n  %i\n  %?\n"))))
+               "* %^{Title} %U\n%i\n%?\n"))))
       (org-capture)))
   (tkb-keys ((kbd "C-c k o l") #'tkb-add-org-log))
   (tkb-keys ((kbd "C-c k o C-p") #'org-move-subtree-up))
@@ -985,7 +1023,17 @@ over 40 is morbidly obese, over 50 is super morbidly obese."
       (setq auto-save-file-name-transforms
             `((".*" ,backup-dir t))))))
 (progn
-  (setq backup-directory-alist '(("." . ".~"))))
+  (setq backup-directory-alist '(("." . ".~/")))
+  (when nil
+    ;; This causes an error autosaving because the directory doesn't exist.
+    (setq auto-save-file-name-transforms `((".*" ".~/" t)))
+    ;; This didn't work to fix it.  TODO: investigate later.
+    (defun tkb-make-auto-save-directory (auto-save-file-name)
+      (let ((auto-save-directory-name (file-name-directory auto-save-file-name)))
+        (unless (file-exists-p auto-save-directory-name)
+          (make-directory auto-save-directory-name))
+        auto-save-file-name))
+    (advice-add 'make-auto-save-file-name :filter-return #'tkb-make-auto-save-directory)))
 
 (defun tkb-next-blank-line ()
   (interactive)
@@ -1340,7 +1388,7 @@ Not under a window system, so you can't ispell the selection")))))
                         (error "Aborted send")))))
           (set-marker end-of-headers nil)))))
   (add-hook 'message-send-hook 'check-attachments-attached)
-  (when nil 
+  (when nil
     (defun tkb-messsage-header-setup-hook ()
       (goto-char (point-max))
       (insert "BCC: tkurtbond@gmail.com\n"))
@@ -1493,42 +1541,43 @@ Goes backward if ARG is negative; error if CHAR not found."
 ;; on tiled, tabbing window managers like ion.)
 (setq ediff-window-setup-function 'ediff-setup-windows-plain)
 
-(when-load-file "gforth.el"
-  (autoload 'forth-mode "gforth")
-  (add-to-list 'auto-mode-alist '("\\.fs\\'" . forth-mode))
-  (autoload 'forth-block-mode "gforth")
-  (add-to-list 'auto-mode-alist '("\\.fb\\'" . forth-block-mode))
-  (add-hook 'forth-mode-hook #'(lambda ()
-                                 ;; Why are we setting the following to the defaults?
-                                 ;; customize variables here:
-                                 (setq forth-indent-level 4)
-                                 (setq forth-minor-indent-level 2)
-                                 (setq forth-hilight-level 3)
-                                 ))
-  (setq forth-custom-indent-words
-        '((("while" "[while]")
-           (-2 . 2)
-           (0 . 2))
-          (("repeat" "[repeat]")
-           (-2 . 0)
-           (0 . -4))
-          ))
+(when t
+  (when-load-file "gforth"
+    (autoload 'forth-mode "gforth")
+    (add-to-list 'auto-mode-alist '("\\.fs\\'" . forth-mode))
+    (autoload 'forth-block-mode "gforth")
+    (add-to-list 'auto-mode-alist '("\\.fb\\'" . forth-block-mode))
+    (add-hook 'forth-mode-hook #'(lambda ()
+                                   ;; Why are we setting the following to the defaults?
+                                   ;; customize variables here:
+                                   (setq forth-indent-level 4)
+                                   (setq forth-minor-indent-level 2)
+                                   (setq forth-hilight-level 3)
+                                   ))
+    (setq forth-custom-indent-words
+          '((("while" "[while]")
+             (-2 . 2)
+             (0 . 2))
+            (("repeat" "[repeat]")
+             (-2 . 0)
+             (0 . -4))
+            ))
 
 
-  (eval-after-load "gforth"
-    '(progn
-      (load "tkb-forth")
-       (defun forth-load-file (file-name)
-         "Load a Forth file FILE-NAME into the inferior Forth process."
-         (interactive (comint-get-source "Load Forth file: " forth-prev-l/c-dir/file
-                                         forth-source-modes t)) ; T because LOAD
+    (eval-after-load "gforth"
+      '(progn
+        (load "tkb-forth")
+        (defun forth-load-file (file-name)
+          "Load a Forth file FILE-NAME into the inferior Forth process."
+          (interactive (comint-get-source "Load Forth file: " forth-prev-l/c-dir/file
+                                          forth-source-modes t)) ; T because LOAD
                                         ; needs an exact name
-         (comint-check-source file-name) ; Check to see if buffer needs saved.
-         (setq forth-prev-l/c-dir/file (cons (file-name-directory    file-name)
-                                             (file-name-nondirectory file-name)))
-         (comint-send-string (forth-proc) (concat "include "
-                                                  file-name
-                                                  "\n"))))))
+          (comint-check-source file-name) ; Check to see if buffer needs saved.
+          (setq forth-prev-l/c-dir/file (cons (file-name-directory    file-name)
+                                              (file-name-nondirectory file-name)))
+          (comint-send-string (forth-proc) (concat "include "
+                                                   file-name
+                                                   "\n")))))))
 
 
 (defun tkb-insert-name ()
@@ -2131,6 +2180,18 @@ REPEAT is how many times to repeat the roll."
         into rolls
         finally (insert (mapconcat #'int-to-string rolls ", "))))
 
+;; Maybe this is better?
+(defun* d* (sides &key (number 1)  (mod 0)  (repeat 1) (no-insert nil))
+  (interactive "nSides: \nnNumber: \nnMod: \nnRepeat: \nP")
+  (cl-loop repeat repeat
+        collect (cl-loop repeat number
+                      sum (1+ (random sides)) into roll
+                      finally return (+ roll mod))
+        into rolls
+        finally return (if no-insert
+                           rolls
+                         (insert (mapconcat #'int-to-string rolls ", ")))))
+
 (load-library "iso-transl.el")
 ;; This sticks keys in iso-transl-ctl-x-8-map, which makes them available under
 ;; the "C-x 8" key prefix.
@@ -2158,6 +2219,7 @@ REPEAT is how many times to repeat the roll."
                           ("pb" . [?•])  ; bullet
                           ("pd" . [?†])  ; dagger
                           ("pe" . [?…])  ; ellipsis
+                          ("pf" . [? ])  ; figure space
                           ("ph" . [?­])  ; soft hyphen
                           ("pm" . [?—])  ; M-dash
                           ("pn" . [?–])  ; N-dash
@@ -2165,15 +2227,23 @@ REPEAT is how many times to repeat the roll."
                           ("pq" . [?”])  ; close double quote
                           ("ps" . [?’])  ; close single quote
                           ("pv" . [?‖])  ; double vertical bar
-                          ;; Gender
+                          ;; I should separate sex (physical) and gender (social)
                           ("Gh" . [?×])  ; Hybrid gender in biology
                           ("Gm" . [?♂])  ; male sign
                           ("Gf" . [?♀])  ; female sign
                           ("GM" . [?⚣])  ; male homosexuality
                           ("GF" . [?⚢])  ; female homosexuality
                           ("Gb" . [?⚥])  ; male & female, both
-                          ("Ga" . [?⚪])  ; agender, sexless
+                          ("Ga" . [?⚪]) ; MEDIUM WHITE CIRCLE: agender, sexless
                           ("Gt" . [?⚧])  ; transgender
+                          ;; ⚧ is actually MALE WITH STROKE AND MALE
+                          ;; AND FEMALE SIGN, but makes a good
+                          ;; transgender symbol.
+                          ("Gn" . [?🜬])  ; Non binary; enby.
+                          ;; 🜬 is actually the symbol for sublimate
+                          ;; of antimony, but makes a good enby symbol.
+
+                          ("Gu" . [?χ]) ; GREEK SMALL LETTER CHI: unknown gender
                           ;; Symbols
                           ("sc" . [?©])  ; copyright
                           ("sC" . [?🄯])  ; copyleft
@@ -2260,7 +2330,7 @@ REPEAT is how many times to repeat the roll."
         'tkb-local-geiser-chicken--external-help)
     (defalias 'geiser-chicken--external-help
       'tkb-saved-geiser-chicken--external-help)))
-    
+
 (when-load-file "magit"
   :load
   (global-set-key (kbd "C-x M s") 'magit-status)
@@ -2596,7 +2666,7 @@ inkscape."
 ;; variations on where I install groff.  And I've started using
 ;; ~/.bashrc_local-$(hostname -s) again to set up the proper alias for
 ;; man.  :(
-(when nil 
+(when nil
   (when-exec-found (groff "groff" (list "/usr/local/sw/versions/groff/git/bin"
                                         "/sw/versions/groff/git/bin"))
     (message "Found a groff of ours: %s" groff)))
@@ -2907,7 +2977,7 @@ and make it the current selection."
     (if (<= 2 d 3)
         (+ d #x00B0)
       (+ d #x2070))))
-  
+
 (defun tkb-unicode-fraction-the-hard-way (numerator denominator)
   "Return a string with a common fraction using unciode super- and sub-scripts."
   (interactive "nNumerator? \nnDenominator? ")
@@ -2944,5 +3014,104 @@ and make it the current selection."
       web-mode-markup-indent-offset 2
       web-mode-script-padding 2)
 
+;; gemini://idiomdrottning.org/cozify-window
+;; sets the window width to one space wider than the current cursor position:
+(defun cozify-window ()
+  "Change the wide of a window to one more than the current column when there are windows side by side."
+  (interactive)
+  (shrink-window-horizontally
+   (- (window-width) (current-column) 1)))
+
+
+;; Nikola metadata lines start like this:
+;; .. keyword:
+;; They shouldn't be wrapped.
+(defvar tkb-nikola-metadata-regexp "\\.\\. [a-z]+:")
+
+(defun tkb-nikola-rest-fill-nobreak-p ()
+  "Don't fill on metadata lines in nikola reST posts."
+  (save-excursion
+    (beginning-of-line)
+    (looking-at tkb-nikola-metadata-regexp)))
+
+(defun tkb-nikola-rest-hook ()
+  (interactive)
+  (when (and (string-match "\\.rst\\'" (buffer-file-name))
+             (looking-at tkb-nikola-metadata-regexp))
+    (make-local-variable 'fill-nobreak-predicate)
+    (add-to-list 'fill-nobreak-predicate #'tkb-nikola-rest-fill-nobreak-p)))
+(add-to-list 'find-file-hook #'tkb-nikola-rest-hook)
+
+(defun tkb-magit-commit-fill-nobreak-p ()
+  "Don't fill on the first line of a magit commit message."
+  (= 1 (line-number-at-pos)))
+  
+(defun tkb-magit-commit-find-file-hook ()
+  (interactive)
+  (when (string-match "COMMIT_EDITMSG\\'" (buffer-file-name))
+    (make-local-variable 'fill-nobreak-predicate)
+    (add-to-list 'fill-nobreak-predicate #'tkb-magit-commit-fill-nobreak-p)))
+;; Using add-to-list without specifying APPEND didn't work because
+;; that added it to the front of the list and the
+;; git-commit-setup-check-buffer find file hook ran later. The
+;; git-commit-setup-check-buffer runs git-commit-setup which runs
+;; normal-mode which runs kill-all-local-variables, which wiped out
+;; what tkb-magit-commit-find-file-hook was trying to do.
+(add-to-list 'find-file-hook #'tkb-magit-commit-find-file-hook t)
+
+(defun tkb-troff-column-width (text-width number-of-columns gutter-width)
+  (interactive "nText width? \nnNumber of columns? \nnGutter width? ")
+  (let ((column-width (/ (- text-width (* (- number-of-columns 1)
+                                          gutter-width))
+                         number-of-columns)))
+    (message "Column width: %f" column-width)))
+
+(defun tkb-dotted-netmask-from-cidr (cidr)
+  "Convert the CIDR of an IP address to a dotted netmask.
+Given 192.168.1.151/24, the CIDR is 24."
+  (interactive "nCIDR? ")
+  (let* ((binary (loop for i from (- 32 cidr) to 32 sum (expt 2 i)))
+         (octets (loop for n = binary then (ash n -8)  for i from 1 to 4
+                       collect (logand #xFF n) into octets
+                       finally return (reverse octets))))
+    (message "Netmask: %s" (apply #'format (cons "%d.%d.%d.%d" octets)))))
+
+;;; From: https://incompetech.com/graphpaper/hexagonal/
+;; Calculating various bits about regular hexagons
+;;
+;; Given length of a side x...
+;; Tip to tip across the hex is 2x.
+;; Height of the hex flat side to flat side is 2x(sqrt(3/4)) or about 1.732x.
+;; Area of the hex is 1.5(x^2 (sqrt(3)) or about 2.56x^2.
+;;
+;;     Example: Making graph paper with 4 hexes per square inch
+;;     Hexagon with a side length of x... The area of that hex would be about...
+;;     2.6 (x^2)
+;;     So for 4 hexes per square inch...
+;;     4 * 2.6 (x^2) = 1
+;;     x^2 = 1/10.4
+;;     x^2 = .096
+;;     x = .31 inches per side.
+;;
+;;     Extra: 1 sq. in. per hex ~= 0.6204
+(defun tkb-hex-width-to-side-length (w)
+  "Convert from the width of a hex from flat side to flat side to the length
+ of a side.  Use with https://incompetech.com/graphpaper/hexagonal/ "
+  (interactive "nWidth of hex from flat side to flat side? ")
+  ;; w = 1.732x
+  ;; x = w / 1.732
+  (let ((x (/ w 1.732)))
+    (message "Length of side: %f" x)
+    x))
+
+;; For forth mode:
+(setq forth-smie-basic-indent 4)
+
+;;; See: https://github.com/tkurtbond/tkbtools/blob/main/Scripts/start-ssh-agent
+(defun attach-ssh-agent ()
+  (interactive)
+  ;; XDG/Fedora compatable?
+  (setenv "SSH_AUTH_SOCK" (s-concat (getenv "XDG_RUNTIME_DIR") "/ssh-agent.socket")))
+ 
 (message "End of tkb-experimental.el")
 ;;; end of tkb-experimental.el

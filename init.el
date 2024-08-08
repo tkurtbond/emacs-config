@@ -20,6 +20,11 @@
 (setq read-file-name-completion-ignore-case t)
 (setq read-buffer-completion-ignore-case t)
 (setq-default indent-tabs-mode nil)
+(setq backup-by-copying t)
+;; ??? Revisit decision after a week, and after a month.
+;; Go back to using double spaces, because I like the extra space and it
+;; works so much better with groff.
+;;(setq sentence-end-double-space nil) 
 
 (setq line-move-visual nil)
 
@@ -70,6 +75,7 @@
                         elpher
 			;;elscreen ; Did I ever really use this?
 			f
+                        ;; forth-mode
 			fuel
 			ac-geiser geiser geiser-chez geiser-chibi geiser-chicken
                         geiser-guile geiser-racket
@@ -89,6 +95,7 @@
                         oberon
                         org-download
                         origami
+                        php-mode
 			projectile 
 			racket-mode
                         ;;+++
@@ -99,6 +106,7 @@
                         ;;---
 			;; regex-tool ; not currently using
                         s
+                        shadchen
                         skewer-mode
                         string-inflection
                         unicode-fonts
