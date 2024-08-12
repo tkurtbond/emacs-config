@@ -2197,7 +2197,13 @@ REPEAT is how many times to repeat the roll."
 ;; the "C-x 8" key prefix.
 ;; Note that section and pilcrow are in C-x 8: S and P.
 
-(iso-transl-define-keys '(;; Dingbats
+(iso-transl-define-keys '(
+                          ;; Arrows
+                          ("au" . [?↑])  ; upwards arrow
+                          ("ad" . [?↓])  ; downards arrow
+                          ("ar" . [?→])  ; rightwards arrow
+                          ("al" . [?←])  ; leftwards arrow
+                          ;; Dingbats
                           ("dC" . [?✔])  ; HEAVY CHECK MARK
                           ("dc" . [?✓])  ; CHECK MARK
                           ("dd" . [?⯁])  ; black diamond centered
@@ -2270,7 +2276,6 @@ REPEAT is how many times to repeat the roll."
                           ("3/5" . [?⅗])
                           ("2/5" . [?⅖])
                           ))
-
 
 
 
