@@ -420,9 +420,59 @@ and add a log entry to it."
          (message "(%s %s" nfg nbg)))))
 
 (defun tkb-wheat ()
+  "Set foreground to black and background to wheat.  See also ‘tkb-bad-wheat’."
   (interactive)
   (set-frame-parameter nil 'foreground-color "black")
   (set-frame-parameter nil 'background-color "wheat"))
+
+(defun tkb-bad-wheat ()
+  "Modify faces that are bad after ‘tkb-wheat’ to be white on black."
+  (interactive)
+  (let ((bad-wheat
+         '(completions-highlight
+           ffap
+           go-guru-hl-identifier-face
+           header-line-highlight
+           highlight
+           info-index-match
+           isearch
+           magit-diff-lines-boundary
+           magit-diff-lines-heading
+           match
+           mode-line-highlight
+           monky-log-head-label-bookmarks
+           monky-queue-negative-guard
+           mouse-drag-and-drop-region
+           next-error
+           next-error-message
+           query-replace
+           region
+           rst-level-1-face 
+           rst-level-10-face
+           rst-level-2-face 
+           rst-level-3-face 
+           rst-level-4-face 
+           rst-level-5-face 
+           rst-level-6-face 
+           rst-level-7-face 
+           rst-level-8-face 
+           rst-level-9-face
+           show-paren-mismatch
+           shr-mark
+           shr-selected-link
+           sldb-catch-tag-face
+           slime-highlight-face
+           speedbar-separator-face
+           transient-active-infix
+           tty-menu-enabled-face
+           widget-field
+           widget-single-line-field
+           xref-match
+           )))
+    (mapc #'(lambda (face)
+              (set-face-attribute face nil ':foreground "lightred"
+                                  ':background "black"))
+          bad-wheat)))
 
 (defun nothing ()
   ;; Why did I need this???
