@@ -3167,6 +3167,18 @@ Given 192.168.1.151/24, the CIDR is 24."
   (interactive)
   ;; XDG/Fedora compatable?
   (setenv "SSH_AUTH_SOCK" (s-concat (getenv "XDG_RUNTIME_DIR") "/ssh-agent.socket")))
+
+
+(defun awful-reload ()
+  (interactive)
+  (shell-command "lynx -dump http://localhost:8080/reload"))
+
+(when nil
+  (add-hook 'scheme-mode-hook
+          #'(lambda ()
+              (local-set-key "\C-cksr" 'awful-reload))))
+
+(global-set-key "\C-cksr" 'awful-reload)
  
 (message "End of tkb-experimental.el")
 ;;; end of tkb-experimental.el
