@@ -450,5 +450,6 @@ always indent Chicken Scheme module forms 0 characters."
 ;; Icon/Unicon
 (setq icon-indent-level 3)              ; Traditional icon indent is 3 chars.
 (setq icon-continued-statement-offset 3)
+(setq icon-brace-offset 0)
 
 ;;; end of tkb-lang.el
