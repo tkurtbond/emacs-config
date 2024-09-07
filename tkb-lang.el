@@ -169,6 +169,17 @@ always indent Chicken Scheme module forms 0 characters."
       "Reset module's scheme-indent-function to tkb-module-scheme-indent."
       (put 'module 'scheme-indent-function #'tkb-module-scheme-indent))))
 
+;; https://lists.gnu.org/archive/html/geiser-users/2022-12/msg00006.html
+;;
+;; Geiser is trying to locate your project root using Emacs's
+;; project-root function.  If your directory structure is such that
+;; project-root is not adequate, you can avoid it customizing
+;; geiser-repl-current-project-function (e.g., you can set it to
+;; #'ignore).  The REPL will then use as current directory that of the
+;; first buffer from which you start it.
+;; 
+(setq geiser-repl-current-project-function #'ignore)
+
 (put 'receive 'scheme-indent-function 2)
 (put 'condition-case 'scheme-indent-function 1)
 (put 'receive 'scheme-indent-function 1)
