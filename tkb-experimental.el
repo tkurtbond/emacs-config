@@ -3179,6 +3179,12 @@ Given 192.168.1.151/24, the CIDR is 24."
               (local-set-key "\C-cksr" 'awful-reload))))
 
 (global-set-key "\C-cksr" 'awful-reload)
+
+;; https://stackoverflow.com/questions/16607791/emacs-move-around-split-windows-in-a-specified-direction
+(windmove-default-keybindings)          ; Shift+arrow keys is the default
+;; Or bind windmove-up, windmove-down, windmove-left, and
+;; windmove-right to whatever you want.
+
  
 (message "End of tkb-experimental.el")
 ;;; end of tkb-experimental.el
