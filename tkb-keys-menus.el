@@ -40,6 +40,13 @@
 (define-key tkb-map "b" #'browse-url-at-point)
 (define-key tkb-map "t" #'toggle-truncate-lines)
 
+(define-prefix-command 'tkb-arrows-map)
+(define-key tkb-arrows-map (kbd "l") #'windmove-left)
+(define-key tkb-arrows-map (kbd "r") #'windmove-right)
+(define-key tkb-arrows-map (kbd "u") #'windmove-up)
+(define-key tkb-arrows-map (kbd "d") #'windmove-down)
+(define-key tkb-map (kbd "a") 'tkb-arrows-map)
+
 (define-prefix-command 'tkb-frame-map)
 (global-set-key (kbd "C-c k F") 'tkb-frame-map)
 
