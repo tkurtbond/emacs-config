@@ -463,4 +463,48 @@ always indent Chicken Scheme module forms 0 characters."
 (setq icon-continued-statement-offset 3)
 (setq icon-brace-offset 0)
 
+;; Forth
+(when t
+  (when-load-file "gforth"
+    (autoload 'forth-mode "gforth")
+    (add-to-list 'auto-mode-alist '("\\.fs\\'" . forth-mode))
+    (autoload 'forth-block-mode "gforth")
+    (add-to-list 'auto-mode-alist '("\\.fb\\'" . forth-block-mode))
+    (defun tkb-gforth-hook ()
+      ;; Why are we setting the following to the defaults?
+      ;; customize variables here:
+      (setq forth-indent-level 4)
+      (setq forth-minor-indent-level 2)
+      (setq forth-hilight-level 3)
+      ;; I hate gforth.el's indent function, and its reindent on RET.
+      (setq indent-line-function #'indent-relative)
+      (define-key forth-mode-map (kbd "RET") #'newline-and-indent))
+    (add-hook 'forth-mode-hook #'tkb-gforth-hook)
+    (setq forth-custom-indent-words
+          '((("while" "[while]")
+             (-2 . 2)
+             (0 . 2))
+            (("repeat" "[repeat]")
+             (-2 . 0)
+             (0 . -4))
+            ))
+
+    (eval-after-load "gforth"
+      '(progn
+        (load "tkb-forth")
+        (defun forth-load-file (file-name)
+          "Load a Forth file FILE-NAME into the inferior Forth process."
+          (interactive (comint-get-source "Load Forth file: " forth-prev-l/c-dir/file
+                                          forth-source-modes t)) ; T because LOAD
+                                        ; needs an exact name
+          (comint-check-source file-name) ; Check to see if buffer needs saved.
+          (setq forth-prev-l/c-dir/file (cons (file-name-directory    file-name)
+                                              (file-name-nondirectory file-name)))
+          (comint-send-string (forth-proc) (concat "include "
+                                                   file-name
+                                                   "\n")))))))
+
+;; For forth mode:
+(setq forth-smie-basic-indent 4)
+
 ;;; end of tkb-lang.el

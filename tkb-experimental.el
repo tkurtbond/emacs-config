@@ -1591,45 +1591,6 @@ Goes backward if ARG is negative; error if CHAR not found."
 ;; on tiled, tabbing window managers like ion.)
 (setq ediff-window-setup-function 'ediff-setup-windows-plain)
 
-(when t
-  (when-load-file "gforth"
-    (autoload 'forth-mode "gforth")
-    (add-to-list 'auto-mode-alist '("\\.fs\\'" . forth-mode))
-    (autoload 'forth-block-mode "gforth")
-    (add-to-list 'auto-mode-alist '("\\.fb\\'" . forth-block-mode))
-    (add-hook 'forth-mode-hook #'(lambda ()
-                                   ;; Why are we setting the following to the defaults?
-                                   ;; customize variables here:
-                                   (setq forth-indent-level 4)
-                                   (setq forth-minor-indent-level 2)
-                                   (setq forth-hilight-level 3)
-                                   ))
-    (setq forth-custom-indent-words
-          '((("while" "[while]")
-             (-2 . 2)
-             (0 . 2))
-            (("repeat" "[repeat]")
-             (-2 . 0)
-             (0 . -4))
-            ))
-
-
-    (eval-after-load "gforth"
-      '(progn
-        (load "tkb-forth")
-        (defun forth-load-file (file-name)
-          "Load a Forth file FILE-NAME into the inferior Forth process."
-          (interactive (comint-get-source "Load Forth file: " forth-prev-l/c-dir/file
-                                          forth-source-modes t)) ; T because LOAD
-                                        ; needs an exact name
-          (comint-check-source file-name) ; Check to see if buffer needs saved.
-          (setq forth-prev-l/c-dir/file (cons (file-name-directory    file-name)
-                                              (file-name-nondirectory file-name)))
-          (comint-send-string (forth-proc) (concat "include "
-                                                   file-name
-                                                   "\n")))))))
-
-
 (defun tkb-insert-name ()
   (interactive)
   (insert "T. Kurt Bond"))
@@ -3158,9 +3119,6 @@ Given 192.168.1.151/24, the CIDR is 24."
   (let ((x (/ w 1.732)))
     (message "Length of side: %f" x)
     x))
-
-;; For forth mode:
-(setq forth-smie-basic-indent 4)
 
 ;;; See: https://github.com/tkurtbond/tkbtools/blob/main/Scripts/start-ssh-agent
 (defun attach-ssh-agent ()
