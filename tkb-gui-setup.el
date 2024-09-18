@@ -45,14 +45,14 @@ defaults.")
          ;; Retina display probably, so use smaller font
          `(,@(tkb-mf 14)
              ,(if (s-contains-p "KDE" (getenv "XDG_CURRENT_DESKTOP"))
-                   56
+                   55
                  50)
              "go display-pixel-height >= 2280"))
         ((>= (display-pixel-height) 2160)
          (if (>= 214 (caddr (assoc 'mm-size (frame-monitor-attributes))))
-             `(,@(tkb-mf 14) 60
+             `(,@(tkb-mf 14) 55
                 "display-pixel-height >= 2160 high and mm-size height <= 214")
-           `(,@(tkb-mf 14) 60
+           `(,@(tkb-mf 14) 55
                "display-pixel-height >= 2160 high and mm-size height != 214")))
         ((= (display-pixel-height) 1728)
          `(,@(tkb-mf 14) 55 "display-pixel-height = 1728 high"))
