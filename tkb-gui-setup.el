@@ -48,8 +48,15 @@ defaults.")
                    55
                  50)
              "go display-pixel-height >= 2280"))
+        ((and (= (display-pixel-height) 2160)
+              (= (display-pixel-width) 3840)
+              (= (caddr (assoc 'mm-size (frame-monitor-attributes))) 210)
+              (= (cadr (assoc 'mm-size (frame-monitor-attributes))) 380))
+         ;; This catches sway on atla.
+         `(,@(tkb-mf 8) 55
+              "3840x2160, 380x210mmm"))
         ((>= (display-pixel-height) 2160)
-         (if (>= 214 (caddr (assoc 'mm-size (frame-monitor-attributes))))
+         (if (>= (caddr (assoc 'mm-size (frame-monitor-attributes))) 214)
              `(,@(tkb-mf 14) 55
                 "display-pixel-height >= 2160 high and mm-size height <= 214")
            `(,@(tkb-mf 14) 55
