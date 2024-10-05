@@ -2767,12 +2767,12 @@ and make it the current selection."
         (setq res "0"))
     res))
 
-(defun fahrenheit-to (f)
+(cl-defun fahrenheit-to (f &optional (out t))
   (interactive "NFahrenheit? ")
   (let* ((c (* (/ 5.0 9.0) (- f 32.0)))
          (k (+ 273.15 (* (/ 5.0 9.0) (- f 32.0))))
          (result (format "%6.2f℉ is %6.2f℃ and %6.2fK" f c k)))
-    (message "%s" result)
+    (princ (format "%s\n" result) out)
     result))
 
 
