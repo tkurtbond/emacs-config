@@ -1,0 +1,5 @@
+;; From: https://emacs.stackexchange.com/q/13080 and the emacs manual.
+;; Remember M-: (hack-dir-local-variables-non-file-buffer) to reload.
+((auto-mode-alist . (("\\.bookmarks\\'" . text-mode)))
+ (text-mode . ((indent-tabs-mode . t)
+               (mode . whitespace))))
