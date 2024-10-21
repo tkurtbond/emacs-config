@@ -3143,6 +3143,34 @@ Given 192.168.1.151/24, the CIDR is 24."
 ;; Or bind windmove-up, windmove-down, windmove-left, and
 ;; windmove-right to whatever you want.
 
+(defun tkb-ruler ()
+  (interactive)
+  "Draw a ruler the width of the window, inserting it in the current buffer."
+  ;; This was originally written in Emacs 18.55.105 on VAX/VMS 5.5-2 in 2024.
+  (let* ((width    (window-width)) ; Must be 1 less on old emacs like 18.55
+         (nheaders (/ width 10))
+         (buf      (current-buffer))
+         (i 1))
+    (while (<= i width)
+      (princ (format "%c" (if (= (% i 10) 0) ?+ ?-)) buf)
+      (setq i (1+ i)))
+    (terpri buf)
+    (setq i 1)
+    (while (<= i nheaders)
+      (princ (format "%10d" i) buf)
+      (setq i (1+ i)))
+    (terpri buf)
+    (setq i 1)
+    (while (<= i width)
+      (princ (format "%d" (% i 10)) buf)
+      (setq i (1+ i)))
+    (terpri buf)
+    (setq i 1)
+    (while (<= i width)
+      (princ (format "%c" (if (= (% i 10) 0) ?+ ?-)) buf)
+      (setq i (1+ i)))
+    (terpri buf)))
+
  
 (message "End of tkb-experimental.el")
 ;;; end of tkb-experimental.el
