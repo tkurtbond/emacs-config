@@ -51,8 +51,10 @@
 			;; ada-mode.el comes with emacs; so installing
 			;; a newer version only works from the
 			;; list-packages buffer.
-			;; ada-mode ; not currently using
-			ada-ref-man ; not currently using
+			ada-mode
+                        gpr-mode
+                        gpr-query
+			ada-ref-man
 			;; Not using because of markup minimization making
 			;; markup unusable.
 			;;adoc-mode

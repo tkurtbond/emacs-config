@@ -103,8 +103,13 @@
 						 ((listp column) (car column))
 						 (t column))))
 			       (indent-to column))))
+
+(define-prefix-command 'tkb-ada-map)
+(global-set-key (kbd "C-c k a") 'tkb-ada-map)
+
 (eval-after-load "ada-mode"
-  '(define-key ada-mode-map (kbd "C-c M-a")
+  '(progn
+    (define-key ada-mode-map (kbd "C-c M-a")
      (function
       (lambda (column)
 	(interactive "P")
@@ -114,7 +119,9 @@
 	  (re-search-forward "\\buse\\b")
 	  (backward-word 1)
 	  (indent-to column)
-	  (forward-word 1))))))
+	  (forward-word 1)))))
+    (define-key tkb-ada-map "a" (λ () (interactive) (ada-adjust-case)))))
+
 (global-set-key (kbd "C-c a") 'auto-fill-mode)
 (global-set-key (kbd "C-c C") 'compile)
 (global-set-key (kbd "C-c c") 'center-line)

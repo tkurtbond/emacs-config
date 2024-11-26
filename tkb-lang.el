@@ -380,18 +380,24 @@ always indent Chicken Scheme module forms 0 characters."
                   ("\\.m3$" . modula-3-mode))
                 auto-mode-alist)))
 
-(when-load-file "ada-mode"
-  ;; The directory old-ada-mode gets added to load-path in unix.el.
-  (message "Setting up Ada Mode.")
-  (autoload 'ada-mode "ada-mode")
-  (cl-loop for ext in '("\\.gpr$" "\\.ada$" "\\.ads$" "\\.adb$")
-           do (add-to-list 'auto-mode-alist (cons ext 'ada-mode)))
-  (push ".ali" completion-ignored-extensions)
-  (setq ada-label-indent -3)            ; I want the same level as ada-indent.
-  (define-prefix-command 'tkb-ada-map)
-  (global-set-key (kbd "C-c k a") 'tkb-ada-map)
-  (define-key tkb-ada-map "a" (λ () (interactive) (ada-adjust-case)))
-  )
+(when nil
+  (when-load-file "ada-mode"
+    ;; The directory old-ada-mode gets added to load-path in unix.el.
+    (message "Setting up Ada Mode.")
+    (autoload 'ada-mode "ada-mode")
+    (cl-loop for ext in '("\\.gpr$" "\\.ada$" "\\.ads$" "\\.adb$")
+          do (add-to-list 'auto-mode-alist (cons ext 'ada-mode)))
+    (push ".ali" completion-ignored-extensions)
+    (setq ada-label-indent -3)  ; I want the same level as ada-indent.
+    ))
+(use-package ada-mode
+    :init
+  (setq ada-case-strict nil)
+    )
+(use-package gpr-mode)
+(use-package gpr-query)
+
+(load-file "~/lib/emacs/emacs-config/tkb-ada.el")
 
 (use-package
   go-mode :ensure t

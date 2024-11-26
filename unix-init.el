@@ -81,7 +81,7 @@
 
 (cl-loop for d across ["~/lib/emacs/others"
                        "~/lib/emacs/others/misc"
-                       "~/lib/emacs/others/old-ada-mode"
+                       ;; not right now.  "~/lib/emacs/others/old-ada-mode"
                        ]
       do (progn
 	   (when-directory (o (expand-file-name d))
