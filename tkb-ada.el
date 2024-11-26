@@ -48,11 +48,16 @@
     (message "file name: %s" krunched-name)
     krunched-name))
 
+(define-key tkb-ada-map "s" #'tkb-find-ada-spec-file)
+
 (defun tkb-find-ada-file (filename)
   (interactive "sFilename? ")
   (let ((result-filename (tkb-search-path-list tkb-adaincludes-path filename)))
-    (if result-filename (find-file-read-only result-filename)
-      (message "Ada file %s not found"))))
+    (cond (result-filename
+           (find-file-read-only result-filename))
+          (t
+           (beep)
+           (message "Ada file %s not found" filename)))))
 
 (defun tkb-find-ada-spec-file ()
   (interactive)
