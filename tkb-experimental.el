@@ -1091,7 +1091,7 @@ over 40 is morbidly obese, over 50 is super morbidly obese."
     (forward-line))                 ; Skip to the next non-blank line.
   (while (not (looking-at "^[ \t]*$"))
     (forward-line)))                    ; Skip to the next blank line.
-(tkb-keys ((kbd "C-c C-n") 'tkb-next-blank-line))
+(tkb-keys ((kbd "C-c n") 'tkb-next-blank-line))
 
 (defun tkb-previous-blank-line ()
   (interactive)
@@ -1099,7 +1099,7 @@ over 40 is morbidly obese, over 50 is super morbidly obese."
     (forward-line -1))                 ; Skip to the next non-blank line.
   (while (not (looking-at "^[ \t]*$"))
     (forward-line -1)))                 ; Skip to the next blank line.
-(tkb-keys ((kbd "C-c C-p") 'tkb-previous-blank-line))
+(tkb-keys ((kbd "C-c p") 'tkb-previous-blank-line))
 
 (progn
   (defun tkb-yank-dired-filename ()
@@ -3145,7 +3145,14 @@ Given 192.168.1.151/24, the CIDR is 24."
 ;; https://stackoverflow.com/questions/16607791/emacs-move-around-split-windows-in-a-specified-direction
 (windmove-default-keybindings)          ; Shift+arrow keys is the default
 ;; Or bind windmove-up, windmove-down, windmove-left, and
-;; windmove-right to whatever you want.
+;; windmove-right to whatever you want.  It turns out that
+;; Shift-<arrow key> doesn't work on the console, or in a terminal, so
+;; define some key bindings that will work!
+(tkb-keys ((kbd "C-c m u") 'windmove-up)
+          ((kbd "C-c m d") 'windmove-down)
+          ((kbd "C-c m l") 'windmove-left)
+          ((kbd "C-c m r") 'windmove-right))
+
 
 (defun tkb-ruler ()
   (interactive)
