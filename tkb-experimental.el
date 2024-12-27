@@ -1087,15 +1087,19 @@ over 40 is morbidly obese, over 50 is super morbidly obese."
 
 (defun tkb-next-blank-line ()
   (interactive)
+  (while (looking-at "^[ \t]*$")
+    (forward-line))                 ; Skip to the next non-blank line.
   (while (not (looking-at "^[ \t]*$"))
-    (forward-line)))
+    (forward-line)))                    ; Skip to the next blank line.
 (tkb-keys ((kbd "C-c C-n") 'tkb-next-blank-line))
 
 (defun tkb-previous-blank-line ()
   (interactive)
+  (while (looking-at "^[ \t]*$")
+    (forward-line -1))                 ; Skip to the next non-blank line.
   (while (not (looking-at "^[ \t]*$"))
-    (forward-line -1)))
-(tkb-keys ((kbd "C-c C-p") 'tkb-next-blank-line))
+    (forward-line -1)))                 ; Skip to the next blank line.
+(tkb-keys ((kbd "C-c C-p") 'tkb-previous-blank-line))
 
 (progn
   (defun tkb-yank-dired-filename ()
