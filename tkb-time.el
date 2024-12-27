@@ -12,7 +12,7 @@
 (setq cal-tex-diary t)
 
 (setq display-time-string-forms
-      '(12-hours ":" minutes " " (downcase am-pm) (if mail " Mail") load))
+      '(24-hours ":" minutes " (" 12-hours ":" minutes " " (downcase am-pm) ")" (if mail " Mail") load))
 
 (defun string-or-nil-to-int (s)
   (if s
