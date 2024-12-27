@@ -3187,6 +3187,14 @@ Given 192.168.1.151/24, the CIDR is 24."
       (indicators)
       (terpri buf))))
 
+(defun tkb-set-window-width (new-width)
+  "Make the current window 80 columns wide, or to the width
+specified by the prefix."
+  (interactive "P")
+  (unless new-width (setq new-width 80))
+  (unless (numberp new-width) (setq new-width (car new-width)))
+  (shrink-window-horizontally (- (window-width) new-width)))
+
  
 (message "End of tkb-experimental.el")
 ;;; end of tkb-experimental.el
