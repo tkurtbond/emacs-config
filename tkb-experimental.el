@@ -474,6 +474,10 @@ and add a log entry to it."
                                   ':background "black"))
           bad-wheat)))
 
+(defun tkb-console-function-name-face ()
+  (interactive)
+  (set-face-attribute 'font-lock-function-name-face  nil ':background "green"))
+
 (defun nothing ()
   ;; Why did I need this???
   (interactive)
