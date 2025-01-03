@@ -380,7 +380,7 @@ always indent Chicken Scheme module forms 0 characters."
                   ("\\.m3$" . modula-3-mode))
                 auto-mode-alist)))
 
-(when t
+(when nil
   (when-load-file "ada-mode"
     ;; The directory old-ada-mode gets added to load-path in unix.el.
     (message "Setting up Ada Mode.")
@@ -390,7 +390,7 @@ always indent Chicken Scheme module forms 0 characters."
     (push ".ali" completion-ignored-extensions)
     (setq ada-label-indent -3)  ; I want the same level as ada-indent.
     ))
-(when nil 
+(when t
   (use-package ada-mode
       :init
     (setq ada-case-strict nil)
