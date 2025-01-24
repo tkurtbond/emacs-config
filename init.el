@@ -67,6 +67,7 @@
 			clojure-mode
 			clojure-quick-repls
 			clojure-snippets
+                        cobol-mode
                         dante           ; For Haskell
                         dash
                         define-word
