@@ -380,23 +380,39 @@ always indent Chicken Scheme module forms 0 characters."
                   ("\\.m3$" . modula-3-mode))
                 auto-mode-alist)))
 
-(when nil
+(when t
+  (cl-loop for d across ["~/lib/emacs/others"
+                         "~/lib/emacs/others/misc"
+                         ;; Using old-ada-mode right now.
+                         "~/lib/emacs/others/old-ada-mode"
+                         ]
+        do (progn
+	     (when-directory (o (expand-file-name d))
+	       (message "adding %s to load-path" o)
+	       (add-to-list 'load-path o))))
   (when-load-file "ada-mode"
-    ;; The directory old-ada-mode gets added to load-path in unix.el.
-    (message "Setting up Ada Mode.")
+    (message "Setting up old Ada Mode.")
     (autoload 'ada-mode "ada-mode")
     (cl-loop for ext in '("\\.gpr$" "\\.ada$" "\\.ads$" "\\.adb$")
           do (add-to-list 'auto-mode-alist (cons ext 'ada-mode)))
     (push ".ali" completion-ignored-extensions)
     (setq ada-label-indent -3)  ; I want the same level as ada-indent.
     ))
-(when t
+(when nil
   (use-package ada-mode
       :init
     (setq ada-case-strict nil)
     )
   (use-package gpr-mode)
   (use-package gpr-query))
+
+(when nil
+  (defun tkb-ada-ts-mode-hook ()
+    (lsp-mode))
+  (use-package ada-ts-mode
+      :config (progn
+                (setq ada-ts-mode-indent-backend  'lsp)
+                (add-hook 'ada-ts-mode-hook #'tkb-ada-ts-mode-hook))))
 
 (load-file "~/lib/emacs/emacs-config/tkb-ada.el")
 
@@ -482,5 +498,8 @@ always indent Chicken Scheme module forms 0 characters."
 
 ;; For forth mode:
 (setq forth-smie-basic-indent 4)
+
+(when-load-file "cobol-mode"
+  (push '("\\.cob\\'" . cobol-mode) auto-mode-alist))
 
 ;;; end of tkb-lang.el

@@ -51,9 +51,10 @@
 			;; ada-mode.el comes with emacs; so installing
 			;; a newer version only works from the
 			;; list-packages buffer.
-			ada-mode
-                        gpr-mode
-                        gpr-query
+			;; ada-mode
+                        ;; gpr-mode
+                        ;; gpr-query
+                        ;; ada-ts-mode
 			ada-ref-man
 			;; Not using because of markup minimization making
 			;; markup unusable.
@@ -87,6 +88,7 @@
                         js-comint
                         js2-mode
                         julia-mode
+                        lsp-mode
                         magit
 			markdown-mode
                         mew             ; Hope springs eternal

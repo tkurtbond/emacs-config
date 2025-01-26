@@ -63,12 +63,13 @@
   
   result-filename))
 
-(defun x ()
-  (interactive)
-  (skip-chars-backward ".[:alnum:]_-")
-  (if (looking-at "\\([.[:alnum:]_-]+\\):\\([0-9]+\\)")
-      (message "%s:%s" (match-string 1) (match-string 2)))
-  )
+(when nil 
+  (defun x ()
+    (interactive)
+    (skip-chars-backward ".[:alnum:]_-")
+    (if (looking-at "\\([.[:alnum:]_-]+\\):\\([0-9]+\\)")
+        (message "%s:%s" (match-string 1) (match-string 2)))
+    ))
 
 (defun tkb-krunch-ada-filenname (filename)
   "Use gnatkr to krunch an Ada source filename into short form.  If the
