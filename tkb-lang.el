@@ -500,6 +500,11 @@ always indent Chicken Scheme module forms 0 characters."
 (setq forth-smie-basic-indent 4)
 
 (when-load-file "cobol-mode"
-  (push '("\\.cob\\'" . cobol-mode) auto-mode-alist))
+  (setq auto-mode-alist
+        (append
+         '(("\\.cob\\'" . cobol-mode)
+           ("\\.cbl\\'" . cobol-mode)
+           ("\\.cpy\\'" . cobol-mode))
+         auto-mode-alist)))
 
 ;;; end of tkb-lang.el
