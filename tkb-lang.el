@@ -397,6 +397,13 @@ always indent Chicken Scheme module forms 0 characters."
           do (add-to-list 'auto-mode-alist (cons ext 'ada-mode)))
     (push ".ali" completion-ignored-extensions)
     (setq ada-label-indent -3)  ; I want the same level as ada-indent.
+    (defun tkb-ada-mode-hook ()
+      "TKB's ada-mode hook."
+      (interactive)
+      (message "TKB's ada-mode hook executing!")
+      ;; The following doesn't seem to work.
+      (setq-local comment-start "-- "))
+    (add-hook 'ada-mode-hook #'tkb-ada-mode-hook)
     ))
 (when nil
   (use-package ada-mode
