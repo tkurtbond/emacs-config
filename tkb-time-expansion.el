@@ -30,6 +30,23 @@ WARNING: Doesn't handle seconds."
       (+ hour fraction)))
    (t (error "%s is not a valid time string" s))))
 
+(defun t:match-iso-time (s)
+  "Match a time string of the form HH:MM (24 hour time) and return it as a
+decimal of the form 12.50.  12 midnight is 00:00 is 0.
+WARNING: Doesn't handle seconds."
+  (cond
+    ((string-match (rx (group (1+ digit))   ; group 1: hour
+                       (optional (group ":" ; group 2: :&minute
+                                        (group (1+ digit)))) ; group 3: minute
+                       )
+                   s)
+     (let ((hour     (string-to-number (match-string 1 s)))
+           (fraction (if (match-string 3 s)
+                         (/ (string-to-number (match-string 3 s)) 60.0)
+                       0.0)))
+       (+ hour fraction)))
+    (t (error "%s is not a valid time string" s))))
+
 
 (defun t:time-diff (start end)
   "Subtract START time from END time."
@@ -43,6 +60,24 @@ WARNING: Doesn't handle seconds."
     (let ((d (- e s)))
       (message "s: %s (%.2f) e: %s (%.2f) Duration: %.2f hours"
 	       start s end e d)
+      d)))
+
+(defun t:iso-time-diff (start end do-insert)
+  "Subtract START time from END time."
+  (interactive "sStart: \nsEnd: \nP")
+  (message "start: %s end: %s" start end)
+  (let ((s (t:match-iso-time start))
+        (e (t:match-iso-time end)))
+    (when (= e 0) (setq e 24))
+    (when (< e s)
+      (error "start %s (%.2f) should be before end %s (%.2f) " start s  end e))
+    (let* ((d (- e s))
+           (h (truncate d))
+           (m (truncate (* (- d h) 60)))
+           (h:m (format "%d:%d" h m)))
+      (message "s: %s (%.2f) e: %s (%.2f) Duration: %.2f hours"
+	       start s end e d)
+      (when do-insert (insert h:m))
       d)))
 
 (defun t:show-time-diff ()
