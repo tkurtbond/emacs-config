@@ -380,7 +380,13 @@ always indent Chicken Scheme module forms 0 characters."
                   ("\\.m3$" . modula-3-mode))
                 auto-mode-alist)))
 
-(when t
+(dolist (d '("~/lib/emacs/others"
+            "~/lib/emacs/others/misc"))
+  (when-directory (o (expand-file-name d))
+    (message "adding %s to load-path" o)
+    (add-to-list 'load-path o)))
+
+(when t ;; old ada-mode
   (cl-loop for d across ["~/lib/emacs/others"
                          "~/lib/emacs/others/misc"
                          ;; Using old-ada-mode right now.
@@ -405,7 +411,8 @@ always indent Chicken Scheme module forms 0 characters."
       (setq-local comment-start "-- "))
     (add-hook 'ada-mode-hook #'tkb-ada-mode-hook)
     ))
-(when nil
+
+(when nil ;; new ada-mode
   (use-package ada-mode
       :init
     (setq ada-case-strict nil)
@@ -413,13 +420,20 @@ always indent Chicken Scheme module forms 0 characters."
   (use-package gpr-mode)
   (use-package gpr-query))
 
-(when nil
+(when nil ;; ada-ts-mode
   (defun tkb-ada-ts-mode-hook ()
     (lsp-mode))
   (use-package ada-ts-mode
       :config (progn
                 (setq ada-ts-mode-indent-backend  'lsp)
                 (add-hook 'ada-ts-mode-hook #'tkb-ada-ts-mode-hook))))
+
+(when nil ;; ada-light-mode
+  (when-directory (o (expand-file-name "~/lib/emacs/others/ada-light-mode"))
+    (add-to-list 'load-path o)
+    (message  "Loading ada-light-mode")
+    (load-library "ada-light-mode")
+    ))
 
 (load-file "~/lib/emacs/emacs-config/tkb-ada.el")
 

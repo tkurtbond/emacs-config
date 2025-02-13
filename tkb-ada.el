@@ -8,7 +8,8 @@
   (let ((p (getenv "TKB_ADAINCLUDES_PATH")))
     (if p
         (s-split ":" p)
-      '("/usr/local/sw/src/gcc/gcc/ada/libgnat")))
+      '("/usr/local/sw/src/gcc/gcc/ada/libgnat"
+        "/usr/local/sw/versions/AdaCurses/20211021/share/ada/adainclude")))
   "List containing path elements to search for Ada spec files in.")
 
 
