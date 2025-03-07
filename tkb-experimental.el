@@ -2201,7 +2201,7 @@ REPEAT is how many times to repeat the roll."
         finally (insert (mapconcat #'int-to-string rolls ", "))))
 
 ;; Maybe this is better?
-(defun* d* (sides &key (number 1)  (mod 0)  (repeat 1) (no-insert nil))
+(cl-defun d* (sides &key (number 1)  (mod 0)  (repeat 1) (no-insert nil))
   (interactive "nSides: \nnNumber: \nnMod: \nnRepeat: \nP")
   (cl-loop repeat repeat
         collect (cl-loop repeat number
