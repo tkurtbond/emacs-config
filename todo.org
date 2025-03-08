@@ -7,6 +7,8 @@ gemini://idiomdrottning.org/bad-emacs-defaults
 (make-directory "~/.emacs_autosave/" t)
 (setq auto-save-file-name-transforms '((".*" "~/.emacs_autosave/" t)))
 (setq backup-directory-alist '(("." . "~/.emacs_backups/")))
-
-
-
+* TODO 2025-03-07 sqlite-mode
+https://www.reddit.com/r/emacs/comments/15k1sjj/emacs_29_sqlitemode_is_pretty_neat/
+* TODO sql-mode-extras.el
+https://xenodium.com/sqlite-mode-goodies/
+* TODO edbi
