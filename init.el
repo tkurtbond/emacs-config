@@ -103,6 +103,7 @@
                         php-mode
 			projectile 
 			racket-mode
+                        rec-mode
                         ;;+++
                         ;; These are available both from gnu and melpa,
                         ;; so install manually.
