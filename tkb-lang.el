@@ -261,6 +261,12 @@ always indent Chicken Scheme module forms 0 characters."
 (put 'when-in-hash 'lisp-indent-function 1)
 (put 'register-groups-bind 'lisp-indent-function 2)
 (put 'ppcre:register-groups-bind 'lisp-indent-function 2)
+(put 'with-decoded-timestamp 'lisp-indent-function 2)
+
+;; This didn't work, because there can be multiple repl buffers, so
+;; you have be in one of them for it to work.
+;;
+;;(tkb-keys :keymap lisp-mode-map ((kbd "C-c l c") #'slime-repl-clear-buffer))
 
 (load-library "cl-indent") ; defines the common-lisp-indent-function properties
 (setq lisp-indent-function 'common-lisp-indent-function)
