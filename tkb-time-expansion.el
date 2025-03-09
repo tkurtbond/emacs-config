@@ -323,3 +323,30 @@ time, to get the time to be finished."
 		    start end code desc))))
 (tkb-keys ((kbd "C-c k s i") 't:insert-interval))
 		     
+(defun t:insert-time-code (&optional default)
+  "Insert an MPL time code."
+  (interactive)
+  (insert (completing-read "Time code? " t:time-codes nil nil default)))
+
+;; Introduction to the Personal Software Process, PSP Time
+;; Recording Log Columns, p. 24, and column heading instructions, p. 27.
+;; * Date
+;; * Start
+;; * Stop
+;; * Interruption Time
+;; * Delta Time
+;; * Activity
+;; * Comments
+;; * C (Completed)
+;; * U (re
+
+(defconst t:activity-codes
+  '(("PROG" . "Programming")
+    ("RSCH" . "Research")
+    ("READ" . "Reading")))
+     
+
+(defun t:insert-activity-code (&optional default)
+  "Insert an activity code."
+  (interactive)
+  (insert (completing-read "Activity code? " t:activity-codes nil nil default)))
