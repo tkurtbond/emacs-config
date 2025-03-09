@@ -82,7 +82,8 @@ is added."
                                        (file-name-extension filename))
                        filename
                      (concat filename ".ads")))
-         (buf (generate-new-buffer "*tkb-gnatkr*"))
+         (buf (get-buffer-create "*tkb-gnatkr*"))
+         (_ (with-current-buffer buf (erase-buffer)))
          (_ (call-process "gnatkr" nil buf nil filename))
          (krunched-name (s-trim-right
                          (with-current-buffer buf
