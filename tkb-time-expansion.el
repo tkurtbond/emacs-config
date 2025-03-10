@@ -327,6 +327,7 @@ time, to get the time to be finished."
   "Insert an MPL time code."
   (interactive)
   (insert (completing-read "Time code? " t:time-codes nil nil default)))
+(tkb-keys ((kbd "C-c k s c") #'t:insert-time-code))
 
 ;; Introduction to the Personal Software Process, PSP Time
 ;; Recording Log Columns, p. 24, and column heading instructions, p. 27.
