@@ -2554,7 +2554,9 @@ Formula: end-mass = start-mass * (end-height / start-height)^3
 See:
 https://en.wikipedia.org/wiki/Square%E2%80%93cube_law
 https://www.enworld.org/threads/how-much-does-my-giant-weight.106631/post-1846443"
-  (interactive "nStarting Height? \nnStarting Mass? \nnEnd Height? \nnBuild Ratio? ")
+  (interactive "nStarting Height? \nnStarting Mass? \nnEnd Height? \nnBuild Ratio?
+
+Note that you can use any units you want.")
   (let* ((start-height (* 1.0 start-height)) ; make measurements floats.
          (start-mass (* 1.0 start-mass))
          (end-height (* 1.0 end-height))
