@@ -52,7 +52,7 @@
 (add-hook 'lisp-mode-hook #'(lambda () (setq indent-tabs-mode nil)))
 
 
-(when-file (fn "~/quicklisp/slime-helper.el") (load fn))
+;;(when-file (fn "~/quicklisp/slime-helper.el") (load fn))
 
 (when nil				;not installed right now: 2015-10-16
   (when-directory (d "/opt/local/share/doc/lisp/HyperSpec-7-0/HyperSpec/")
