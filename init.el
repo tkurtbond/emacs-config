@@ -114,6 +114,7 @@
                         s
                         shadchen
                         skewer-mode
+                        slime
                         string-inflection
                         unicode-fonts
 			use-package ;; too strict?
