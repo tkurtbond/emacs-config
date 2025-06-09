@@ -210,8 +210,10 @@ always indent Chicken Scheme module forms 0 characters."
 (put 'bind 'scheme-indent-function 2)
 (put 'bind-loop 'scheme-indent-function 2)
 (put 'submatch-named 'scheme-indent-function 1) ; For irregex SREs.
-;; Hmm.  Not sure about this.
-(put 'args:make-option 'scheme-indent-function 3)
+
+;; Hmm.  Not sure about this.  I think it is better to just always put
+;; the first argument on the next line.  It's simpler and more robust.
+;;(put 'args:make-option 'scheme-indent-function 3)
 
 (when nil
   (defun tkb-beginning-of-defun (&optional arg)
