@@ -3197,7 +3197,7 @@ specified by the prefix."
   (unless (numberp new-width) (setq new-width (car new-width)))
   (shrink-window-horizontally (- (window-width) new-width)))
 
-(defun tkb-apply-to-direct-marked-files (command suffix)
+(defun tkb-apply-to-dired-marked-files (command suffix)
   (interactive "sCommand: \nsCommand Suffix: ")
   (message "Commmand: %s Command Suffix: %s" command suffix)
   (let* ((cmd-list `(,command ,@(dired-get-marked-files) ,suffix))
