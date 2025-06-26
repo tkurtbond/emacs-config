@@ -3197,6 +3197,15 @@ specified by the prefix."
   (unless (numberp new-width) (setq new-width (car new-width)))
   (shrink-window-horizontally (- (window-width) new-width)))
 
+(defun tkb-apply-to-direct-marked-files (command suffix)
+  (interactive "sCommand: \nsCommand Suffix: ")
+  (message "Commmand: %s Command Suffix: %s" command suffix)
+  (let* ((cmd-list `(,command ,@(dired-get-marked-files) ,suffix))
+         (cmd (string-join cmd-list " ")))
+    (message "cmd: %s" cmd)
+    (when (yes-or-no-p (concat "Apply command \n    " cmd "\n?"))
+      (shell-command cmd))))
+
  
 (message "End of tkb-experimental.el")
 ;;; end of tkb-experimental.el
