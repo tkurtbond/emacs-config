@@ -447,15 +447,15 @@ and add a log entry to it."
            next-error-message
            query-replace
            region
-           rst-level-1-face 
+           rst-level-1-face
            rst-level-10-face
-           rst-level-2-face 
-           rst-level-3-face 
-           rst-level-4-face 
-           rst-level-5-face 
-           rst-level-6-face 
-           rst-level-7-face 
-           rst-level-8-face 
+           rst-level-2-face
+           rst-level-3-face
+           rst-level-4-face
+           rst-level-5-face
+           rst-level-6-face
+           rst-level-7-face
+           rst-level-8-face
            rst-level-9-face
            show-paren-mismatch
            shr-mark
@@ -3072,7 +3072,7 @@ and make it the current selection."
 (defun tkb-magit-commit-fill-nobreak-p ()
   "Don't fill on the first line of a magit commit message."
   (= 1 (line-number-at-pos)))
-  
+
 (defun tkb-magit-commit-find-file-hook ()
   (interactive)
   (when (string-match "COMMIT_EDITMSG\\'" (buffer-file-name))
@@ -3171,7 +3171,7 @@ Given 192.168.1.151/24, the CIDR is 24."
          (buf      (current-buffer))
          (i 1))
     (cl-labels ((indicators ()
-                  (cl-loop for i from 1 upto width 
+                  (cl-loop for i from 1 upto width
                         do (princ (format "%c" (if (= (% i 10) 0) ?| (if (= (% i 5) 0) ?+ ?-))) buf))))
       (indicators)
       (terpri buf)
@@ -3206,6 +3206,19 @@ specified by the prefix."
     (when (yes-or-no-p (concat "Apply command \n    " cmd "\n?"))
       (shell-command cmd))))
 
- 
+(defun tkb-number-lines (start)
+  "Number lines from START until a blank line is found,
+inserting the numbers before the first non-whitespace character on a line."
+  (interactive "p")
+  (beginning-of-line)
+  (cl-loop for i from start until (looking-at "^[ \t]*$")
+    do (progn
+         (skip-chars-forward " \t")
+         (insert (format "%d. " i))
+         (beginning-of-line 2)))
+  (message "start: %d" start))
+
+
+
 (message "End of tkb-experimental.el")
 ;;; end of tkb-experimental.el
