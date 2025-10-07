@@ -2339,22 +2339,30 @@ REPEAT is how many times to repeat the roll."
   (message "geiser-chicken-binary is %s" geiser-chicken-binary))
 (setq geiser-default-implementation 'chicken) ;; not sure why this doesn't work.
 
+(defvar tkb-chickadee-toggled nil)
+
+;; (symbol-function 'tkb-saved-geiser-chicken--external-help)
+;; (symbol-function 'tkb-local-geiser-chicken--external-help)
 (fset 'tkb-saved-geiser-chicken--external-help
   (symbol-function 'geiser-chicken--external-help))
 (defun tkb-local-geiser-chicken--external-help (id _module)
   "Load chicken doc for ID into a buffer."
+  (message "tkb-local-geiser-chicken--external-help: id: %S _module: %S" id _module)
   (let* ((version (geiser-chicken--version (geiser-chicken--binary)))
          (major-version (car (split-string version "\\\."))))
-    (browse-url (format "http://localhost:7001/cdoc?q=%s&query-name=Look+up"
+    (browse-url (format "http://localhost:8080/cdoc?q=%s&query-name=Look+up"
                         id))))
+
 (defun tkb-switch-chickadee ()
   (interactive)
-  (if (eq (symbol-function 'geiser-chicken--external-help)
-          (symbol-function 'tkb-saved-geiser-chicken--external-help))
-      (defalias 'geiser-chicken--external-help
-        'tkb-local-geiser-chicken--external-help)
-    (defalias 'geiser-chicken--external-help
-      'tkb-saved-geiser-chicken--external-help)))
+  (cond (tkb-chickadee-toggled          ; it has been toggled
+         (message "Switching to %S" (symbol-function 'tkb-saved-geiser-chicken--external-help))
+         (defalias 'geiser-chicken--external-help
+             #'tkb-saved-geiser-chicken--external-help))
+        (t 
+         (message "Switching to tkb-local-geiser-chicken--external-help")
+         (defalias 'geiser-chicken--external-help
+             #'tkb-local-geiser-chicken--external-help))))
 
 (when-load-file "magit"
   :load
