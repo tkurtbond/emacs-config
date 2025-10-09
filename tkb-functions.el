@@ -306,6 +306,11 @@ Goes backward if ARG is negative; error if CHAR not found."
   (interactive)
   (message "%s" (text-properties-at (point))))
 
+(defun tkb-list-faces ()
+  "show text faces at point."
+  (interactive)
+  (message "%S" (plist-get (text-properties-at (point)) 'font-lock-face)))
+
 (defun tkb-find-in-path (path to-find)
   (let ((path (tkb-path-get path)))
     (catch 'checking
