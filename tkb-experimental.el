@@ -2372,8 +2372,8 @@ REPEAT is how many times to repeat the roll."
     (when (fboundp 'global-magit-file-mode)
       (global-magit-file-mode))
     (when (boundp 'magit-file-mode-map)
-      (define-key magit-file-mode-map
-        (kbd "C-x M g") 'magit-file-dispatch))))
+      (define-key magit-file-mode-map (kbd "C-x M g") 'magit-file-dispatch)))
+  (add-hook 'magit-diff-mode-hook #'toggle-truncate-lines))
 
 (add-hook 'markdown-mode-hook 'flyspell-mode)
 
