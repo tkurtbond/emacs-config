@@ -1048,6 +1048,18 @@ over 40 is morbidly obese, over 50 is super morbidly obese."
                 (t "super morbidly obese"))))
     (message "bmi: %06.3f; %s" bmi characterization)))
 
+(defun bmi-ranges ()
+  "Display BMI, body mass index, ranges."
+  (interactive)
+  (message "%s"
+           "BMI Ranges
+<  18.5 underweight
+<= 25.0 optimal
+<  30.0 overweight
+<  40.0 obese
+<  50.0 morbidly obese
+>= 50.0 super morbidly obese"))
+
 
 (when (not window-system)
   (eval-after-load "font-lock"
