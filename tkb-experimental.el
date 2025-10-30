@@ -3239,6 +3239,9 @@ inserting the numbers before the first non-whitespace character on a line."
   (message "start: %d" start))
 
 
+(setq ediff-window-setup-function 'ediff-setup-windows-plain)
+(setq ediff-split-window-function 'split-window-horizontally)
+
 
 (message "End of tkb-experimental.el")
 ;;; end of tkb-experimental.el
