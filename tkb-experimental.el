@@ -2362,7 +2362,7 @@ REPEAT is how many times to repeat the roll."
   (message "tkb-local-geiser-chicken--external-help: id: %S _module: %S" id _module)
   (let* ((version (geiser-chicken--version (geiser-chicken--binary)))
          (major-version (car (split-string version "\\\."))))
-    (browse-url (format "http://localhost:8080/cdoc?q=%s&query-name=Look+up"
+    (browse-url (format "http://localhost:7001/cdoc?q=%s&query-name=Look+up"
                         id))))
 
 (defun tkb-switch-chickadee ()
