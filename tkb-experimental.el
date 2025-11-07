@@ -2357,13 +2357,15 @@ REPEAT is how many times to repeat the roll."
 ;; (symbol-function 'tkb-local-geiser-chicken--external-help)
 (fset 'tkb-saved-geiser-chicken--external-help
   (symbol-function 'geiser-chicken--external-help))
+(defvar tkb-chickadee-port "7001")
+
 (defun tkb-local-geiser-chicken--external-help (id _module)
   "Load chicken doc for ID into a buffer."
   (message "tkb-local-geiser-chicken--external-help: id: %S _module: %S" id _module)
   (let* ((version (geiser-chicken--version (geiser-chicken--binary)))
          (major-version (car (split-string version "\\\."))))
-    (browse-url (format "http://localhost:7001/cdoc?q=%s&query-name=Look+up"
-                        id))))
+    (browse-url (format "http://localhost:%s/cdoc?q=%s&query-name=Look+up"
+                        tkb-chickadee-port id))))
 
 (defun tkb-switch-chickadee ()
   (interactive)
