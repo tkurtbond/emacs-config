@@ -2596,8 +2596,7 @@ Ratio: %g; End Mass: %g; * Build Ratio: %g"
   (let* ((human-density 63.1)            ; lb/ft^3
          (granite-density 168)           ; lb/ft^3
          (granite-weight (* (/ human-weight human-density) granite-density)))
-    (message "A human of %f pounds would weigh %f pounds
-   if converted to granite."
+    (message "A human of %.3f pounds would weigh %.3f pounds if converted to granite."
              human-weight granite-weight)))
 
 (defun tkb-remove-mod ()
