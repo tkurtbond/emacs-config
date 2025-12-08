@@ -241,6 +241,7 @@
 (load-library "gemini-mode.el")
 (load-file "~/lib/emacs/emacs-config/tkb-magit.el")
 (load-file "~/lib/emacs/emacs-config/tkb-org.el")
+(load-file "~/lib/emacs/emacs-config/tkb-music.el")
 
 ;;(setq epg-gpg-program "gpg2") ; on macOS with homebrew it's gpg.
 
