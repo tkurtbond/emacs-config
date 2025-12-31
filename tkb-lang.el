@@ -536,4 +536,19 @@ always indent Chicken Scheme module forms 0 characters."
            ("\\.cpy\\'" . cobol-mode))
          auto-mode-alist)))
 
+
+
+;; For FreePascal
+
+(setq compilation-error-regexp-alist-alist
+      (cons '(pascal "^\\(.*\\)(\\([0-9]+\\)+\\,\\([0-9]+\\)).*"
+              1 ;; file
+              2 ;; line
+              3 ;; column? 
+              )
+            compilation-error-regexp-alist-alist))
+
+(setq compilation-error-regexp-alist
+      (cons 'pascal compilation-error-regexp-alist))
+
 ;;; end of tkb-lang.el
