@@ -3156,7 +3156,9 @@ Given 192.168.1.151/24, the CIDR is 24."
 (defun attach-ssh-agent ()
   (interactive)
   ;; XDG/Fedora compatable?
-  (setenv "SSH_AUTH_SOCK" (s-concat (getenv "XDG_RUNTIME_DIR") "/ssh-agent.socket")))
+  (if (getenv "XDG_RUNTIME_DIR")
+      (setenv "SSH_AUTH_SOCK" (concat (getenv "XDG_RUNTIME_DIR") "/ssh-agent.socket"))
+    (setenv "SSH_AUTH_SOCK" (concat (expand-file-name "~/tmp/sock") "/ssh-agent.socket"))))
 
 
 (defun awful-reload ()
