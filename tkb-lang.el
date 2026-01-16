@@ -394,7 +394,29 @@ always indent Chicken Scheme module forms 0 characters."
     (message "adding %s to load-path" o)
     (add-to-list 'load-path o)))
 
-(when t ;; old ada-mode
+(when t ;; ada-ts-mode
+  ;; The github repo:
+  ;;     https://github.com/brownts/ada-ts-mode
+  ;; Author's small Emacs config:
+  ;;     https://github.com/brownts/dotemacs-ada
+  ;; which is much to complicated for me to start with.
+  ;; Thread about it:
+  ;;     https://forum.ada-lang.io/t/note-on-ada-ts-mode/
+  ;; Simon J Wright's note:
+  ;;     https://forward-in-code.blogspot.com/2025/01/ada-ts-mode.html
+  ;; which, along with his emacs config:
+  ;;    https://github.com/simonjwright/emacs-settings/blob/ada-ts-mode/dot-emacs-ada.el
+  ;; I munged into my  emacs config.  
+  (require 'lsp-mode)
+  (load-file "~/lib/emacs/emacs-config/dot-emacs-ada.el")
+  (defun tkb-ada-ts-mode-hook ()
+    (lsp-mode)
+    (yas-minor-mode)
+    (ada-ts-auto-case-mode))
+  (setq ada-ts-mode-indent-backend 'lsp)
+  (add-hook 'ada-ts-mode-hook #'tkb-ada-ts-mode-hook))
+
+(when nil ;; old ada-mode
   (cl-loop for d across ["~/lib/emacs/others"
                          "~/lib/emacs/others/misc"
                          ;; Using old-ada-mode right now.
@@ -427,14 +449,6 @@ always indent Chicken Scheme module forms 0 characters."
     )
   (use-package gpr-mode)
   (use-package gpr-query))
-
-(when nil ;; ada-ts-mode
-  (defun tkb-ada-ts-mode-hook ()
-    (lsp-mode))
-  (use-package ada-ts-mode
-      :config (progn
-                (setq ada-ts-mode-indent-backend  'lsp)
-                (add-hook 'ada-ts-mode-hook #'tkb-ada-ts-mode-hook))))
 
 (when nil ;; ada-light-mode
   (when-directory (o (expand-file-name "~/lib/emacs/others/ada-light-mode"))

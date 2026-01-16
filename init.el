@@ -1,5 +1,7 @@
 ;;;; .emacs.el - Unified emacs startup.
 
+(setq debug-on-error t)
+
 ;;(desktop-save-mode 1)
 
 ;; Added by Package.el.  This must come before configurations of
@@ -41,8 +43,9 @@
   (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
 
   (require 'package)
-  (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
-  (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
+  (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/"))
+  (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
+  (add-to-list 'package-archives '("gnu-devel" . "https://elpa.gnu.org/devel/"))
   ;; (package-initialize) ;; done in '~/.emacs'.
 
   (let ((tkb-packages '(
@@ -54,7 +57,6 @@
 			;; ada-mode
                         ;; gpr-mode
                         ;; gpr-query
-                        ;; ada-ts-mode
 			ada-ref-man
 			;; Not using because of markup minimization making
 			;; markup unusable.
@@ -123,6 +125,12 @@
                         w3m
                         web-mode
                         yaml-mode
+
+                        ada-ts-mode
+                        gpr-ts-mode
+			gpr-yasnippets
+			lsp-mode
+			company
 			)))
     ;; The order of things here might be mistaken.  Should I iterate
     ;; over tkb-packages and then over package-selected-pages?
