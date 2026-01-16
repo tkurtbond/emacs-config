@@ -406,7 +406,7 @@ always indent Chicken Scheme module forms 0 characters."
   ;;     https://forward-in-code.blogspot.com/2025/01/ada-ts-mode.html
   ;; which, along with his emacs config:
   ;;    https://github.com/simonjwright/emacs-settings/blob/ada-ts-mode/dot-emacs-ada.el
-  ;; I munged into my  emacs config.  
+  ;; I munged into my emacs config.  
   (require 'lsp-mode)
   (load-file "~/lib/emacs/emacs-config/dot-emacs-ada.el")
   (defun tkb-ada-ts-mode-hook ()
