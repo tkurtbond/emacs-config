@@ -8,7 +8,7 @@
   (let ((p (getenv "TKB_ADAINCLUDES_PATH")))
     (if p
         (s-split ":" p)
-      '("/usr/lib/gcc/x86_64-redhat-linux/14/adainclude/"
+      '("/usr/lib/gcc/x86_64-redhat-linux/15/adainclude/"
         "/usr/local/sw/src/gcc/gcc/ada/libgnat"
         "/usr/local/sw/versions/AdaCurses/20211021/share/ada/adainclude")))
   "List containing path elements to search for Ada spec files in.")
@@ -39,7 +39,7 @@
       (concat with-dashes (file-name-extension filename)))))
 
 (defun tkb-find-adaincludes-file (filename)
-  "Find an Ada file along the TKB_ADAINCLUDES_PATH."
+  "Find an Ada file in the current directory or along the TKB_ADAINCLUDES_PATH."
   (interactive "sAda Includes Filename: ")
   (let* (;; First, add .ads if the filename has no extension.
          (filename (if (string-match-p "\\(.*\\)\\(ads\\|adb\\)\\'" filename)
@@ -48,18 +48,18 @@
          ;; Search with the original name.  Note that pkg.subpkg.ads
          ;; is a valid name to gnat, although it will give a warning about
          ;; the name not matching.
-         (result-filename (tkb-search-path-list tkb-adaincludes-path filename))
+         (result-filename (tkb-search-path-list (cons "." tkb-adaincludes-path) filename))
          ;; If it was not found, try the filename with dashes.
          (result-filename
           (if result-filename
               result-filename
-            (tkb-search-path-list tkb-adaincludes-path
+            (tkb-search-path-list (cons "." tkb-adaincludes-path)
                                   (tkb-ada-filename-to-dashes filename))))
          ;; If it was not found, try with the krunched filename.
          (result-filename
           (if result-filename
               result-filename
-            (tkb-search-path-list tkb-adaincludes-path
+            (tkb-search-path-list (cons "." tkb-adaincludes-path)
                                   (tkb-krunch-ada-filenname
                                    filename)))))
   
@@ -93,15 +93,15 @@ is added."
     krunched-name))
 
 (defun tkb-get-ada-spec-file ()
-  "Find a Ada package name at point and get the krunched name of its
+  "Find a Ada package name at point and find the resulting filename in the 
 source file."
   (interactive)
-  (let* ((id (substring-no-properties (thing-at-point 'tkb-ada-identifier)))
+  (let* ((id (downcase (substring-no-properties (thing-at-point 'tkb-ada-identifier))))
          (filename (concat id ".ads"))
-         (krunched-name (tkb-krunch-ada-filenname filename)))
+         (result-filename (tkb-find-adaincludes-file filename)))
     (when (called-interactively-p)
-      (message "file name: %s" krunched-name))
-    krunched-name))
+      (message "file name: %s" result-filename))
+    result-filename))
 
 (defun tkb-find-ada-file (filename)
   "Find an Ada filename in the path TKB_ADAINCLUDES_PATH and display it."

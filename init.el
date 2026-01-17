@@ -61,6 +61,7 @@
 			;; Not using because of markup minimization making
 			;; markup unusable.
 			;;adoc-mode
+                        a68-mode
 			auctex
 			caml
                         ;; cask
