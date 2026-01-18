@@ -61,7 +61,8 @@
 			;; Not using because of markup minimization making
 			;; markup unusable.
 			;;adoc-mode
-                        a68-mode
+                        ;; Does something weird with the list that maps file extensions to modes.
+                        ;;a68-mode
 			auctex
 			caml
                         ;; cask
@@ -130,7 +131,6 @@
                         ada-ts-mode
                         gpr-ts-mode
 			gpr-yasnippets
-			lsp-mode
 			company
 			)))
     ;; The order of things here might be mistaken.  Should I iterate

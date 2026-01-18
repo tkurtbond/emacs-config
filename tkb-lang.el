@@ -408,6 +408,7 @@ always indent Chicken Scheme module forms 0 characters."
   ;;    https://github.com/simonjwright/emacs-settings/blob/ada-ts-mode/dot-emacs-ada.el
   ;; I munged into my emacs config.  
   (load-file "~/lib/emacs/emacs-config/dot-emacs-ada.el")
+  (require 'lsp-mode)
   (defun tkb-ada-ts-mode-hook ()
     (lsp-mode)
     (yas-minor-mode)

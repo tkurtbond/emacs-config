@@ -28,16 +28,15 @@
        (":signature" . "~/.signature-leo")
        ("Return-Path" . "<thomas.bond@leo.gov>")))))
  '(package-selected-packages
-   '(a68-mode ac-geiser ada-ref-man ada-ts-mode auctex caml
-     clojure-quick-repls clojure-snippets cobol-mode dante define-word
-     disable-mouse docbook elfeed-org elpher fuel geiser-chez
-     geiser-chibi geiser-chicken geiser-guile geiser-racket
-     gemini-mode go-guru gpr-ts-mode gpr-yasnippets haskell-mode
-     js-comint julia-mode lsp-mode magit mew monky nodejs-repl
-     nushell-mode oberon org-download origami php-mode projectile
-     racket-mode rec-mode shadchen skewer-mode slime string-inflection
-     unicode-fonts visual-fill-column w3m wanderlust web-mode
-     yaml-mode))
+   '(ac-geiser ada-ref-man ada-ts-mode auctex caml clojure-quick-repls
+     clojure-snippets cobol-mode dante define-word disable-mouse
+     docbook elfeed-org elpher fuel geiser-chez geiser-chibi
+     geiser-chicken geiser-guile geiser-racket gemini-mode go-guru
+     gpr-ts-mode gpr-yasnippets haskell-mode js-comint julia-mode
+     lsp-mode magit mew monky nodejs-repl nushell-mode oberon
+     org-download origami php-mode projectile racket-mode rec-mode
+     shadchen skewer-mode slime string-inflection unicode-fonts
+     visual-fill-column w3m wanderlust web-mode yaml-mode))
  '(rst-level-face-max 10)
  '(send-mail-function 'mailclient-send-it)
  '(w3m-use-cookies t)
