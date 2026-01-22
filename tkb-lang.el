@@ -409,11 +409,12 @@ always indent Chicken Scheme module forms 0 characters."
   ;; I munged into my emacs config.  
   (load-file "~/lib/emacs/emacs-config/dot-emacs-ada.el")
   (require 'lsp-mode)
+  (setq lsp-enable-indentation nil)
   (defun tkb-ada-ts-mode-hook ()
-    (lsp-mode)
+    ;; (lsp-mode)
     (yas-minor-mode)
     (ada-ts-auto-case-mode))
-  (setq ada-ts-mode-indent-backend 'lsp)
+  (setq ada-ts-mode-indent-backend 'tree-sitter)
   (add-hook 'ada-ts-mode-hook #'tkb-ada-ts-mode-hook))
 
 (when nil ;; old ada-mode

@@ -30,7 +30,7 @@
  '(package-selected-packages
    '(ac-geiser ada-ref-man ada-ts-mode auctex caml clojure-quick-repls
      clojure-snippets cobol-mode dante define-word disable-mouse
-     docbook elfeed-org elpher fuel geiser-chez geiser-chibi
+     docbook eglot elfeed-org elpher fuel geiser-chez geiser-chibi
      geiser-chicken geiser-guile geiser-racket gemini-mode go-guru
      gpr-ts-mode gpr-yasnippets haskell-mode js-comint julia-mode
      lsp-mode magit mew monky nodejs-repl nushell-mode oberon
