@@ -123,8 +123,8 @@
     (define-key tkb-ada-map "a" (λ () (interactive) (ada-adjust-case)))))
 
 (global-set-key (kbd "C-c a") 'auto-fill-mode)
-(global-set-key (kbd "C-c C") 'compile)
-(global-set-key (kbd "C-c c") 'center-line)
+(global-set-key (kbd "C-c c") 'compile)
+(global-set-key (kbd "C-c C") 'center-line)
 
 (global-set-key (kbd "C-c d i") 'tkb-insert-iso-date)
 (global-set-key (kbd "C-c d I") #'tkb-kill-iso-date)

@@ -343,7 +343,7 @@ currently under the curser"
     (set-register ?t exect)))
 
 (global-set-key "\C-c#" 'query-replace-regexp)
-(global-set-key "\C-cC" 'compile)
+(global-set-key "\C-cc" 'compile)
 (global-set-key "\C-cf" 'tkb-insert-buffer-filename)
 (global-set-key "\C-cF" 'tkb-insert-buffer-filename-sans-extension)
 (global-set-key "\C-cg" 'goto-line)

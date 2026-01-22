@@ -385,7 +385,8 @@ With argument, print output into current buffer."
 (global-set-key "\C-c\C-a" 'abbrev-mode)
 (global-set-key "\C-ca" 'auto-fill-mode)
 (global-set-key "\C-cb" 'insert-buffer)
-(global-set-key "\C-cc" 'center-line)
+(global-set-key "\C-cc" 'compile)
+(global-set-key "\C-cC" 'center-line)
 (global-set-key "\C-cD" 'tkb-find-current-directory)
 ;;(global-set-key "\C-cd" 'delete-rectangle) ; removed so I can add a map on d.
 (global-set-key "\C-cE" 'tkb-basic-error)
