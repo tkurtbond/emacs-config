@@ -1,6 +1,6 @@
 ;;;; .emacs.el - Unified emacs startup.
 
-(setq debug-on-error t)
+(setq debug-on-error nil)
 
 ;;(desktop-save-mode 1)
 
