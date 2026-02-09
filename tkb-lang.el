@@ -566,4 +566,9 @@ always indent Chicken Scheme module forms 0 characters."
 (setq compilation-error-regexp-alist
       (cons 'pascal compilation-error-regexp-alist))
 
+
+(defun tkb-a68-mode-hook ()
+  (interactive)
+  (setq indent-line-function #'indent-relative-maybe))
+(add-hook 'a68-mode-hook #'tkb-a68-mode-hook)
 ;;; end of tkb-lang.el
