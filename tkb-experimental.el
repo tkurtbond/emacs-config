@@ -3245,6 +3245,8 @@ inserting the numbers before the first non-whitespace character on a line."
 (setq ediff-window-setup-function 'ediff-setup-windows-plain)
 (setq ediff-split-window-function 'split-window-horizontally)
 
+;; Make groff 1.24.1 not include color escapes when formatting man pages in emacs.
+(setenv "MANROFFOPT" "-c")
 
 (message "End of tkb-experimental.el")
 ;;; end of tkb-experimental.el
