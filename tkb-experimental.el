@@ -82,6 +82,45 @@ recommended by the ReST quickref: http://tinyurl.com/47lkhk"
   (interactive "M")
   (message "file: %s" (locate-file filename load-path (get-load-suffixes))))
 
+(defun tkb-find-org-log-file ()
+  "Look in the current directory or its parents for a file named *-log.org
+and return it."
+  ;; So I can us M-x tkb-find-file-org-log and not bring up the
+  ;; debugger on the call to error when testing.
+  (interactive)
+  (let ((default-directory default-directory)
+        (original-directory default-directory)
+        log-files)
+    (while (not (setq log-files (file-expand-wildcards "*-log.org" t)))
+      (cd "..")
+      (when (string-equal default-directory "/")
+        (error "unable to find *-log.org starting at %s"
+               original-directory)))
+    (car log-files)))
+
+(defun tkb-add-org-log ()
+  "Look in the current directory or its parents for a file named *-log.org
+and add a log entry to it."
+  (interactive)
+  (let* ((org-file (tkb-find-org-log-file))
+         (org-capture-templates
+          `(("l" "Log" entry (file+headline ,org-file "Log")
+                 "* %^{Title} %U\n%i\n%?\n"))))
+    (org-capture)))
+(tkb-keys ((kbd "C-c k o l") #'tkb-add-org-log))
+
+(defun tkb-find-file-org-log ()
+  "Look in the current directory or its parents for a file named *-log.org
+and switch to a buffer visiting it."
+  (interactive)
+  (let* ((org-file (tkb-find-org-log-file)))
+    (find-file org-file)))
+(tkb-keys ((kbd "C-c k o L") #'tkb-find-file-org-log))
+;; (defalias 'x #'tkb-find-file-org-log)
+
+(tkb-keys ((kbd "C-c k o C-p") #'org-move-subtree-up))
+(tkb-keys ((kbd "C-c k o C-n") #'org-move-subtree-down))
+
 (when t  ; Using org-capture now.
   (progn ; Config for mobile org
     ;; Set to the location of your Org files on your local system
@@ -179,10 +218,12 @@ recommended by the ReST quickref: http://tinyurl.com/47lkhk"
           ("T" "MPL Tasks" entry
            (file+headline ,tkb-org-mpl-tasks "MPL Tasks")
            "* TODO %^{Title} %U\n%i\n%?\n%a\n")))
-  ;;(defvar tkb-org-files-map (make-sparse-keymap))
-  (define-prefix-command 'tkb-org-files-map)
-  (global-set-key (kbd "C-C k o F") 'tkb-org-files-map)
   (progn
+    (message "*** Before defining find org capture keys")
+    ;;(defvar tkb-org-files-map (make-sparse-keymap))
+    (define-prefix-command 'tkb-org-files-map)
+    (global-set-key (kbd "C-C k o F") 'tkb-org-files-map) ;I have no idea why this doesn't work.
+    (tkb-check-bindings (list (kbd "C-c k o F")))
     (defun tkb-find-org-blog-ideas ()
       "Find Org Blog Ideas"
       (interactive)
@@ -252,46 +293,10 @@ recommended by the ReST quickref: http://tinyurl.com/47lkhk"
       "Find Org MPL Tasks"
       (interactive)
       (find-file tkb-org-mpl-tasks))
-    (global-set-key (kbd "C-c k o F T") #'tkb-find-org-mpl-tasks))
-  (tkb-check-bindings (list (kbd "C-c k o C-c")))
-
-  (defun tkb-find-org-log-file ()
-    "Look in the current directory or its parents for a file named *-log.org
-and return it."
-    ;; So I can us M-x tkb-find-file-org-log and not bring up the
-    ;; debugger on the call to error when testing.
-    (interactive)
-    (let ((default-directory default-directory)
-          (original-directory default-directory)
-          log-files)
-      (while (not (setq log-files (file-expand-wildcards "*-log.org" t)))
-        (cd "..")
-        (when (string-equal default-directory "/")
-          (error "unable to find *-log.org starting at %s"
-                 original-directory)))
-      (car log-files)))
-
-  (defun tkb-find-file-org-log ()
-    "Look in the current directory or its parents for a file named *-log.org
-and switch to a buffer visiting it."
-    (interactive)
-    (let* ((org-file (tkb-find-org-log-file)))
-      (find-file org-file)))
-  (tkb-keys ((kbd "C-c k o f") #'tkb-find-file-org-log))
-  ;; (defalias 'x #'tkb-find-file-org-log)
-
-  (defun tkb-add-org-log ()
-    "Look in the current directory or its parents for a file named *-log.org
-and add a log entry to it."
-    (interactive)
-    (let* ((org-file (tkb-find-org-log-file))
-           (org-capture-templates
-            `(("l" "Log" entry (file+headline ,org-file "Log")
-               "* %^{Title} %U\n%i\n%?\n"))))
-      (org-capture)))
-  (tkb-keys ((kbd "C-c k o l") #'tkb-add-org-log))
-  (tkb-keys ((kbd "C-c k o C-p") #'org-move-subtree-up))
-  (tkb-keys ((kbd "C-c k o C-n") #'org-move-subtree-down)))
+    (global-set-key (kbd "C-c k o F T") #'tkb-find-org-mpl-tasks)
+    (tkb-check-bindings (list (kbd "C-c k o F")))
+    (message "*** After defining find org capture keys"))
+  (tkb-check-bindings (list (kbd "C-c k o C-c"))))
 
 (progn
   ;; See Info: (org)Activation.
