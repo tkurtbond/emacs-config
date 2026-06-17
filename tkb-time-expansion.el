@@ -17,7 +17,8 @@ WARNING: Doesn't handle seconds."
                                        (group (1+ digit)))) ; group 3: minute
 		      (0+ " ")
                       (group (or "a" "p")) ; group 4: a/p
-                      ) s)
+                      )
+                  s)
     (let ((hour     (string-to-number (match-string 1 s)))
           (fraction (if (match-string 3 s)
                         (/ (string-to-number (match-string 3 s)) 60.0)
@@ -134,8 +135,10 @@ WARNING: Doesn't handle seconds."
 				(mapcar #'chomp interval))
 			    intervals))
 		sum (let* ((end (t:match-time b))
+                           (end (if (= end 0.0) 24.0 end))
 			   (beg (t:match-time a))
 			   (dif (- end beg)))
+                      (print dif)
 		      (cl-incf (gethash (if c (car c) nil) tab 0.0) dif)
 		      (when print-intervals
 			(princ (format "   %-6s to %-6s = %9f%s\n"
@@ -188,6 +191,7 @@ if END is a dash, use the current time instead."
 				      (t:match-time
 				       (format-time-string "%I:%M%p"))
 				    (t:match-time end*)))
+                             (end (if (= end 0.0) 24.0 end))
 			     (beg (t:match-time beg*))
 			     (dif (- end beg)))
 			(cl-incf (gethash (if comments (car comments) nil)
