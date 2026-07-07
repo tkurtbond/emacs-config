@@ -92,6 +92,7 @@
                         js-comint
                         js2-mode
                         julia-mode
+                        lua-mode
                         lsp-mode
                         magit
 			markdown-mode
