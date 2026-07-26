@@ -121,6 +121,7 @@
                         skewer-mode
                         slime
                         string-inflection
+                        unfill
                         unicode-fonts
 			use-package ;; too strict?
                         visual-fill-column
