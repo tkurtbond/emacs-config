@@ -30,7 +30,7 @@
 
 (setq line-move-visual nil)
 
-(unless (version< emacs-version "24.1.1")
+(unless (version< emacs-version "29.1")
   ;; Error:
   ;; Failed to verify signature archive-contents.sig:
   ;; No public key for 066DAFCB81E42C40 created at 2019-10-29T17:10:02-0400 using RSA
@@ -48,104 +48,78 @@
   (add-to-list 'package-archives '("gnu-devel" . "https://elpa.gnu.org/devel/"))
   ;; (package-initialize) ;; done in '~/.emacs'.
 
-  (let ((tkb-packages '(
-			;; installing ada-mode using package-install
-			;; says its already installed because
-			;; ada-mode.el comes with emacs; so installing
-			;; a newer version only works from the
-			;; list-packages buffer.
-			;; ada-mode
-                        ;; gpr-mode
-                        ;; gpr-query
-			ada-ref-man
-			;; Not using because of markup minimization making
-			;; markup unusable.
-			;;adoc-mode
-                        ;; Does something weird with the list that maps file extensions to modes.
-                        ;;a68-mode
-			auctex
-			caml
-                        ;; cask
-                        ;; cask-mode
-                        ;; caskxy
-			cider
-			clojure-mode
-			clojure-quick-repls
-			clojure-snippets
-                        cobol-mode
-                        dante           ; For Haskell
-                        dash
-                        define-word
-                        disable-mouse
-			docbook
-                        elfeed
-                        elfeed-org
-                        elpher
-			;;elscreen ; Did I ever really use this?
-			f
-                        ;; forth-mode
-			fuel
-			ac-geiser geiser geiser-chez geiser-chibi geiser-chicken
-                        geiser-guile geiser-racket
-                        gemini-mode
-                        haskell-mode
-                        js-comint
-                        js2-mode
-                        julia-mode
-                        lua-mode
-                        lsp-mode
-                        magit
-			markdown-mode
-                        mew             ; Hope springs eternal
-                        monky
-			;; moz ; Did I every really use this?
-			;;nim-mode ; unbalanced parentheses.
-                        nodejs-repl
-                        nushell-mode
-                        oberon
-                        org-download
-                        origami
-                        php-mode
-			projectile 
-			racket-mode
-                        rec-mode
-                        ;;+++
-                        ;; These are available both from gnu and melpa,
-                        ;; so install manually.
-                        ;; realgud
-                        ;; realgud-lldb
-                        ;;---
-			;; regex-tool ; not currently using
-                        s
-                        shadchen
-                        skewer-mode
-                        slime
-                        string-inflection
-                        unfill
-                        unicode-fonts
-			use-package ;; too strict?
-                        visual-fill-column
-			wanderlust ;; apparently using again.
-                        w3m
-                        web-mode
-                        yaml-mode
-
-                        ada-ts-mode
-                        gpr-ts-mode
-			gpr-yasnippets
-			company
-			)))
-    ;; The order of things here might be mistaken.  Should I iterate
-    ;; over tkb-packages and then over package-selected-pages?
-    (message "tkb's packages: %S" tkb-packages)
-    (unless (cl-every #'package-installed-p package-selected-packages)
-      (package-refresh-contents))
-    (dolist (p tkb-packages) ;; was package-selected-packages
-      (message "selected package %s" p)
-      (unless (package-installed-p p)
-        (message "installing package %s" p)
-	(package-install p)))
+  (progn
+    ;; I used to use ada-mode, gpr-mode, and gpr-query.
+    (use-package ada-ref-man :ensure t)
+    ;; Not using adoc-mode because of markup minimization making markup unusable.
+    ;; a68-mode Does something weird with the list that maps file extensions to modes.
+    (use-package auctex :ensure t)
+    (use-package caml :ensure t)
+    ;; I used to use cask, cask-mode, and caskxy
+    (use-package cider :ensure t)
+    (use-package clojure-mode :ensure t)
+    (use-package clojure-quick-repls :ensure t)
+    (use-package clojure-snippets :ensure t)
+    (use-package cobol-mode :ensure t)
+    (use-package dante :ensure t)       ; For Hasekll
+    (use-package dash :ensure t)
+    (use-package define-word :ensure t)
+    (use-package disable-mouse :ensure t)
+    (use-package docbook :ensure t)
+    (use-package elfeed :ensure t)
+    (use-package elfeed-org :ensure t)
+    (use-package elpher :ensure t)
+    ;; Did I ever really use elscreen?
+    (use-package f :ensure t)
+    (use-package fuel :ensure t)
+    (use-package ac-geiser :ensure t)
+    (use-package geiser :ensure t)
+    (use-package geiser-chez :ensure t)
+    (use-package geiser-chibi :ensure t)
+    (use-package geiser-chicken :ensure t)
+    (use-package geiser-guile :ensure t)
+    (use-package geiser-racket :ensure t)
+    (use-package gemini-mode :ensure t)
+    (use-package haskell-mode :ensure t)
+    (use-package js-comint :ensure t)
+    (use-package js2-mode :ensure t)
+    (use-package julia-mode :ensure t)
+    (use-package lua-mode :ensure t)
+    (use-package lsp-mode :ensure t)
+    (use-package magit :ensure t)
+    (use-package markdown-mode :ensure t)
+    (use-package mew :ensure t)         ; Hope springs eternal
+    (use-package monky :ensure t)
+    (use-package nodejs-repl :ensure t)
+    ;; Did I ever really use moz?
+    ;; I used to use nim-mode, but something about unbalanced parentheses?
+    (use-package nushell-mode :ensure t)
+    (use-package oberon :ensure t)
+    (use-package org-download :ensure t)
+    (use-package origami :ensure t)
+    (use-package php-mode :ensure t)
+    (use-package projectile :ensure t)
+    (use-package racket-mode :ensure t)
+    (use-package rec-mode :ensure t)
+    ;; I used to use realgud and realgud-lldb on macOS, I think?
+    (use-package s :ensure t)
+    (use-package shadchen :ensure t)
+    (use-package skewer-mode :ensure t)
+    (use-package slime :ensure t)
+    (use-package string-inflection :ensure t)
+    (use-package unfill :ensure t)
+    (use-package unicode-fonts :ensure t)
+    (use-package visual-fill-column :ensure t)
+    (use-package wanderlust :ensure t)  ; Apparently using again.
+    (use-package w3m :ensure t)
+    (use-package web-mode :ensure t)
+    (use-package yaml-mode :ensure t)
+    (use-package ada-ts-mode :ensure t)
+    (use-package gpr-ts-mode :ensure t)
+    (use-package gpr-yasnippets :ensure t)
+    (use-package company :ensure t)
     )
+
   (load "s")                      ; Because its autoloads didn't work.
   (load "f")                      ; Ditto.
   )
