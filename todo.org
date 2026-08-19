@@ -12,3 +12,7 @@ https://www.reddit.com/r/emacs/comments/15k1sjj/emacs_29_sqlitemode_is_pretty_ne
 * TODO sql-mode-extras.el
 https://xenodium.com/sqlite-mode-goodies/
 * TODO edbi
+* [[https://www.reddit.com/r/emacs/comments/np6ey4/how_packageel_works_with_use_package/][How package.el Works with Use Package]]
+** Also, what about [[https://github.com/radian-software/straight.el][straight.el]] ?
+** And [[https://github.com/progfolio/elpaca][Elpaca: An Elisp Package Manager]] ?
+See [[https://www.reddit.com/r/emacs/comments/wkwlaf/straightel_as_a_classic_example_of/][straight.el as a classic example of overengineering in emacs?]]
