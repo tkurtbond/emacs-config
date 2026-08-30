@@ -452,6 +452,7 @@ always indent Chicken Scheme module forms 0 characters."
   (use-package gpr-query))
 
 (when nil ;; ada-light-mode
+  ;; https://github.com/sebastianpoeplau/ada-light-mode
   (when-directory (o (expand-file-name "~/lib/emacs/others/ada-light-mode"))
     (add-to-list 'load-path o)
     (message  "Loading ada-light-mode")
