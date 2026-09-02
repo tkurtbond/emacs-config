@@ -37,7 +37,7 @@
      nodejs-repl nushell-mode oberon org-download origami php-mode
      projectile racket-mode rec-mode shadchen skewer-mode slime
      string-inflection unfill unicode-fonts visual-fill-column w3m
-     wanderlust web-mode yaml-mode))
+     wanderlust web-mode xterm-color yaml-mode))
  '(rst-level-face-max 10)
  '(send-mail-function 'mailclient-send-it)
  '(w3m-use-cookies t)
