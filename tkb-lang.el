@@ -415,7 +415,10 @@ always indent Chicken Scheme module forms 0 characters."
     (yas-minor-mode)
     (ada-ts-auto-case-mode))
   (setq ada-ts-mode-indent-backend 'tree-sitter)
-  (add-hook 'ada-ts-mode-hook #'tkb-ada-ts-mode-hook))
+  (add-hook 'ada-ts-mode-hook #'tkb-ada-ts-mode-hook)
+  (add-hook 'ada-ts-mode-hook
+            (lambda ()
+              (add-hook 'hack-local-variables-hook #'lsp nil t))))
 
 (when nil ;; old ada-mode
   (cl-loop for d across ["~/lib/emacs/others"
