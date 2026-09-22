@@ -2821,7 +2821,6 @@ and make it the current selection."
     (princ (format "%s\n" result) out)
     result))
 
-
 (defun kelvin-to (k)
   (interactive "NKelvin? ")
   (let* ((f (+ (* 1.8 (- k 273)) 32))
@@ -2838,6 +2837,11 @@ and make it the current selection."
     (message "%s" result)
     result))
 
+(defun tkb-print-temperatures (buffer-name)
+  (interactive "Boutput buffer")
+  (let ((buf (get-buffer-create buffer-name)))
+    (with-current-buffer buf
+      (cl-loop for f from -300 to 300 do (fahrenheit-to f buf)))))
 
 
 (when nil
