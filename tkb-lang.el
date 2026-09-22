@@ -377,6 +377,7 @@ always indent Chicken Scheme module forms 0 characters."
 (add-to-list 'auto-mode-alist '("\\.Mod$" . oberon-mode))
 (add-to-list 'auto-mode-alist '("\\.m$"   . oberon-mode))
 (eval-after-load "oberon" '(setq oberon-indent-level 2))
+(add-hook 'oberon-mode-hook (lambda () (font-lock-mode 1)))
 
 
 (when-load-file "modula3"
