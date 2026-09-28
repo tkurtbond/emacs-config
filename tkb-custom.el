@@ -27,10 +27,8 @@
       (("From" . "thomas.bond@leo.gov")
        (":signature" . "~/.signature-leo")
        ("Return-Path" . "<thomas.bond@leo.gov>")))))
- '(package-selected-packages
-   '())
- '(package-vc-selected-packages
-   '())
+ '(package-selected-packages nil)
+ '(package-vc-selected-packages 'nil)
  '(rst-level-face-max 10)
  '(send-mail-function 'mailclient-send-it)
  '(w3m-use-cookies t)
