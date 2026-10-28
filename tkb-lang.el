@@ -379,6 +379,23 @@ always indent Chicken Scheme module forms 0 characters."
 (eval-after-load "oberon" '(setq oberon-indent-level 2))
 (add-hook 'oberon-mode-hook (lambda () (font-lock-mode 1)))
 
+(defun my-obn-beginning-of-defun (&optional arg)
+  "Move to the start of the ARGth previous PROCEDURE heading,
+allowing leading whitespace."
+  (setq arg (or arg 1))
+  ;; If point is in the indentation, step to the previous line's end so the
+  ;; heading we're already on isn't found again; otherwise include this line.
+  (if (looking-back "^[ \t]*" (line-beginning-position))
+      (unless (bobp) (forward-line 0) (backward-char))
+    (end-of-line))
+  (when (re-search-backward obn-proc-heading-re nil t arg)
+    (back-to-indentation)
+    t))
+
+(add-hook 'oberon-mode-hook
+          (lambda ()
+            (setq-local beginning-of-defun-function #'my-obn-beginning-of-defun)))
+
 
 (when-load-file "modula3"
   (autoload 'modula-3-mode "modula3")
