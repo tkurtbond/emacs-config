@@ -1,5 +1,20 @@
 ;;; oberon-defun.el --- PROCEDURE/MODULE motion for oberon-mode  -*- lexical-binding: t -*-
 
+;; Copyright (C) 2026 T. Kurt Bond
+
+;; This program is free software: you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 ;; Load from your init file (or paste it there), replacing the earlier
 ;; `my-obn-beginning-of-defun', `my-obn-end-of-defun' and their hook.
 
