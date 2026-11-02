@@ -82,6 +82,8 @@ recommended by the ReST quickref: http://tinyurl.com/47lkhk"
   (interactive "M")
   (message "file: %s" (locate-file filename load-path (get-load-suffixes))))
 
+(setq org-element-use-cache nil)        ; Multiple emacs can write to the cache and overwrite each other.
+
 (defun tkb-find-org-log-file ()
   "Look in the current directory or its parents for a file named *-log.org
 and return it."
