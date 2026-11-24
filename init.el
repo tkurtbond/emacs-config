@@ -205,11 +205,22 @@
 (load "~/lib/emacs/emacs-config/tkb-fortune.el")
 (when nil (load "~/lib/emacs/emacs-config/tkb-timeclock.el"))
 
-(when window-system
-  (add-hook 'after-init-hook
-	    (lambda ()
-              (load "~/lib/emacs/emacs-config/tkb-gui-setup")
-              (load "~/lib/emacs/emacs-config/tkb-gui-fixup"))))
+(cond
+  (window-system
+   (add-hook 'after-init-hook
+	     (lambda ()
+               (load "~/lib/emacs/emacs-config/tkb-gui-setup")
+               (load "~/lib/emacs/emacs-config/tkb-gui-fixup"))))
+  (t                                    ; Better terminal colors, for me.
+   (set-face-attribute 'minibuffer-prompt nil :foreground "#5fd7ff" :weight 'bold) ; bright cyan
+   (set-face-attribute 'default nil :foreground "#d0d0d0")                         ; soft light gray
+   (set-face-attribute 'font-lock-comment-face nil :foreground "#9e9e9e")          ; gray, still legible
+   (set-face-attribute 'font-lock-string-face nil :foreground "#87d787")           ; soft green
+   (set-face-attribute 'font-lock-keyword-face nil :foreground "#d7afff")          ; light purple
+   (set-face-attribute 'font-lock-function-name-face nil :foreground "#ffd787")    ; pale gold
+   (set-face-attribute 'link nil :foreground "#87afff" :underline t)               ; light blue
+   ))
+
 
 ;; wanderlust
 (autoload 'wl-user-agent-compose "wl-draft" nil t)
