@@ -2831,6 +2831,12 @@ and make it the current selection."
     (message "%s" result)
     result))
 
+(defun feet-and-inches-to-centimeters (f i)
+  (interactive "nFeet? \nnInches? ")
+  (let* ((inches (+ (* f 12) i))
+         (cm (* inches 2.54)))
+    (message "%f cm" cm)))
+
 (defun celsius-to (c)
   (interactive "NCelsius? ")
   (let* ((f (+ (* 1.8 c) 32))
